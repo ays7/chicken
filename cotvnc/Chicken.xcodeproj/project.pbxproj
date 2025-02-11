@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -105,7 +105,6 @@
 		7F7A945405E71B5C00E20416 /* ServerFromPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6DF6805C31AF50028A970 /* ServerFromPrefs.m */; };
 		7F7A945605E71B5C00E20416 /* ServerDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F088F2505E1D81100336456 /* ServerDataManager.m */; };
 		7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
-		7F7A945A05E71B5C00E20416 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5B8B7E9036275D101000105 /* libz.dylib */; };
 		7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2F48D78040EDD5100BD55BA /* Carbon.framework */; };
 		7F7DE7D6080F39DF006BF1DF /* ServerStandAlone.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F7DE7D4080F39DF006BF1DF /* ServerStandAlone.h */; };
 		7F7DE7D7080F39DF006BF1DF /* ServerStandAlone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F7DE7D5080F39DF006BF1DF /* ServerStandAlone.m */; };
@@ -122,52 +121,18 @@
 		7FFA8FEB062BA6330008D381 /* ServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FFA8FE9062BA6330008D381 /* ServerBase.h */; };
 		7FFA8FEC062BA6330008D381 /* ServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA8FEA062BA6330008D381 /* ServerBase.m */; };
 		7FFA903D062BA74F0008D381 /* ServerDisplay.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7FFA903B062BA74F0008D381 /* ServerDisplay.nib */; };
-		8A538096200EA0DF000EE16F /* simd in Resources */ = {isa = PBXBuildFile; fileRef = 8A538095200EA0DE000EE16F /* simd */; };
-		8A53809B200EA1D8000EE16F /* jconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A538099200EA1D8000EE16F /* jconfig.h */; };
-		8A53809C200EA1D8000EE16F /* jconfigint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A53809A200EA1D8000EE16F /* jconfigint.h */; };
-		8A7851AE29908B6E00EAC51E /* jversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A7851AD29908B6E00EAC51E /* jversion.h */; };
+		8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */; };
+		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
 		DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */; };
 		DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */; };
 		DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1FD8C312D5100400632D78 /* PersistentServer.h */; };
 		DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1FD8C412D5100400632D78 /* PersistentServer.m */; };
 		DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9112D6B1A000632D78 /* Security.framework */; };
-		DA21209212087A370060A5F9 /* jsimd_none.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305711E03BA600271F8F /* jsimd_none.c */; };
 		DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DA22199716BC615600410C5A /* CommandLineConnection.h */; };
 		DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA22199816BC615600410C5A /* CommandLineConnection.m */; };
 		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
 		DA335CCF12DA4A6C00C70987 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = DA335CCD12DA4A6C00C70987 /* Session.h */; };
 		DA335CD012DA4A6C00C70987 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = DA335CCE12DA4A6C00C70987 /* Session.m */; };
-		DA60307011E03BA600271F8F /* jdapistd.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303111E03BA600271F8F /* jdapistd.c */; };
-		DA60307111E03BA600271F8F /* jdatadst.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303211E03BA600271F8F /* jdatadst.c */; };
-		DA60307211E03BA600271F8F /* jdatasrc.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303311E03BA600271F8F /* jdatasrc.c */; };
-		DA60307311E03BA600271F8F /* jdcoefct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303411E03BA600271F8F /* jdcoefct.c */; };
-		DA60307411E03BA600271F8F /* jdcolor.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303511E03BA600271F8F /* jdcolor.c */; };
-		DA60307511E03BA600271F8F /* jdct.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60303611E03BA600271F8F /* jdct.h */; };
-		DA60307611E03BA600271F8F /* jddctmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303711E03BA600271F8F /* jddctmgr.c */; };
-		DA60307711E03BA600271F8F /* jdhuff.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303811E03BA600271F8F /* jdhuff.c */; };
-		DA60307811E03BA600271F8F /* jdhuff.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60303911E03BA600271F8F /* jdhuff.h */; };
-		DA60307911E03BA600271F8F /* jdinput.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303A11E03BA600271F8F /* jdinput.c */; };
-		DA60307A11E03BA600271F8F /* jdmainct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303B11E03BA600271F8F /* jdmainct.c */; };
-		DA60307B11E03BA600271F8F /* jdmarker.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303C11E03BA600271F8F /* jdmarker.c */; };
-		DA60307C11E03BA600271F8F /* jdmaster.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303D11E03BA600271F8F /* jdmaster.c */; };
-		DA60307D11E03BA600271F8F /* jdmerge.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303E11E03BA600271F8F /* jdmerge.c */; };
-		DA60307E11E03BA600271F8F /* jdphuff.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60303F11E03BA600271F8F /* jdphuff.c */; };
-		DA60307F11E03BA600271F8F /* jdpostct.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304011E03BA600271F8F /* jdpostct.c */; };
-		DA60308311E03BA600271F8F /* jerror.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60304411E03BA600271F8F /* jerror.h */; };
-		DA60308711E03BA600271F8F /* jidctflt.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304811E03BA600271F8F /* jidctflt.c */; };
-		DA60308811E03BA600271F8F /* jidctfst.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304911E03BA600271F8F /* jidctfst.c */; };
-		DA60308911E03BA600271F8F /* jidctint.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304A11E03BA600271F8F /* jidctint.c */; };
-		DA60308A11E03BA600271F8F /* jidctred.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304B11E03BA600271F8F /* jidctred.c */; };
-		DA60308B11E03BA600271F8F /* jinclude.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60304C11E03BA600271F8F /* jinclude.h */; };
-		DA60308C11E03BA600271F8F /* jmemmgr.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304D11E03BA600271F8F /* jmemmgr.c */; };
-		DA60308D11E03BA600271F8F /* jmemnobs.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304E11E03BA600271F8F /* jmemnobs.c */; };
-		DA60308E11E03BA600271F8F /* jmemsys.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60304F11E03BA600271F8F /* jmemsys.h */; };
-		DA60308F11E03BA600271F8F /* jmorecfg.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305011E03BA600271F8F /* jmorecfg.h */; };
-		DA60309011E03BA600271F8F /* jpegint.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305111E03BA600271F8F /* jpegint.h */; };
-		DA60309711E03BA600271F8F /* jsimd.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305811E03BA600271F8F /* jsimd.h */; };
-		DA60309811E03BA600271F8F /* jsimddct.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305911E03BA600271F8F /* jsimddct.h */; };
-		DA60309A11E03BA600271F8F /* jversion.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305B11E03BA600271F8F /* jversion.h */; };
-		DA6030B511E03BE600271F8F /* jpeglib.h in Headers */ = {isa = PBXBuildFile; fileRef = DA60305211E03BA600271F8F /* jpeglib.h */; };
 		DA68E53211E7867500F23347 /* ConnectionWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA68E53011E7867500F23347 /* ConnectionWaiter.h */; };
 		DA68E53311E7867500F23347 /* ConnectionWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA68E53111E7867500F23347 /* ConnectionWaiter.m */; };
 		DA78379912DE159800F1893E /* SshWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA78379712DE159800F1893E /* SshWaiter.h */; };
@@ -178,17 +143,7 @@
 		DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA856D016B8717100A40AB5 /* DockConnection.m */; };
 		DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */; };
 		DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */; };
-		DABF107313E3470800558AE1 /* jaricom.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B71304648200134E29 /* jaricom.c */; };
-		DABF108A13E3473F00558AE1 /* jdapimin.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60301511E03B5400271F8F /* jdapimin.c */; };
-		DABF109113E3475B00558AE1 /* jutils.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305A11E03BA600271F8F /* jutils.c */; };
-		DABF109613E3476600558AE1 /* jquant2.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305611E03BA600271F8F /* jquant2.c */; };
-		DABF109713E3476700558AE1 /* jquant1.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60305511E03BA600271F8F /* jquant1.c */; };
-		DABF10A913E3479000558AE1 /* jerror.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304311E03BA600271F8F /* jerror.c */; };
-		DABF111913E34A7600558AE1 /* jdsample.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60304111E03BA600271F8F /* jdsample.c */; };
-		DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */ = {isa = PBXBuildFile; fileRef = DA60300E11E03B5400271F8F /* jcomapi.c */; };
 		DAC8077E12FEC38400C4ADB6 /* ssh-helper.sh in Resources */ = {isa = PBXBuildFile; fileRef = DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */; };
-		DAD344BE1304648200134E29 /* jdarith.c in Sources */ = {isa = PBXBuildFile; fileRef = DAD344B91304648200134E29 /* jdarith.c */; };
-		DAD344BF1304648200134E29 /* jpegcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD344BA1304648200134E29 /* jpegcomp.h */; };
 		DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */; };
 		DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */; };
 		DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = DAD6DEE812DCF4A3001FD9D6 /* AuthPrompt.nib */; };
@@ -271,12 +226,8 @@
 		7FF0C9A705CDC9A0008E39DD /* CotVNC.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; name = CotVNC.scriptTerminology; path = Resources/CotVNC.scriptTerminology; sourceTree = SOURCE_ROOT; };
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
 		7FFA8FEA062BA6330008D381 /* ServerBase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerBase.m; sourceTree = "<group>"; };
-		8A538093200EA078000EE16F /* jconfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jconfig.h; path = "libjpeg-turbo/build/jconfig.h"; sourceTree = "<group>"; };
-		8A538095200EA0DE000EE16F /* simd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = simd; path = "libjpeg-turbo/simd"; sourceTree = "<group>"; };
-		8A538097200EA12D000EE16F /* jconfigint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jconfigint.h; path = "libjpeg-turbo/build/jconfigint.h"; sourceTree = "<group>"; };
-		8A538099200EA1D8000EE16F /* jconfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jconfig.h; sourceTree = "<group>"; };
-		8A53809A200EA1D8000EE16F /* jconfigint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jconfigint.h; sourceTree = "<group>"; };
-		8A7851AD29908B6E00EAC51E /* jversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jversion.h; sourceTree = "<group>"; };
+		8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = "libjpeg-turbo/lib/libturbojpeg.a"; sourceTree = "<group>"; };
+		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8AC541E22413D91C00B6450B /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/fr.lproj/ConnectionDialog.nib; sourceTree = "<group>"; };
 		8AC541E32413D91C00B6450B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Resources/fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8AC541E42413D91C00B6450B /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/fr.lproj/ListenDialog.nib; sourceTree = "<group>"; };
@@ -324,46 +275,6 @@
 		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
 		DA335CCD12DA4A6C00C70987 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
 		DA335CCE12DA4A6C00C70987 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
-		DA60300E11E03B5400271F8F /* jcomapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jcomapi.c; path = "libjpeg-turbo/jcomapi.c"; sourceTree = "<group>"; };
-		DA60300F11E03B5400271F8F /* jconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jconfig.h; path = "libjpeg-turbo/jconfig.h"; sourceTree = "<group>"; };
-		DA60301511E03B5400271F8F /* jdapimin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdapimin.c; path = "libjpeg-turbo/jdapimin.c"; sourceTree = "<group>"; };
-		DA60303111E03BA600271F8F /* jdapistd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdapistd.c; path = "libjpeg-turbo/jdapistd.c"; sourceTree = "<group>"; };
-		DA60303211E03BA600271F8F /* jdatadst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdatadst.c; path = "libjpeg-turbo/jdatadst.c"; sourceTree = "<group>"; };
-		DA60303311E03BA600271F8F /* jdatasrc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdatasrc.c; path = "libjpeg-turbo/jdatasrc.c"; sourceTree = "<group>"; };
-		DA60303411E03BA600271F8F /* jdcoefct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdcoefct.c; path = "libjpeg-turbo/jdcoefct.c"; sourceTree = "<group>"; };
-		DA60303511E03BA600271F8F /* jdcolor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdcolor.c; path = "libjpeg-turbo/jdcolor.c"; sourceTree = "<group>"; };
-		DA60303611E03BA600271F8F /* jdct.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jdct.h; path = "libjpeg-turbo/jdct.h"; sourceTree = "<group>"; };
-		DA60303711E03BA600271F8F /* jddctmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jddctmgr.c; path = "libjpeg-turbo/jddctmgr.c"; sourceTree = "<group>"; };
-		DA60303811E03BA600271F8F /* jdhuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdhuff.c; path = "libjpeg-turbo/jdhuff.c"; sourceTree = "<group>"; };
-		DA60303911E03BA600271F8F /* jdhuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdhuff.h; path = "libjpeg-turbo/jdhuff.h"; sourceTree = "<group>"; };
-		DA60303A11E03BA600271F8F /* jdinput.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdinput.c; path = "libjpeg-turbo/jdinput.c"; sourceTree = "<group>"; };
-		DA60303B11E03BA600271F8F /* jdmainct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdmainct.c; path = "libjpeg-turbo/jdmainct.c"; sourceTree = "<group>"; };
-		DA60303C11E03BA600271F8F /* jdmarker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdmarker.c; path = "libjpeg-turbo/jdmarker.c"; sourceTree = "<group>"; };
-		DA60303D11E03BA600271F8F /* jdmaster.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdmaster.c; path = "libjpeg-turbo/jdmaster.c"; sourceTree = "<group>"; };
-		DA60303E11E03BA600271F8F /* jdmerge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdmerge.c; path = "libjpeg-turbo/jdmerge.c"; sourceTree = "<group>"; };
-		DA60303F11E03BA600271F8F /* jdphuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdphuff.c; path = "libjpeg-turbo/jdphuff.c"; sourceTree = "<group>"; };
-		DA60304011E03BA600271F8F /* jdpostct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdpostct.c; path = "libjpeg-turbo/jdpostct.c"; sourceTree = "<group>"; };
-		DA60304111E03BA600271F8F /* jdsample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdsample.c; path = "libjpeg-turbo/jdsample.c"; sourceTree = "<group>"; };
-		DA60304311E03BA600271F8F /* jerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jerror.c; path = "libjpeg-turbo/jerror.c"; sourceTree = "<group>"; };
-		DA60304411E03BA600271F8F /* jerror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jerror.h; path = "libjpeg-turbo/jerror.h"; sourceTree = "<group>"; };
-		DA60304811E03BA600271F8F /* jidctflt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctflt.c; path = "libjpeg-turbo/jidctflt.c"; sourceTree = "<group>"; };
-		DA60304911E03BA600271F8F /* jidctfst.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctfst.c; path = "libjpeg-turbo/jidctfst.c"; sourceTree = "<group>"; };
-		DA60304A11E03BA600271F8F /* jidctint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctint.c; path = "libjpeg-turbo/jidctint.c"; sourceTree = "<group>"; };
-		DA60304B11E03BA600271F8F /* jidctred.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jidctred.c; path = "libjpeg-turbo/jidctred.c"; sourceTree = "<group>"; };
-		DA60304C11E03BA600271F8F /* jinclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jinclude.h; path = "libjpeg-turbo/jinclude.h"; sourceTree = "<group>"; };
-		DA60304D11E03BA600271F8F /* jmemmgr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jmemmgr.c; path = "libjpeg-turbo/jmemmgr.c"; sourceTree = "<group>"; };
-		DA60304E11E03BA600271F8F /* jmemnobs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jmemnobs.c; path = "libjpeg-turbo/jmemnobs.c"; sourceTree = "<group>"; };
-		DA60304F11E03BA600271F8F /* jmemsys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jmemsys.h; path = "libjpeg-turbo/jmemsys.h"; sourceTree = "<group>"; };
-		DA60305011E03BA600271F8F /* jmorecfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jmorecfg.h; path = "libjpeg-turbo/jmorecfg.h"; sourceTree = "<group>"; };
-		DA60305111E03BA600271F8F /* jpegint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpegint.h; path = "libjpeg-turbo/jpegint.h"; sourceTree = "<group>"; };
-		DA60305211E03BA600271F8F /* jpeglib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpeglib.h; path = "libjpeg-turbo/jpeglib.h"; sourceTree = "<group>"; };
-		DA60305511E03BA600271F8F /* jquant1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jquant1.c; path = "libjpeg-turbo/jquant1.c"; sourceTree = "<group>"; };
-		DA60305611E03BA600271F8F /* jquant2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jquant2.c; path = "libjpeg-turbo/jquant2.c"; sourceTree = "<group>"; };
-		DA60305711E03BA600271F8F /* jsimd_none.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jsimd_none.c; path = "libjpeg-turbo/jsimd_none.c"; sourceTree = "<group>"; };
-		DA60305811E03BA600271F8F /* jsimd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsimd.h; path = "libjpeg-turbo/jsimd.h"; sourceTree = "<group>"; };
-		DA60305911E03BA600271F8F /* jsimddct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsimddct.h; path = "libjpeg-turbo/jsimddct.h"; sourceTree = "<group>"; };
-		DA60305A11E03BA600271F8F /* jutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jutils.c; path = "libjpeg-turbo/jutils.c"; sourceTree = "<group>"; };
-		DA60305B11E03BA600271F8F /* jversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jversion.h; path = "libjpeg-turbo/jversion.h"; sourceTree = "<group>"; };
 		DA68E53011E7867500F23347 /* ConnectionWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionWaiter.h; sourceTree = "<group>"; };
 		DA68E53111E7867500F23347 /* ConnectionWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionWaiter.m; sourceTree = "<group>"; };
 		DA78379712DE159800F1893E /* SshWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshWaiter.h; sourceTree = "<group>"; };
@@ -375,9 +286,6 @@
 		DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesktopNameEncodingReader.h; sourceTree = "<group>"; };
 		DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesktopNameEncodingReader.m; sourceTree = "<group>"; };
 		DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "ssh-helper.sh"; path = "Resources/ssh-helper.sh"; sourceTree = "<group>"; };
-		DAD344B71304648200134E29 /* jaricom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jaricom.c; path = "libjpeg-turbo/jaricom.c"; sourceTree = "<group>"; };
-		DAD344B91304648200134E29 /* jdarith.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdarith.c; path = "libjpeg-turbo/jdarith.c"; sourceTree = "<group>"; };
-		DAD344BA1304648200134E29 /* jpegcomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpegcomp.h; path = "libjpeg-turbo/jpegcomp.h"; sourceTree = "<group>"; };
 		DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPrompt.h; sourceTree = "<group>"; };
 		DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthPrompt.m; sourceTree = "<group>"; };
 		DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshTunnel.h; sourceTree = "<group>"; };
@@ -429,7 +337,6 @@
 		F536C26903937E5301178D82 /* ZRLEEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZRLEEncodingReader.m; sourceTree = "<group>"; };
 		F564F4B60392E07E01303550 /* ZlibEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibEncodingReader.m; sourceTree = "<group>"; };
 		F564F4B70392E07E01303550 /* ZlibEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibEncodingReader.h; sourceTree = "<group>"; };
-		F5B8B7E9036275D101000105 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
 		F5DC7177033DB40D01A8010C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = "<group>"; };
 		F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor3.tiff; path = Resources/rfbCursor3.tiff; sourceTree = "<group>"; };
 		F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor2.tiff; path = Resources/rfbCursor2.tiff; sourceTree = "<group>"; };
@@ -518,8 +425,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */,
+				8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */,
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
-				7F7A945A05E71B5C00E20416 /* libz.dylib in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
 			);
@@ -534,7 +442,6 @@
 				DA1FDD9112D6B1A000632D78 /* Security.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				E2F48D78040EDD5100BD55BA /* Carbon.framework */,
-				F5B8B7E9036275D101000105 /* libz.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -550,17 +457,11 @@
 		29B97314FDCFA39411CA2CEA /* Chicken of the VNC */ = {
 			isa = PBXGroup;
 			children = (
-				8A7851AD29908B6E00EAC51E /* jversion.h */,
-				8A538097200EA12D000EE16F /* jconfigint.h */,
-				8A538093200EA078000EE16F /* jconfig.h */,
-				8A538099200EA1D8000EE16F /* jconfig.h */,
-				8A53809A200EA1D8000EE16F /* jconfigint.h */,
 				F5DC718B033DB45F01A8010C /* Documentation */,
 				F5DC7198033DB4A801A8010C /* Source */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				DA602FEF11E03AEE00271F8F /* libjpeg-turbo */,
 			);
 			name = "Chicken of the VNC";
 			sourceTree = "<group>";
@@ -594,6 +495,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A84A09A2D5BC78E00277CAC /* libz.tbd */,
+				8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -685,57 +588,6 @@
 				7F7DE7D5080F39DF006BF1DF /* ServerStandAlone.m */,
 			);
 			name = "Server Models";
-			sourceTree = "<group>";
-		};
-		DA602FEF11E03AEE00271F8F /* libjpeg-turbo */ = {
-			isa = PBXGroup;
-			children = (
-				DAD344B71304648200134E29 /* jaricom.c */,
-				DAD344B91304648200134E29 /* jdarith.c */,
-				DAD344BA1304648200134E29 /* jpegcomp.h */,
-				DA60303111E03BA600271F8F /* jdapistd.c */,
-				DA60303211E03BA600271F8F /* jdatadst.c */,
-				8A538095200EA0DE000EE16F /* simd */,
-				DA60303311E03BA600271F8F /* jdatasrc.c */,
-				DA60303411E03BA600271F8F /* jdcoefct.c */,
-				DA60303511E03BA600271F8F /* jdcolor.c */,
-				DA60303611E03BA600271F8F /* jdct.h */,
-				DA60303711E03BA600271F8F /* jddctmgr.c */,
-				DA60303811E03BA600271F8F /* jdhuff.c */,
-				DA60303911E03BA600271F8F /* jdhuff.h */,
-				DA60303A11E03BA600271F8F /* jdinput.c */,
-				DA60303B11E03BA600271F8F /* jdmainct.c */,
-				DA60303C11E03BA600271F8F /* jdmarker.c */,
-				DA60303D11E03BA600271F8F /* jdmaster.c */,
-				DA60303E11E03BA600271F8F /* jdmerge.c */,
-				DA60303F11E03BA600271F8F /* jdphuff.c */,
-				DA60304011E03BA600271F8F /* jdpostct.c */,
-				DA60304111E03BA600271F8F /* jdsample.c */,
-				DA60304311E03BA600271F8F /* jerror.c */,
-				DA60304411E03BA600271F8F /* jerror.h */,
-				DA60304811E03BA600271F8F /* jidctflt.c */,
-				DA60304911E03BA600271F8F /* jidctfst.c */,
-				DA60304A11E03BA600271F8F /* jidctint.c */,
-				DA60304B11E03BA600271F8F /* jidctred.c */,
-				DA60304C11E03BA600271F8F /* jinclude.h */,
-				DA60304D11E03BA600271F8F /* jmemmgr.c */,
-				DA60304E11E03BA600271F8F /* jmemnobs.c */,
-				DA60304F11E03BA600271F8F /* jmemsys.h */,
-				DA60305011E03BA600271F8F /* jmorecfg.h */,
-				DA60305111E03BA600271F8F /* jpegint.h */,
-				DA60305211E03BA600271F8F /* jpeglib.h */,
-				DA60305511E03BA600271F8F /* jquant1.c */,
-				DA60305611E03BA600271F8F /* jquant2.c */,
-				DA60305711E03BA600271F8F /* jsimd_none.c */,
-				DA60305811E03BA600271F8F /* jsimd.h */,
-				DA60305911E03BA600271F8F /* jsimddct.h */,
-				DA60305A11E03BA600271F8F /* jutils.c */,
-				DA60305B11E03BA600271F8F /* jversion.h */,
-				DA60300E11E03B5400271F8F /* jcomapi.c */,
-				DA60300F11E03B5400271F8F /* jconfig.h */,
-				DA60301511E03B5400271F8F /* jdapimin.c */,
-			);
-			name = "libjpeg-turbo";
 			sourceTree = "<group>";
 		};
 		E21FE439062B79940059585C /* KeyEquivalents */ = {
@@ -896,8 +748,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A53809B200EA1D8000EE16F /* jconfig.h in Headers */,
-				8A53809C200EA1D8000EE16F /* jconfigint.h in Headers */,
 				7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */,
 				7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */,
 				7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */,
@@ -915,7 +765,6 @@
 				7F7A93F405E71B5C00E20416 /* GrayScaleFrameBuffer.h in Headers */,
 				7F7A93F505E71B5C00E20416 /* HextileEncodingReader.h in Headers */,
 				7F7A93F605E71B5C00E20416 /* HighColorFrameBuffer.h in Headers */,
-				8A7851AE29908B6E00EAC51E /* jversion.h in Headers */,
 				7F7A93F705E71B5C00E20416 /* LowColorFrameBuffer.h in Headers */,
 				7F7A93F905E71B5C00E20416 /* PaletteFilter.h in Headers */,
 				7F7A93FA05E71B5C00E20416 /* Profile.h in Headers */,
@@ -967,17 +816,6 @@
 				7F7DE7D6080F39DF006BF1DF /* ServerStandAlone.h in Headers */,
 				E291FA1508815A950061216E /* EventFilter.h in Headers */,
 				E291FB23088168E20061216E /* QueuedEvent.h in Headers */,
-				DA60307511E03BA600271F8F /* jdct.h in Headers */,
-				DA60307811E03BA600271F8F /* jdhuff.h in Headers */,
-				DA60308311E03BA600271F8F /* jerror.h in Headers */,
-				DA60308B11E03BA600271F8F /* jinclude.h in Headers */,
-				DA60308E11E03BA600271F8F /* jmemsys.h in Headers */,
-				DA60308F11E03BA600271F8F /* jmorecfg.h in Headers */,
-				DA60309011E03BA600271F8F /* jpegint.h in Headers */,
-				DA60309711E03BA600271F8F /* jsimd.h in Headers */,
-				DA60309811E03BA600271F8F /* jsimddct.h in Headers */,
-				DA60309A11E03BA600271F8F /* jversion.h in Headers */,
-				DA6030B511E03BE600271F8F /* jpeglib.h in Headers */,
 				DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */,
 				DA68E53211E7867500F23347 /* ConnectionWaiter.h in Headers */,
 				DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */,
@@ -988,7 +826,6 @@
 				DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */,
 				DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */,
 				DA78379912DE159800F1893E /* SshWaiter.h in Headers */,
-				DAD344BF1304648200134E29 /* jpegcomp.h in Headers */,
 				DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */,
 				DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */,
 			);
@@ -1070,7 +907,6 @@
 				E291FAD5088161DA0061216E /* cursors.plist in Resources */,
 				DAFB492212944331008C6FC4 /* dsa_pub.pem in Resources */,
 				DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */,
-				8A538096200EA0DF000EE16F /* simd in Resources */,
 				DAC8077E12FEC38400C4ADB6 /* ssh-helper.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1164,29 +1000,8 @@
 				7F7DE7D7080F39DF006BF1DF /* ServerStandAlone.m in Sources */,
 				E291FB1B088168BB0061216E /* EventFilter.m in Sources */,
 				E291FB24088168E20061216E /* QueuedEvent.m in Sources */,
-				DA60307011E03BA600271F8F /* jdapistd.c in Sources */,
-				DA60307111E03BA600271F8F /* jdatadst.c in Sources */,
-				DA60307211E03BA600271F8F /* jdatasrc.c in Sources */,
-				DA60307311E03BA600271F8F /* jdcoefct.c in Sources */,
-				DA60307411E03BA600271F8F /* jdcolor.c in Sources */,
-				DA60307611E03BA600271F8F /* jddctmgr.c in Sources */,
-				DA60307711E03BA600271F8F /* jdhuff.c in Sources */,
-				DA60307911E03BA600271F8F /* jdinput.c in Sources */,
-				DA60307A11E03BA600271F8F /* jdmainct.c in Sources */,
-				DA60307B11E03BA600271F8F /* jdmarker.c in Sources */,
-				DA60307C11E03BA600271F8F /* jdmaster.c in Sources */,
-				DA60307D11E03BA600271F8F /* jdmerge.c in Sources */,
-				DA60307E11E03BA600271F8F /* jdphuff.c in Sources */,
-				DA60307F11E03BA600271F8F /* jdpostct.c in Sources */,
-				DA60308711E03BA600271F8F /* jidctflt.c in Sources */,
-				DA60308811E03BA600271F8F /* jidctfst.c in Sources */,
-				DA60308911E03BA600271F8F /* jidctint.c in Sources */,
-				DA60308A11E03BA600271F8F /* jidctred.c in Sources */,
-				DA60308C11E03BA600271F8F /* jmemmgr.c in Sources */,
-				DA60308D11E03BA600271F8F /* jmemnobs.c in Sources */,
 				DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */,
 				DA68E53311E7867500F23347 /* ConnectionWaiter.m in Sources */,
-				DA21209212087A370060A5F9 /* jsimd_none.c in Sources */,
 				DAEB76F21232AE3500002E6A /* Keymap.m in Sources */,
 				DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */,
 				DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */,
@@ -1195,15 +1010,6 @@
 				DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */,
 				DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */,
 				DA78379A12DE159800F1893E /* SshWaiter.m in Sources */,
-				DAD344BE1304648200134E29 /* jdarith.c in Sources */,
-				DABF107313E3470800558AE1 /* jaricom.c in Sources */,
-				DABF108A13E3473F00558AE1 /* jdapimin.c in Sources */,
-				DABF109113E3475B00558AE1 /* jutils.c in Sources */,
-				DABF109613E3476600558AE1 /* jquant2.c in Sources */,
-				DABF109713E3476700558AE1 /* jquant1.c in Sources */,
-				DABF10A913E3479000558AE1 /* jerror.c in Sources */,
-				DABF111913E34A7600558AE1 /* jdsample.c in Sources */,
-				DABF111E13E34A9000558AE1 /* jcomapi.c in Sources */,
 				DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */,
 				DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */,
 			);
@@ -1343,10 +1149,9 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1383,10 +1188,9 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1421,10 +1225,9 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1474,11 +1277,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.2b3;
+				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
 			};
 			name = Development;
 		};
@@ -1514,9 +1317,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				SDKROOT = macosx;
-				_CHICKEN_VERSION_ = 2.2b3;
+				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
 			};
 			name = Deployment;
 		};
@@ -1553,9 +1356,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				SDKROOT = macosx;
-				_CHICKEN_VERSION_ = 2.2b3;
+				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
 			};
 			name = Default;
 		};
@@ -1580,10 +1383,9 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				NASM_OTHER_FLAGS = "-I $(SRCROOT)/libjpeg-turbo/simd/";
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1633,11 +1435,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2.2b3;
+				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
 			};
 			name = "Universal Fast Development";
 		};

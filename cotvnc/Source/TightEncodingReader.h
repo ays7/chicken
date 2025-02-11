@@ -23,7 +23,7 @@
 #import "RFBConnection.h"
 #import <zlib.h>
 
-#import "../libjpeg-turbo/jpeglib.h"
+#import "../libjpeg-turbo/include/jpeglib.h"
 
 #define NUM_ZSTREAMS		4
 //#define Z_BUFSIZE		4096

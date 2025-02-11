@@ -1,3 +1,0 @@
-[submodule "cotvnc/libjpeg-turbo"]
-	path = cotvnc/libjpeg-turbo
-	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
