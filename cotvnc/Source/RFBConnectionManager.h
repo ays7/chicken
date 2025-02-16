@@ -43,7 +43,7 @@
 	NSArray* mOrderedServerNames;
 
     ConnectionWaiter    *connectionWaiter;
-    BOOL lockedSelection;
+    int lockedSelection;
 }
 
 + (id)sharedManager;
