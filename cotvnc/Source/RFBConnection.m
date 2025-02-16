@@ -878,9 +878,12 @@ static NSString* byteString(double d)
 
 - (void)removeMouseMovedTrackingRect
 {
-	[rfbView removeTrackingRect: _mouseMovedTrackingTag];
-	[[rfbView window] setAcceptsMouseMovedEvents: NO];
-    _mouseMovedTrackingTag = 0;
+    if (_mouseMovedTrackingTag)
+    {
+        [rfbView removeTrackingRect: _mouseMovedTrackingTag];
+        [[rfbView window] setAcceptsMouseMovedEvents: NO];
+        _mouseMovedTrackingTag = 0;
+    }
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {

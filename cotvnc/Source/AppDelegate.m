@@ -74,7 +74,7 @@
 	if ( ! [cm runFromCommandLine] && ! [cm launchedByURL] )
 		[cm runNormally];
 	
-	[mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSOnState : NSOffState];
+    [mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
 	[mInfoVersionNumber setStringValue: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
 }
 
@@ -100,7 +100,7 @@
 	PrefController *prefs = [PrefController sharedController];
 	[prefs toggleUseRendezvous: sender];
 	
-	[mRendezvousMenuItem setState: [prefs usesRendezvous] ? NSOnState : NSOffState];
+    [mRendezvousMenuItem setState: [prefs usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
 
