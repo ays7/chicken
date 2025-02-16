@@ -106,7 +106,8 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     NSSize deltaSize = NSMakeSize( newSize.width - originalSize.width, newSize.height - originalSize.height );
     
 	// I'm hardcoding the border so that I can use a real border at design time so it can be seen easily
-	[serverDataBoxLocal setBorderType:NSNoBorder];
+    serverDataBoxLocal.transparent = true;
+	//[serverDataBoxLocal setBorderType:NSNoBorder];
     [serverDataBoxLocal setFrameSize: newSize];
 	[serverDataBoxLocal setContentView:serverCtrlerBox];
 	[serverCtrlerBox release];
@@ -124,13 +125,15 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
     [serverListBox retain];
 	[serverListBox removeFromSuperview];
-	[serverListBox setBorderType:NSNoBorder];
+    serverListBox.transparent = true;
+	//[serverListBox setBorderType:NSNoBorder];
 	[splitView addSubview:serverListBox];
 	// we now own serverListBox and are responsible for releasing it
 	
 	[serverGroupBox retain];
 	[serverGroupBox removeFromSuperview];
-	[serverGroupBox setBorderType:NSNoBorder];
+    serverGroupBox.transparent = true;
+	//[serverGroupBox setBorderType:NSNoBorder];
 	// we now own serverGroupBox and are responsible for releasing it
 	
 	[splitView adjustSubviews];
@@ -144,7 +147,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 {
     NSProcessInfo *procInfo = [NSProcessInfo processInfo];
     NSArray *args = [procInfo arguments];
-    int i, argCount = [args count];
+    unsigned long i, argCount = [args count];
     NSString *arg;
 	
 	ServerStandAlone* cmdlineServer = [[[ServerStandAlone alloc] init] autorelease];
