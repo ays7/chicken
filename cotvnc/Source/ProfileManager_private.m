@@ -40,7 +40,7 @@ typedef unsigned int NSUInteger;
 }
 
 
-- (void)_selectProfileAtIndex: (int)index
+- (void)_selectProfileAtIndex: (NSInteger)index
 {
     NSIndexSet  *set = [[NSIndexSet alloc] initWithIndex: index];
     [mProfileTable selectRowIndexes: set byExtendingSelection: NO];

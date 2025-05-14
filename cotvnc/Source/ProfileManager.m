@@ -136,7 +136,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     [[NSNotificationCenter defaultCenter] postNotificationName:ProfileAddDeleteNotification
                                                         object:self];
 
-	int selectedRow = [mProfileTable selectedRow];
+	NSInteger selectedRow = [mProfileTable selectedRow];
 	[self _selectProfileAtIndex: selectedRow];
 }
 

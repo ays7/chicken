@@ -82,7 +82,7 @@ enum {
     _isFullscreen = NO; // jason added for fullscreen display
 
     [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
-    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil]];
+    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil]];
 
     password = [[connection password] retain];
 
@@ -740,7 +740,7 @@ enum {
 		[window setDelegate: nil];
         windowedWindow = window;
 		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
-											styleMask:NSBorderlessWindowMask
+                                            styleMask:NSWindowStyleMaskBorderless
 											backing:NSBackingStoreBuffered
 											defer:NO
 											screen:[NSScreen mainScreen]];
@@ -868,10 +868,20 @@ enum {
 
 - (void)removeFullscreenTrackingRects {
 	[self endFullscreenScrolling];
-	[scrollView removeTrackingRect: _leftTrackingTag];
-	[scrollView removeTrackingRect: _topTrackingTag];
-	[scrollView removeTrackingRect: _rightTrackingTag];
-	[scrollView removeTrackingRect: _bottomTrackingTag];
+    if (_leftTrackingTag)
+    {
+        [scrollView removeTrackingRect: _leftTrackingTag];
+        [scrollView removeTrackingRect: _rightTrackingTag];
+        _leftTrackingTag = 0;
+        _rightTrackingTag = 0;
+    }
+   if (_topTrackingTag)
+   {
+       [scrollView removeTrackingRect: _topTrackingTag];
+       [scrollView removeTrackingRect: _bottomTrackingTag];
+       _topTrackingTag = 0;
+       _bottomTrackingTag = 0;
+    }
     _vertScrollFactor = _horizScrollFactor = 0;
 }
 

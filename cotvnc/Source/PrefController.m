@@ -143,7 +143,7 @@ static int const kPrefsVersion = 0x00000002;
 	if( 1 == NSNumberOfColorComponents(NSColorSpaceFromDepth(windowDepth)) )
 		return [GrayScaleFrameBuffer class];
 
-	int bpp = NSBitsPerPixelFromDepth( windowDepth );
+	NSInteger bpp = NSBitsPerPixelFromDepth( windowDepth );
 	if ( bpp <= 8 )
 		return [LowColorFrameBuffer class];
 	if ( bpp <= 16 )

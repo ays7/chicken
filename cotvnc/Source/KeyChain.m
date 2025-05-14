@@ -101,10 +101,10 @@ static KeyChain* defaultKeyChain = nil;
     const char  *serv = [service UTF8String];
     const char  *acc = [account UTF8String];
     SecKeychainItemRef itemref = NULL;
-    OSStatus    ret;
 
-    ret = SecKeychainFindGenericPassword(NULL, strlen(serv), serv, strlen(acc), acc,
+    SecKeychainFindGenericPassword(NULL, strlen(serv), serv, strlen(acc), acc,
             NULL, NULL, &itemref);
+    
     return itemref;
 }
 

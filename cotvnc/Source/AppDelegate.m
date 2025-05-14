@@ -51,8 +51,8 @@
         if ([fileManager fileExistsAtPath:cotvncPref]
                 && ![fileManager fileExistsAtPath:chickenPref]) {
             BOOL    success;
-            success = [fileManager copyPath:cotvncPref toPath:chickenPref
-                                    handler:nil];
+            success = [fileManager copyItemAtPath:cotvncPref toPath:chickenPref
+                                    error:nil];
             if (!success) {
                 NSLog(@"Failed to copy %@ to %@", cotvncPref, chickenPref);
             }
@@ -121,7 +121,7 @@
 - (IBAction)showHelp: (id)sender
 {
 	NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
-	[[NSWorkspace sharedWorkspace] openFile: path];
+    [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:path]];
 }
 
 - (NSMenuItem *)getFullScreenMenuItem
