@@ -648,6 +648,9 @@ enum {
 	[connection installMouseMovedTrackingRect];
 	[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
     [rfbView setTint:[[connection profile] tintWhenFront:YES]];
+    
+    // sync server clipboard automatically
+    [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification

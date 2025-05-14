@@ -462,7 +462,7 @@
 
         pos.y = size.height - pos.y;
         pos = [rfbView convertPoint:pos toView:nil];
-        pos = [window convertBaseToScreen:pos];
+        pos = [window convertPointToScreen:pos];
         if (!NSPointInRect(pos, [window frame]))
             return;
         screenCoords.x = pos.x;
@@ -518,6 +518,12 @@
 
 - (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
+    // @@ Send clipboard before sending middle mouse down
+    if (mask & rfbButton2Mask)
+    {
+        [self sendPasteboardToServer:[NSPasteboard generalPasteboard]];
+    }
+
     rfbPointerEventMsg msg;
 	
     msg.type = rfbPointerEvent;
@@ -554,19 +560,19 @@
     msg.type = rfbKeyEvent;
 	msg.down = pressed;
 	
-    if( NSShiftKeyMask == m )
+    if( NSEventModifierFlagShift == m )
         msg.key = htonl([_profile shiftKeyCode]);
-	else if( NSControlKeyMask == m )
+    else if( NSEventModifierFlagControl == m )
         msg.key = htonl([_profile controlKeyCode]);
-	else if( NSAlternateKeyMask == m )
+    else if( NSEventModifierFlagOption == m )
         msg.key = htonl([_profile altKeyCode]);
-	else if( NSCommandKeyMask == m )
+    else if( NSEventModifierFlagCommand == m )
         msg.key = htonl([_profile commandKeyCode]);
-    else if(NSAlphaShiftKeyMask == m)
+    else if(NSEventModifierFlagCapsLock == m)
         msg.key = htonl(XK_Caps_Lock);
-    else if(NSHelpKeyMask == m)		// this is F1
+    else if(NSEventModifierFlagHelp == m)		// this is F1
         msg.key = htonl(XK_F1);
-	else if (NSNumericPadKeyMask == m) // don't know how to handle, eat it
+    else if (NSEventModifierFlagNumericPad == m) // don't know how to handle, eat it
 		return;
 	
     // XK_VoidSymbol is used for unbound modifier keys
@@ -665,7 +671,7 @@
     id types, theType;
 	NSString *str;
 	
-    types = [NSArray arrayWithObjects:NSStringPboardType, NSFilenamesPboardType, nil];
+    types = [NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil];
     if((theType = [pb availableTypeFromArray:types]) == nil) {
         NSLog(@"No supported pasteboard type\n");
         return NO;
@@ -681,9 +687,10 @@
 
 - (void)sendPasteboardToServer:(NSPasteboard *)pb
 {
-    NSString    *str = [pb stringForType:NSStringPboardType];
+    NSString    *str = [pb stringForType:NSPasteboardTypeString];
     const char  *cStr = [str cStringUsingEncoding:NSISOLatin1StringEncoding];
 
+#if 0 // just don't send if not convertible
     if (cStr == NULL) {
         NSBeginAlertSheet(NSLocalizedString(@"PasteConversionHeader", nil), 
                           NSLocalizedString(@"PasteAnyways", nil),
@@ -694,11 +701,17 @@
                                               * release in pasteConfirmation: */
                           NSLocalizedString(@"PasteConversionBody", nil));
     } else
+#else
+    if (cStr != NULL)
+#endif
         [self sendStringToServersClipboard:cStr length:strlen(cStr)];
 }
 
 - (void)sendStringToServersClipboard:(const char *)cStr length:(unsigned)len
 {
+    if ([server_ viewOnly])
+        return;
+    
     unsigned int            msgSz = sizeof(rfbClientCutTextMsg) + len;
     rfbClientCutTextMsg     *msg = malloc(msgSz);
 
