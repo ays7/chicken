@@ -91,8 +91,8 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	{
 		_watchEventForCapsLock = NO;
 		NSEvent *currentEvent = [NSApp currentEvent];
-		unsigned int modifierFlags = [currentEvent modifierFlags];
-		if ( (NSAlphaShiftKeyMask & modifierFlags) != (NSAlphaShiftKeyMask & _pressedModifiers) )
+		NSEventModifierFlags modifierFlags = [currentEvent modifierFlags];
+        if ( (NSEventModifierFlagCapsLock & modifierFlags) != (NSEventModifierFlagCapsLock & _pressedModifiers) )
 			[self flagsChanged: currentEvent];
 	}
 }
@@ -331,14 +331,14 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
     NSString *unmodified = [theEvent charactersIgnoringModifiers];
     NSString *modified = [theEvent characters];
     NSString *characters;
-    unsigned int length;
+    NSUInteger length;
 	unsigned int i;
-    unsigned int oldModifiers = 0;
-    unsigned int modifiers = [theEvent modifierFlags];
+    NSEventModifierFlags oldModifiers = 0;
+    NSEventModifierFlags modifiers = [theEvent modifierFlags];
 
     /* If shift is down, the OS does the capitalization on
      * charactersIgnoringModifiers, but if caps lock is down, it doesn't. */
-    if (modifiers & NSAlphaShiftKeyMask)
+    if (modifiers & NSEventModifierFlagCapsLock)
         unmodified = [unmodified uppercaseString];
 
     // figure out the appropriate string to send to the server
@@ -348,7 +348,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
          * these cases, we use the unmodified characters instead. */
         characters = unmodified;
     } else if ([modified length] > 0 && [modified characterAtIndex:0] < 0x80
-                    && !(modifiers & NSCommandKeyMask)
+               && !(modifiers & NSEventModifierFlagCommand)
                     && ![modified isEqualToString: unmodified]) {
         /* Some non-US keyboards require holding option or control in order to
          * type basic ASCII characters. Since these characters can be so
@@ -359,19 +359,19 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
          * command key is down. */
         characters = modified;
 
-        if ([theEvent type] == NSKeyDown) {
+        if ([theEvent type] == NSEventTypeKeyDown) {
             /* We clear the modifiers for a keydown event so that the server
              * doesn't try to interpret the modifiers on top of the already
              * modified character. */
             oldModifiers = modifiers;
-            [self queueModifiers:modifiers & ~NSControlKeyMask
-                                           & ~NSAlternateKeyMask
+            [self queueModifiers:modifiers & ~NSEventModifierFlagControl
+             & ~NSEventModifierFlagOption
                        timestamp:[theEvent timestamp]];
         }
     } else if ([_profile interpretModifiersLocally]) {
         characters = modified;
-        if ((modifiers & (NSShiftKeyMask | NSAlphaShiftKeyMask))
-                    && (modifiers & NSCommandKeyMask)) {
+        if ((modifiers & (NSEventModifierFlagShift | NSEventModifierFlagCapsLock))
+            && (modifiers & NSEventModifierFlagCommand)) {
             // command tends to block the effect of shift
             characters = [characters uppercaseString];
         }
@@ -389,10 +389,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
         character = [characters characterAtIndex: i];
 
-        if ((modifiers & NSNumericPadKeyMask) && character < 0x40)
+        if ((modifiers & NSEventModifierFlagNumericPad) && character < 0x40)
             character += 0xf600; // encode numpad keys in private use area
 		
-        if ([theEvent type] == NSKeyDown) {
+        if ([theEvent type] == NSEventTypeKeyDown) {
             event = [QueuedEvent keyDownEventWithCharacter: character
                                                  timestamp: [theEvent timestamp]];
         } else {
@@ -414,15 +414,15 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 /* Queues a change in the modifier state. Note that unlike the preceeding
  * queue... messages, this does not write the connection buffer. */
-- (void)queueModifiers:(unsigned int)newState
+- (void)queueModifiers:(NSEventModifierFlags)newState
              timestamp:(NSTimeInterval)timestamp
 {
     unsigned int pressed = newState & ~_queuedModifiers;
     unsigned int released = ~newState & _queuedModifiers;
-    unsigned int masks[] = {NSShiftKeyMask, NSControlKeyMask,
-                            NSAlternateKeyMask, NSCommandKeyMask,
-                            NSAlphaShiftKeyMask, NSNumericPadKeyMask,
-                            NSHelpKeyMask};
+    unsigned int masks[] = {NSEventModifierFlagShift, NSEventModifierFlagControl,
+        NSEventModifierFlagOption, NSEventModifierFlagCommand,
+        NSEventModifierFlagCapsLock, NSEventModifierFlagNumericPad,
+        NSEventModifierFlagHelp};
     int i;
 
 	_queuedModifiers = newState;
@@ -487,12 +487,12 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
          * state of the shift key to interpret the keysym, but it helps with
          * some servers. */
 		if (!shiftKeyDown && [upper characterIsMember:character]) {
-			event = [QueuedEvent modifierDownEventWithCharacter:NSShiftKeyMask
+            event = [QueuedEvent modifierDownEventWithCharacter:NSEventModifierFlagShift
 													  timestamp:now];
             [self _sendKeyEvent:event];
 			shiftKeyDown = YES;
 		} else if (shiftKeyDown && ![upper characterIsMember:character]) {
-			event = [QueuedEvent modifierUpEventWithCharacter:NSShiftKeyMask
+            event = [QueuedEvent modifierUpEventWithCharacter:NSEventModifierFlagShift
 													timestamp:now];
             [self _sendKeyEvent:event];
 			shiftKeyDown = NO;
@@ -507,7 +507,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	}
 
 	if (shiftKeyDown) {
-		event = [QueuedEvent modifierUpEventWithCharacter:NSShiftKeyMask
+        event = [QueuedEvent modifierUpEventWithCharacter:NSEventModifierFlagShift
 												timestamp:now];
         [self _sendKeyEvent:event];
 	}

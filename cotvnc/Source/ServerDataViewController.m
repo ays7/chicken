@@ -442,7 +442,7 @@
     if ([sender state]) {
         [rememberPwd setEnabled:YES];
     } else {
-        [rememberPwd setState:NSOffState];
+        [rememberPwd setState:NSControlStateValueOff];
         [rememberPwd setEnabled:NO];
     }
 }
@@ -478,7 +478,7 @@
     [connectBtn setTitle: NSLocalizedString(@"Cancel", nil)];
     [connectBtn setAction: @selector(cancelConnect:)];
     [connectBtn setKeyEquivalent:@"."];
-    [connectBtn setKeyEquivalentModifierMask:NSCommandKeyMask];
+    [connectBtn setKeyEquivalentModifierMask:NSEventModifierFlagCommand];
 
     if( [save state] )
     {

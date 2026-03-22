@@ -122,7 +122,7 @@ NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
 	// set our controls' default values
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[mAutoscrollIncrement setFloatValue: [defaults floatForKey: kPrefs_AutoscrollIncrement_Key]];
-    [mFullscreenScrollbars setState: [defaults boolForKey: kPrefs_FullscreenScrollbars_Key] ? NSOnState : NSOffState];
+    [mFullscreenScrollbars setState: [defaults boolForKey: kPrefs_FullscreenScrollbars_Key] ? NSControlStateValueOn : NSControlStateValueOff];
     
 	float updateDelay;
     updateDelay = [defaults floatForKey: kPrefs_FrontFrameBufferUpdateSeconds_Key];

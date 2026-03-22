@@ -235,14 +235,14 @@ static int const kPrefsVersion = 0x00000002;
 
 - (IBAction)toggleFullscreenScrollbars: (NSButton *)sender
 {
-	BOOL value = ([sender state] == NSOnState) ? YES : NO;
+    BOOL value = ([sender state] == NSControlStateValueOn) ? YES : NO;
 	[[NSUserDefaults standardUserDefaults] setBool: value forKey: kPrefs_FullscreenScrollbars_Key];
 }
 
 
 - (IBAction)toggleFullscreenWarning: (NSButton *)sender
 {
-	BOOL value = ([sender state] == NSOnState) ? YES : NO;
+    BOOL value = ([sender state] == NSControlStateValueOn) ? YES : NO;
 	[[NSUserDefaults standardUserDefaults] setBool: value forKey: kPrefs_FullscreenWarning_Key];
 }
 

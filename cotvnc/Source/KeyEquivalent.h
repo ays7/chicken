@@ -7,19 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
 /* Encapsulates key press with modifiers. This is mapped to a menu event by
  * KeyEquivalentScenario. */
 @interface KeyEquivalent : NSObject <NSCopying> {
 	NSString *mCharacters;
-	unsigned int mModifiers;
+    NSEventModifierFlags mModifiers;
 }
 
-- (id)initWithCharacters: (NSString *)characters modifiers: (unsigned int)modifiers;
+- (id)initWithCharacters: (NSString *)characters modifiers: (NSEventModifierFlags)modifiers;
 - (BOOL)isEqualToKeyEquivalent: (KeyEquivalent *)anObject;
 - (NSString *)characters;
-- (unsigned int)modifiers;
+- (NSEventModifierFlags)modifiers;
 - (NSAttributedString *)userString;
 - (NSString *)string;
 
 @end
+

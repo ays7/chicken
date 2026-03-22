@@ -150,10 +150,10 @@ typedef enum {
 - (void)queueMouseDownEventFromEvent: (NSEvent *)theEvent buttonNumber: (unsigned int)button;
 - (void)queueMouseUpEventFromEvent: (NSEvent *)theEvent buttonNumber: (unsigned int)button;
 - (void)queueKeyEventFromEvent: (NSEvent *)theEvent;
-- (void)queueModifiers:(unsigned int)newState
+- (void)queueModifiers:(NSEventModifierFlags)newState
              timestamp:(NSTimeInterval)timestamp;
-- (void)queueModifierPressed: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp;
-- (void)queueModifierReleased: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp;
+- (void)queueModifierPressed: (NSEventModifierFlags)modifier timestamp: (NSTimeInterval)timestamp;
+- (void)queueModifierReleased: (NSEventModifierFlags)modifier timestamp: (NSTimeInterval)timestamp;
 - (void)pasteString: (NSString *)string;
 
 // Event Processing

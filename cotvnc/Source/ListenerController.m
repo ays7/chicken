@@ -132,7 +132,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
         
         int port = [portText intValue];
         Profile* profile = [pm profileNamed: [profilePopup titleOfSelectedItem]];
-        BOOL local = [localOnlyBtn state] == NSOnState;
+        BOOL local = [localOnlyBtn state] == NSControlStateValueOn;
         
         [self startListenerOnPort:port withProfile:profile localOnly:local];
     }
@@ -414,7 +414,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [portText setIntValue:
         [user integerForKey: kPrefs_ListenerPort_Key]];
     [localOnlyBtn setState:
-        [user boolForKey: kPrefs_ListenerLocal_Key] ? NSOnState : NSOffState];
+     [user boolForKey: kPrefs_ListenerLocal_Key] ? NSControlStateValueOn : NSControlStateValueOff];
 
     {
         NSString* profileName = [user stringForKey: kPrefs_ListenerProfile_Key];
@@ -432,7 +432,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     if (![self isWindowLoaded]) return;
     
     [user setInteger:[portText intValue] forKey: kPrefs_ListenerPort_Key];
-    [user setBool:([localOnlyBtn state] == NSOnState) forKey: kPrefs_ListenerLocal_Key];
+    [user setBool:([localOnlyBtn state] == NSControlStateValueOn) forKey: kPrefs_ListenerLocal_Key];
     [user setValue:[profilePopup titleOfSelectedItem] forKey: kPrefs_ListenerProfile_Key];
     [user setBool:[fullscreen state] forKey: kPrefs_ListenerFullscreen_Key];
 }

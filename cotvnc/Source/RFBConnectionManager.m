@@ -512,7 +512,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	}
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSUInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	if( serverList == aTableView )
 	{

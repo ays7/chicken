@@ -35,7 +35,7 @@
 		characters = [characters stringByAppendingString: [theEvent charactersIgnoringModifiers]];
 		modifiers |= [theEvent modifierFlags];
 	}
-	modifiers |= NSCommandKeyMask;
+    modifiers |= NSEventModifierFlagCommand;
 	modifiers &= 0xFFFF0000;
 	mKeyEquivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 	[super interpretKeyEvents: eventArray];
@@ -48,7 +48,7 @@
 {
 	[mKeyEquivalent autorelease];
 	NSString *characters = [theEvent charactersIgnoringModifiers];
-	unsigned int modifiers = [theEvent modifierFlags];
+	NSEventModifierFlags modifiers = [theEvent modifierFlags];
 	modifiers &= 0xFFFF0000;
 	mKeyEquivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 	[[NSNotificationCenter defaultCenter] postNotificationName: NSTextDidChangeNotification object: self];

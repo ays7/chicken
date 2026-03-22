@@ -68,7 +68,7 @@
 			volatile BOOL IReallyWantToLoadThisItem = YES;
 			if ( IReallyWantToLoadThisItem )
 			{
-				unsigned int modifiers = [menuItem keyEquivalentModifierMask];
+                NSEventModifierFlags modifiers = [menuItem keyEquivalentModifierMask];
 				KeyEquivalent *equivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 				KeyEquivalentEntry *entry = [[KeyEquivalentEntry alloc] initWithMenuItem: menuItem];
 				[mEquivalentToEntryMapping setObject: entry forKey: equivalent];
@@ -127,7 +127,7 @@
 	{
 		KeyEquivalentEntry *entry = [mEquivalentToEntryMapping objectForKey: keyEquivalent];
 		NSString *characters = [keyEquivalent characters];
-		NSNumber *modifiers = [NSNumber numberWithUnsignedInt: [keyEquivalent modifiers]];
+		NSNumber *modifiers = [NSNumber numberWithUnsignedLong: [keyEquivalent modifiers]];
 		NSMenuItem *menuItem = [entry menuItem];
 		NSString *title = [menuItem title];
 		NSDictionary *plistEntry = [NSDictionary dictionaryWithObjectsAndKeys:

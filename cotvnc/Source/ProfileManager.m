@@ -143,7 +143,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 - (void)formDidChange:(id)sender
 {
-	int tag, value;
+	NSInteger tag, value;
 	
     Profile* profile = [self _currentProfile];
 	

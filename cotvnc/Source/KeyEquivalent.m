@@ -20,7 +20,7 @@ typedef unsigned int NSUInteger;
 
 @implementation KeyEquivalent
 
-- (id)initWithCharacters: (NSString *)characters modifiers: (unsigned int)modifiers
+- (id)initWithCharacters: (NSString *)characters modifiers: (NSEventModifierFlags)modifiers
 {
 	if ( self = [super init] )
 	{
@@ -55,12 +55,12 @@ typedef unsigned int NSUInteger;
 {  return [[KeyEquivalent allocWithZone: zone] initWithCharacters: mCharacters modifiers: mModifiers];  }
 
 - (NSString *)description
-{  return [NSString stringWithFormat: @"0x%0.8x (%@)", mModifiers, mCharacters];  }
+{  return [NSString stringWithFormat: @"0x%0.8lx (%@)", (unsigned long)mModifiers, mCharacters];  }
 
 - (NSString *)characters
 {  return mCharacters ? mCharacters : @"";  }
 
-- (unsigned int)modifiers
+- (NSEventModifierFlags)modifiers
 {  return mModifiers;  }
 
 
@@ -70,19 +70,19 @@ typedef unsigned int NSUInteger;
 		return [[[NSAttributedString alloc] initWithString: @""] autorelease];
 	NSMutableString *string = [NSMutableString string];
 	NSRange foundRange = [mCharacters rangeOfCharacterFromSet: [NSCharacterSet uppercaseLetterCharacterSet]];
-	if (mModifiers & NSShiftKeyMask || foundRange.location != NSNotFound)
+    if (mModifiers & NSEventModifierFlagShift || foundRange.location != NSNotFound)
 		[string appendString: [NSString stringWithUTF8String: "⇧"]];
-	if (mModifiers & NSControlKeyMask)
+    if (mModifiers & NSEventModifierFlagControl)
 		[string appendString: [NSString stringWithUTF8String: "⌃"]];
-	if (mModifiers & NSAlternateKeyMask)
+    if (mModifiers & NSEventModifierFlagOption)
 		[string appendString: [NSString stringWithUTF8String: "⌥"]];
-	if (mModifiers & NSCommandKeyMask)
+    if (mModifiers & NSEventModifierFlagCommand)
 		[string appendString: [NSString stringWithUTF8String: "⌘"]];
 	
 	NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] initWithString: string] autorelease];
 	
 	NSString *chars = [mCharacters uppercaseString];
-	unsigned i, length = [chars length];
+    NSUInteger i, length = [chars length];
 	for (i = 0; i < length; ++i)
 	{
 		unichar c = [chars characterAtIndex: i];

@@ -75,7 +75,7 @@ const unsigned int gEncodingValues[NUMENCODINGS] = {
 
 
 static NSTimeInterval
-DoubleClickInterval()
+DoubleClickInterval(void)
 {
 	SInt16 ticks = LMGetKeyThresh();
 	return (NSTimeInterval)ticks * 1.0/60.0;
@@ -83,7 +83,7 @@ DoubleClickInterval()
 
 
 static inline unsigned int
-ButtonNumberToArrayIndex( unsigned int buttonNumber )
+ButtonNumberToArrayIndex( NSInteger buttonNumber )
 {
 	NSCParameterAssert( buttonNumber == 2 || buttonNumber == 3 );
 	return buttonNumber - 2;
@@ -96,16 +96,16 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 {
     _buttonEmulationScenario[0] = kNoMouseButtonEmulation;
     _buttonEmulationScenario[1] = kClickWhileHoldingModifierEmulation;
-    _clickWhileHoldingModifier[0] = NSControlKeyMask;
-    _clickWhileHoldingModifier[1] = NSControlKeyMask;
-    _multiTapModifier[0] = NSCommandKeyMask;
-    _multiTapModifier[1] = NSCommandKeyMask;
+    _clickWhileHoldingModifier[0] = NSEventModifierFlagControl;
+    _clickWhileHoldingModifier[1] = NSEventModifierFlagControl;
+    _multiTapModifier[0] = NSEventModifierFlagCommand;
+    _multiTapModifier[1] = NSEventModifierFlagCommand;
     _multiTapDelay[0] = 0.0;
     _multiTapDelay[1] = 0.0;
     _multiTapCount[0] = 2;
     _multiTapCount[1] = 2;
-    _tapAndClickModifier[0] = NSAlternateKeyMask;
-    _tapAndClickModifier[1] = NSShiftKeyMask;
+    _tapAndClickModifier[0] = NSEventModifierFlagOption;
+    _tapAndClickModifier[1] = NSEventModifierFlagShift;
     _tapAndClickButtonSpeed[0] = 0.0;
     _tapAndClickButtonSpeed[1] = 0.0;
     _tapAndClickTimeout[0] = 5.0;
@@ -480,7 +480,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     return controlKeyPreference;
 }
 
-- (int)pixelFormatIndex
+- (NSInteger)pixelFormatIndex
 {
     return pixelFormatIndex;
 }
@@ -623,7 +623,7 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
 	return altKeyPreference == INTERPRET_LOCALLY_PREFERENCE; //_interpretModifiersLocally;
 }
 
-- (int)numEncodings
+- (NSUInteger)numEncodings
 {
     return numEncodings;
 }
@@ -668,13 +668,13 @@ ButtonNumberToArrayIndex( unsigned int buttonNumber )
     controlKeyPreference = pref;
 }
 
-- (void)setPixelFormatIndex:(int)index
+- (void)setPixelFormatIndex:(NSInteger)index
 {
     pixelFormatIndex = index;
 }
 
 - (void)setEmulationScenario:(EventFilterEmulationScenario)scenario
-                   forButton:(unsigned)button;
+                   forButton:(NSInteger)button;
 {
     unsigned    index = ButtonNumberToArrayIndex(button);
     _buttonEmulationScenario[index] = scenario;

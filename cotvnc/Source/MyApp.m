@@ -45,7 +45,7 @@
 		// we only care about keyboard events.  flagsChanged events get passed fine, so we'll 
 		// let them be handled normally.
 		NSEventType eventType = [anEvent type];
-		if ( NSKeyDown == eventType || NSKeyUp == eventType )
+        if ( NSEventTypeKeyDown == eventType || NSEventTypeKeyUp == eventType )
 		{
 			RFBView *rfbView = [keyManager keyRFBView];;
 			NSParameterAssert( rfbView != nil );
@@ -54,7 +54,7 @@
 			
 			// if it's an NSKeyDown, we either treat it as a key equivalent, or pass it to 
 			// our view as a keyDown: event.
-			if ( NSKeyDown == eventType )
+            if ( NSEventTypeKeyDown == eventType )
 			{
 				unsigned int modifiers = [anEvent modifierFlags] & 0xFFFF0000;
 				

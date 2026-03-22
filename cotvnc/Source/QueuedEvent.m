@@ -151,13 +151,13 @@
 {
 	switch (_modifier)
 	{
-		case NSShiftKeyMask:
+        case NSEventModifierFlagShift:
 			return @"NSShiftKeyMask";
-		case NSControlKeyMask:
+        case NSEventModifierFlagControl:
 			return @"NSControlKeyMask";
-		case NSAlternateKeyMask:
+        case NSEventModifierFlagOption:
 			return @"NSAlternateKeyMask";
-		case NSCommandKeyMask:
+        case NSEventModifierFlagCommand:
 			return @"NSCommandKeyMask";
 	}
 	return nil;

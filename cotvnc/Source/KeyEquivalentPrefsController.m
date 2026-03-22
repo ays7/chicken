@@ -252,7 +252,7 @@ static KeyEquivalentPrefsController *sharedController = nil;
 #pragma mark NSOutlineView methods
 
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+- (NSUInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
 	if (item == nil)
 		return [mSelectedScenario count];
 	return [[item objectForKey: @"items"] count];
@@ -288,7 +288,7 @@ static KeyEquivalentPrefsController *sharedController = nil;
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldEditTableColumn:(NSTableColumn *)tableColumn item:(id)item {
 	if ([item objectForKey: @"items"]) {
-		BOOL childrenToo = ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) ? YES : NO;
+        BOOL childrenToo = ([[NSApp currentEvent] modifierFlags] & NSEventModifierFlagOption) ? YES : NO;
 		if ([mOutlineView isItemExpanded: item])
 			[mOutlineView collapseItem: item collapseChildren: childrenToo];
 		else

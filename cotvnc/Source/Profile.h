@@ -69,7 +69,7 @@ struct encoding {
 {
     NSString *name;
     BOOL isDefault;
-    int pixelFormatIndex;
+    NSInteger pixelFormatIndex;
 
     int commandKeyPreference;
     int altKeyPreference;
@@ -82,7 +82,7 @@ struct encoding {
     BOOL enableCopyRect;
     int jpegLevel;
     struct encoding *encodings; // all non-pseudo encodings, even disabled
-    int numEncodings;
+    NSUInteger numEncodings;
 
     // emulation
 	EventFilterEmulationScenario _buttonEmulationScenario[2];
@@ -114,7 +114,7 @@ struct encoding {
 - (int)altKeyPreference;
 - (int)shiftKeyPreference;
 - (int)controlKeyPreference;
-- (int)pixelFormatIndex;
+- (NSInteger)pixelFormatIndex;
 - (CARD16)numEnabledEncodingsIfViewOnly:(BOOL)viewOnly;
 - (CARD32)encodingAtIndex:(unsigned)index;
 - (BOOL)enableCopyRect;
@@ -132,7 +132,7 @@ struct encoding {
 - (NSTimeInterval)tapAndClickButtonSpeedForButton: (unsigned int)button;
 - (NSTimeInterval)tapAndClickTimeoutForButton: (unsigned int)button;
 - (BOOL)interpretModifiersLocally;
-- (int)numEncodings;
+- (NSUInteger)numEncodings;
 - (NSString *)encodingNameAtIndex: (int)index;
 - (BOOL)encodingEnabledAtIndex: (int)index;
 - (NSColor *)tintWhenFront:(BOOL)front;
@@ -141,7 +141,7 @@ struct encoding {
 - (void)setAltKeyPreference:(int)pref;
 - (void)setShiftKeyPreference:(int)pref;
 - (void)setControlKeyPreference:(int)pref;
-- (void)setPixelFormatIndex:(int)index;
+- (void)setPixelFormatIndex:(NSInteger)index;
 - (void)setEmulationScenario:(EventFilterEmulationScenario)scenario
                    forButton:(unsigned)button;
 - (void)setClickWhileHoldingModifier:(unsigned)modifier

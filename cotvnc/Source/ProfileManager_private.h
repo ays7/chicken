@@ -13,7 +13,7 @@
 
 - (Profile *)_currentProfile;
 - (NSString *)_currentProfileName;
-- (void)_selectProfileAtIndex: (int)index;
+- (void)_selectProfileAtIndex: (NSInteger)index;
 - (void)_selectProfileNamed:(NSString*)aProfile;
 - (NSArray*)_sortedProfileNames;
 - (void)_updateBrowserButtons;
