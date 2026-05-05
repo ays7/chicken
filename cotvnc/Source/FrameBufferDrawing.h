@@ -436,6 +436,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
     NSRect r;
     int bpr;
     FBColor* start;
+    const unsigned char *data[5] = {NULL, NULL, NULL, NULL, NULL};
 
 #ifdef DEBUG_DRAW
 printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height, aPoint.x, aPoint.y);
@@ -459,12 +460,19 @@ printf("draw x=%f y=%f w=%f h=%f at x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         r.size.height -= 1;
         yshift = 1;
     }
+    
+    // Validate coordinates before calculating pointer
+    if(r.origin.x < 0 || r.origin.y < 0 || r.size.width <= 0 || r.size.height <= 0) {
+        return;
+    }
+    
     start = pixels + ((int)r.origin.y) * (int)size.width + (int)r.origin.x;
     r.origin.x = floor(aPoint.x);   // Also round the on-screen location to
     r.origin.y = floor(aPoint.y)+yshift;   // align with pixel boundaries
 
     bpr = size.width * sizeof(FBColor);
-    NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) * 8, bpr, NO, NO, NSDeviceRGBColorSpace, (const unsigned char**)&start);
+    data[0] = (const unsigned char*)start;
+    NSDrawBitmap(r, r.size.width, r.size.height, bitsPerColor, samplesPerPixel, sizeof(FBColor) * 8, bpr, NO, NO, NSDeviceRGBColorSpace, data);
 }
 
 /*
