@@ -1,6 +1,0 @@
-/* Localized versions of Info.plist keys */
-
-//CFBundleName = "Chicken";
-//CFBundleShortVersionString = "2.1";
-CFBundleGetInfoString = "Chicken versione 2.2b2, Copyright 2002-2006 Geekspiff, 2010-2011 Chicken developers.";
-NSHumanReadableCopyright = "Copyright 2002-2006 Geekspiff, 2010-2011 Chicken developers.";
