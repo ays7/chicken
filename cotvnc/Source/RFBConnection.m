@@ -355,9 +355,10 @@
     isReceivingUpdate = NO;
     [session frameBufferUpdateComplete];
 
-    // Only resize the session window if server doesn't support SetDesktopSize.
-    // If it does support it, window resizing is driven by user actions.
-    if (!_serverSupportsSetDesktopSize) {
+    // Only resize the session window if server doesn't support SetDesktopSize
+    // or connection is view-only.
+    // Otherwise window resizing is driven by user actions.
+    if (!_serverSupportsSetDesktopSize || [self viewOnly]) {
         [session resize:newSize];
     }
 }

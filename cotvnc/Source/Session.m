@@ -375,7 +375,7 @@ enum {
     horizontalScroll = verticalScroll = NO;
 
     // If server supports SetDesktopSize, allow any window size without scrollbars
-    if (serverSupportsResize && !_isFullscreen) {
+    if (serverSupportsResize && !_isFullscreen && ![self viewOnly]) {
         return aSize;
     }
 
@@ -620,7 +620,7 @@ enum {
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
     // If server supports SetDesktopSize, allow any window size
-    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen) {
+    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen && ![self viewOnly]) {
         
         // allow anything not outrageously small
         if (proposedFrameSize.width < 200)
@@ -639,7 +639,7 @@ enum {
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
-    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen) {
+    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen && ![self viewOnly]) {
         // update the server with the new desktop size
         [connection writeSetDesktopSize:[[window contentView] frame].size];
         return;
