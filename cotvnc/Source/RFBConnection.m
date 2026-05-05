@@ -101,6 +101,9 @@
         isReceivingUpdate = NO;
         bytesReceived = 0;
 
+        lastDesktopSizeSent = NSZeroSize;
+        lastDesktopSizeTime = nil;
+
         int     keepAliveTime = 5 * 60; // 5 minutes
         if (setsockopt([socketHandler fileDescriptor], IPPROTO_TCP,
                     TCP_KEEPALIVE, (char *)&keepAliveTime, sizeof(int)) < 0)
@@ -143,6 +146,7 @@
 	[frameBuffer release];
     [lastMouseMovement release];
     [_lastUpdateRequestDate release];
+    [lastDesktopSizeTime release];
     free(writeBuffer);
 
     [super dealloc];
@@ -232,6 +236,9 @@
 		serverMinorVersion = 7;
 	}
 	
+	// Detect SetDesktopSize support (RFB 3.8+)
+	_serverSupportsSetDesktopSize = (serverMajorVersion > 3 || (serverMajorVersion == 3 && serverMinorVersion >= 8));
+	
     handshaker = [[RFBHandshaker alloc] initWithConnection: self];
 	[handshaker handshake];
 }
@@ -240,6 +247,11 @@
 {
     if (![server_ viewOnly])
         [rfbView setServerCursorTo: aCursor];
+}
+
+- (BOOL)serverSupportsSetDesktopSize
+{
+    return _serverSupportsSetDesktopSize;
 }
 
 - (void)terminateConnection:(NSString *)reason
@@ -343,7 +355,11 @@
     isReceivingUpdate = NO;
     [session frameBufferUpdateComplete];
 
-    [session resize:newSize];
+    // Only resize the session window if server doesn't support SetDesktopSize.
+    // If it does support it, window resizing is driven by user actions.
+    if (!_serverSupportsSetDesktopSize) {
+        [session resize:newSize];
+    }
 }
 
 - (void)readData:(NSNotification*)aNotification
@@ -819,6 +835,51 @@
 	CARD32      len=htonl(strlen(str));
 	[self writeBufferedBytes:(unsigned char *)&len length:4];
 	[self writeBufferedBytes:(unsigned char *)str length:len];
+}
+
+- (void)writeSetDesktopSize:(NSSize)size
+{
+    rfbSetDesktopSizeMsg msg;
+    rfbScreenLayout screen;
+
+    if (!_serverSupportsSetDesktopSize) {
+        return;
+    }
+
+    // Avoid sending duplicate sizes and debounce rapid resize events
+    NSDate *now = [NSDate date];
+    if (NSEqualSizes(size, lastDesktopSizeSent) &&
+        lastDesktopSizeTime != nil &&
+        [now timeIntervalSinceDate:lastDesktopSizeTime] < 0.1) {
+        // Same size as last sent, and sent within last 100ms - skip
+        return;
+    }
+
+    // Build the message header
+    msg.type = rfbSetDesktopSize;
+    msg.pad1 = 0;
+    msg.width = htons((CARD16)size.width);
+    msg.height = htons((CARD16)size.height);
+    msg.numScreens = 1;
+    msg.pad2 = 0;
+
+    // Send message header
+    [self writeBytes:(unsigned char*)&msg length:sz_rfbSetDesktopSizeMsg];
+
+    // Build and send single screen layout
+    screen.id = htonl(0);
+    screen.x = htons(0);
+    screen.y = htons(0);
+    screen.width = htons((CARD16)size.width);
+    screen.height = htons((CARD16)size.height);
+    screen.flags = htonl(0);
+
+    [self writeBytes:(unsigned char*)&screen length:sz_rfbScreenLayout];
+
+    // Update tracking
+    lastDesktopSizeSent = size;
+    [lastDesktopSizeTime release];
+    lastDesktopSizeTime = [[NSDate date] retain];
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification

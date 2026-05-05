@@ -370,8 +370,14 @@ enum {
     NSRect  winframe;
     NSSize	maxviewsize;
     BOOL usesFullscreenScrollers = [[PrefController sharedController] fullscreenHasScrollbars];
+    BOOL serverSupportsResize = [connection serverSupportsSetDesktopSize];
 
     horizontalScroll = verticalScroll = NO;
+
+    // If server supports SetDesktopSize, allow any window size without scrollbars
+    if (serverSupportsResize && !_isFullscreen) {
+        return aSize;
+    }
 
     maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
                                   hasHorizontalScroller:horizontalScroll
@@ -613,6 +619,17 @@ enum {
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
+    // If server supports SetDesktopSize, allow any window size
+    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen) {
+        
+        // allow anything not outrageously small
+        if (proposedFrameSize.width < 200)
+            proposedFrameSize.width = 200;
+        if (proposedFrameSize.height < 200)
+            proposedFrameSize.height = 200;
+        return proposedFrameSize;
+    }
+
     NSSize max = [self _maxSizeForWindowSize:proposedFrameSize];
 
     max.width = (proposedFrameSize.width > max.width) ? max.width : proposedFrameSize.width;
@@ -622,6 +639,12 @@ enum {
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
+    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen) {
+        // update the server with the new desktop size
+        [connection writeSetDesktopSize:[[window contentView] frame].size];
+        return;
+    }
+
 	[scrollView setHasHorizontalScroller:horizontalScroll];
 	[scrollView setHasVerticalScroller:verticalScroll];
 	if (_isFullscreen) {

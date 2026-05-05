@@ -775,6 +775,36 @@ typedef struct {
 #define sz_rfbClientCutTextMsg 8
 
 
+/*-----------------------------------------------------------------------------
+ * SetDesktopSize - request to resize the remote desktop.
+ * This is a client->server message supported in RFB protocol 3.8+.
+ */
+
+typedef struct {
+    CARD32 id;
+    CARD16 x;
+    CARD16 y;
+    CARD16 width;
+    CARD16 height;
+    CARD32 flags;
+} rfbScreenLayout;
+
+#define sz_rfbScreenLayout 16
+
+typedef struct {
+    CARD8 type;			/* always rfbSetDesktopSize */
+    CARD8 pad1;
+    CARD16 width;
+    CARD16 height;
+    CARD8 numScreens;
+    CARD8 pad2;
+    /* followed by numScreens * rfbScreenLayout */
+} rfbSetDesktopSizeMsg;
+
+#define sz_rfbSetDesktopSizeMsg 8
+
+#define rfbSetDesktopSize 251
+
 
 /*-----------------------------------------------------------------------------
  * Union of all client->server messages.

@@ -80,6 +80,9 @@
 	
 	int serverMajorVersion;
 	int serverMinorVersion;
+	BOOL _serverSupportsSetDesktopSize;
+	NSSize lastDesktopSizeSent;	// Track last size sent to server
+	NSDate *lastDesktopSizeTime;	// Track when last size was sent (for debouncing)
 
     unsigned char   *writeBuffer;
     int             bufferLen;
@@ -103,6 +106,7 @@
 - (void)sendPasteboardToServer:(NSPasteboard *)pb;
 - (void)setServerVersion:(NSData*)aVersion;
 - (void)setCursor: (NSCursor *)aCursor;
+- (BOOL)serverSupportsSetDesktopSize;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
 - (void)promptForPassword;
@@ -129,6 +133,7 @@
 - (void)writeBufferedBytes:(unsigned char*)bytes length:(unsigned int)length;
 - (void)writeRFBString:(NSString *)aString;
 - (void)writeBuffer;
+- (void)writeSetDesktopSize:(NSSize)size;
 
 - (Profile*)profile;
 - (int) protocolMajorVersion;
