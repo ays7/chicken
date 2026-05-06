@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24412" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24412"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,12 +22,6 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="makeKeyAndOrderFront:" target="232" id="628"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Check for Updates" id="1511">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="checkForUpdates:" target="1509" id="1512"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="981">
@@ -303,7 +297,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="358" y="593" width="565" height="196"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1410"/>
             <value key="minSize" type="size" width="246.94399999999999" height="6"/>
             <view key="contentView" id="231">
                 <rect key="frame" x="0.0" y="0.0" width="565" height="196"/>
@@ -401,7 +395,6 @@ source code and support available at http://chicken.sourceforge.net/</string>
                 <outlet property="mRendezvousMenuItem" destination="1361" id="1375"/>
             </connections>
         </customObject>
-        <customObject id="1509" customClass="SUUpdater"/>
         <view id="910">
             <rect key="frame" x="0.0" y="0.0" width="435" height="1"/>
             <autoresizingMask key="autoresizingMask"/>
