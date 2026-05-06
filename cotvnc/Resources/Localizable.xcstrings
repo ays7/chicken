@@ -288,25 +288,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bytes Received: %@\\nBytes Represented: %@\\nCompression: %.2f\\nRectangles: %u\\nEncodings:%@"
+            "value" : "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u\nEncodings:%@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bytes Received: %@\\nBytes Represented: %@\\nCompression: %.2f\\nRectangles: %u\\nEncodings:%@"
+            "value" : "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u\nEncodings:%@"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bytes Received: %@\\nBytes Represented: %@\\nCompression: %.2f\\nRectangles: %u\\nEncodings:%@"
+            "value" : "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u\nEncodings:%@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bytes Received: %@\\nBytes Represented: %@\\nCompression: %.2f\\nRectangles: %u\\nEncodings:%@"
+            "value" : "Bytes Received: %@\nBytes Represented: %@\nCompression: %.2f\nRectangles: %u\nEncodings:%@"
           }
         }
       }
@@ -1563,25 +1563,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VNC Protocol Version: %d.%d\\nVNC Screensize: %dx%d\\nProtocol Parameters\\n\\tBits Per Pixel: %d\\n\\tDepth: %d\\n\\tByteorder: %@\\n\\tTruecolor: %@\\n\\tMaxValues (r/g/b): %d/%d/%d\\n\\tShift (r/g/b): %d/%d/%d"
+            "value" : "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VNC Protocol Version: %d.%d\\nVNC Screensize: %dx%d\\nProtocol Parameters\\n\\tBits Per Pixel: %d\\n\\tDepth: %d\\n\\tByteorder: %@\\n\\tTruecolor: %@\\n\\tMaxValues (r/g/b): %d/%d/%d\\n\\tShift (r/g/b): %d/%d/%d"
+            "value" : "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VNC Protocol Version: %d.%d\\nVNC Screensize: %dx%d\\nProtocol Parameters\\n\\tBits Per Pixel: %d\\n\\tDepth: %d\\n\\tByteorder: %@\\n\\tTruecolor: %@\\n\\tMaxValues (r/g/b): %d/%d/%d\\n\\tShift (r/g/b): %d/%d/%d"
+            "value" : "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VNC Protocol Version: %d.%d\\nVNC Screensize: %dx%d\\nProtocol Parameters\\n\\tBits Per Pixel: %d\\n\\tDepth: %d\\n\\tByteorder: %@\\n\\tTruecolor: %@\\n\\tMaxValues (r/g/b): %d/%d/%d\\n\\tShift (r/g/b): %d/%d/%d"
+            "value" : "VNC Protocol Version: %d.%d\nVNC Screensize: %dx%d\nProtocol Parameters\n\tBits Per Pixel: %d\n\tDepth: %d\n\tByteorder: %@\n\tTruecolor: %@\n\tMaxValues (r/g/b): %d/%d/%d\n\tShift (r/g/b): %d/%d/%d"
           }
         }
       }
@@ -1848,25 +1848,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inflate error\\n"
+            "value" : "Inflate error\n"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inflate error\\n"
+            "value" : "Inflate error\n"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inflate error\\n"
+            "value" : "Inflate error\n"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inflate error\\n"
+            "value" : "Inflate error\n"
           }
         }
       }
@@ -1883,25 +1883,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error\\n"
+            "value" : "InflateInit error\n"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error\\n"
+            "value" : "InflateInit error\n"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error\\n"
+            "value" : "InflateInit error\n"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error\\n"
+            "value" : "InflateInit error\n"
           }
         }
       }
@@ -1912,25 +1912,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error: %s.\\n"
+            "value" : "InflateInit error: %s.\n"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error: %s.\\n"
+            "value" : "InflateInit error: %s.\n"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error: %s.\\n"
+            "value" : "InflateInit error: %s.\n"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InflateInit error: %s.\\n"
+            "value" : "InflateInit error: %s.\n"
           }
         }
       }
@@ -2480,25 +2480,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zlib encoding: inflateInit: %s.\\n"
+            "value" : "Zlib encoding: inflateInit: %s.\n"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zlib encoding: inflateInit: %s.\\n"
+            "value" : "Zlib encoding: inflateInit: %s.\n"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zlib encoding: inflateInit: %s.\\n"
+            "value" : "Zlib encoding: inflateInit: %s.\n"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zlib encoding: inflateInit: %s.\\n"
+            "value" : "Zlib encoding: inflateInit: %s.\n"
           }
         }
       }
