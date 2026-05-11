@@ -674,6 +674,10 @@ enum {
     
     // sync server clipboard automatically
     [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
+    
+    // sometimes when switching workspaces content gets grabled for some reason
+    // see if content syncing helps....
+    [self requestFrameBufferUpdate:nil];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
