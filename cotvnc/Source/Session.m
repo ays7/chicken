@@ -107,6 +107,11 @@ enum {
                                                  name:ProfileTintChangedMsg
                                                object:[connection profile]];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(windowDidChangeOcclusionState:)
+                                                 name:NSWindowDidChangeOcclusionStateNotification
+                                               object:nil];
+
     return self;
 }
 
@@ -592,20 +597,31 @@ enum {
 
 /* Window delegate methods */
 
-- (void)windowDidDeminiaturize:(NSNotification *)aNotification
+- (void)windowDidChangeOcclusionState:(NSNotification *)aNotification
 {
-    float s = [[PrefController sharedController] frontFrameBufferUpdateSeconds];
+    BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;
+    BOOL isKey = [window isKeyWindow];
+    
+    if (isVisible) {
+        // Window is visible, use appropriate update speed based on key state
+        float s = isKey ? [[PrefController sharedController] frontFrameBufferUpdateSeconds]
+                        : [[PrefController sharedController] otherFrameBufferUpdateSeconds];
+        [connection setFrameBufferUpdateSeconds:s];
+        
+        if (isKey) {
+            [connection installMouseMovedTrackingRect];
+        }
 
-    [connection setFrameBufferUpdateSeconds:s];
-	[connection installMouseMovedTrackingRect];
-}
-
-- (void)windowDidMiniaturize:(NSNotification *)aNotification
-{
-    float s = [[PrefController sharedController] maxPossibleFrameBufferUpdateSeconds];
-
-    [connection setFrameBufferUpdateSeconds:s];
-	[connection removeMouseMovedTrackingRect];
+        // sometimes when switching workspaces content gets grabled for some reason
+        // see if content syncing helps....
+        // Incremental update apparently doesn't work as expected, so we'll force an update
+        [connection forceFrameBufferUpdate];
+    } else {
+        // Window is occluded/hidden, use maximum update interval to reduce CPU
+        float s = [[PrefController sharedController] maxPossibleFrameBufferUpdateSeconds];
+        [connection setFrameBufferUpdateSeconds:s];
+        [connection removeMouseMovedTrackingRect];
+    }
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
@@ -668,23 +684,30 @@ enum {
             return;
         }
     }
-	[connection installMouseMovedTrackingRect];
-	[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
+    
+    // Only install mouse tracking and update frame rate if window is actually visible
+    BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;
+    if (isVisible) {
+        [connection installMouseMovedTrackingRect];
+        [connection setFrameBufferUpdateSeconds: [[PrefController sharedController] frontFrameBufferUpdateSeconds]];
+    }
+    
     [rfbView setTint:[[connection profile] tintWhenFront:YES]];
     
     // sync server clipboard automatically
     [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
-    
-    // sometimes when switching workspaces content gets grabled for some reason
-    // see if content syncing helps....
-    // Incremental update apparently doesn't work as expected, so we'll force an update
-    [connection forceFrameBufferUpdate];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
 	[connection removeMouseMovedTrackingRect];
-	[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
+	
+	// Only update frame rate if window is actually visible
+	BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;
+	if (isVisible) {
+		[connection setFrameBufferUpdateSeconds: [[PrefController sharedController] otherFrameBufferUpdateSeconds]];
+	}
+	
     [rfbView setTint:[[connection profile] tintWhenFront:NO]];
 	
 	//Reset keyboard state on remote end
