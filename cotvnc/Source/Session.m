@@ -677,7 +677,8 @@ enum {
     
     // sometimes when switching workspaces content gets grabled for some reason
     // see if content syncing helps....
-    [self requestFrameBufferUpdate:nil];
+    // Incremental update apparently doesn't work as expected, so we'll force an update
+    [connection forceFrameBufferUpdate];
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification

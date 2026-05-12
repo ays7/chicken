@@ -450,6 +450,11 @@
     [self requestUpdate:[rfbView bounds] incremental:YES];
 }
 
+// Force an immediate frame buffer update
+- (void)forceFrameBufferUpdate {
+    [self requestUpdate:[rfbView bounds] incremental:NO];
+}
+
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag
 {
     rfbFramebufferUpdateRequestMsg	msg;

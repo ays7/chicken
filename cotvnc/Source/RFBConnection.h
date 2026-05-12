@@ -119,6 +119,7 @@
 - (void)frameBufferUpdateComplete;
 - (void)frameBufferUpdateCompleteWithResize:(NSSize)newSize;
 - (void)queueUpdateRequest;
+- (void) forceFrameBufferUpdate;
 - (IBAction)requestFrameBufferUpdate:(id)sender;
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
 - (void)serverMovedMouseTo:(NSPoint)pos;
