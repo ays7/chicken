@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -293,26 +293,26 @@
             </items>
             <point key="canvasLocation" x="140" y="189"/>
         </menu>
-        <window title="About Chicken of the VNC" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="about" animationBehavior="default" id="232" userLabel="Info" customClass="NSPanel">
+        <window title="About Fork of the Chicken of the VNC" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="about" animationBehavior="default" id="232" userLabel="Info" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="358" y="593" width="565" height="196"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="246.94399999999999" height="6"/>
             <view key="contentView" id="231">
                 <rect key="frame" x="0.0" y="0.0" width="565" height="196"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="261" translatesAutoresizingMaskIntoConstraints="NO" id="225">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="261" translatesAutoresizingMaskIntoConstraints="NO" id="225">
                         <rect key="frame" x="124" y="137" width="265" height="39"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" alignment="left" title="Chicken" id="1481">
+                        <textFieldCell key="cell" alignment="left" title="FotCotVNC" id="1481">
                             <font key="font" size="28" name="Helvetica-Bold"/>
                             <color key="textColor" red="0.70980399999999999" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="150" translatesAutoresizingMaskIntoConstraints="NO" id="228">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="150" translatesAutoresizingMaskIntoConstraints="NO" id="228">
                         <rect key="frame" x="59" y="13" width="154" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" alignment="left" title="?" id="1483">
@@ -321,7 +321,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="267" translatesAutoresizingMaskIntoConstraints="NO" id="229">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="267" translatesAutoresizingMaskIntoConstraints="NO" id="229">
                         <rect key="frame" x="126" y="99" width="271" height="30"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" selectable="YES" alignment="left" id="1484">
@@ -332,13 +332,14 @@ based on VNCViewer by Helmut Maierhofer</string>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="199" translatesAutoresizingMaskIntoConstraints="NO" id="230">
-                        <rect key="frame" x="342" y="20" width="203" height="26"/>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="199" translatesAutoresizingMaskIntoConstraints="NO" id="230">
+                        <rect key="frame" x="342" y="8" width="203" height="38"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" selectable="YES" alignment="right" id="1485">
                             <font key="font" size="10" name="Helvetica"/>
                             <string key="title">Copyright 1998-2000 by Helmut Maierhofer
-Copyright 2002-2006 by Jason Harris</string>
+Copyright 2002-2006 by Jason Harris
+Copyright 2022-2026 by ays7</string>
                             <color key="textColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -352,18 +353,18 @@ Copyright 2002-2006 by Jason Harris</string>
                         <rect key="frame" x="12" y="52" width="541" height="5"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </box>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="330" translatesAutoresizingMaskIntoConstraints="NO" id="911">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="330" translatesAutoresizingMaskIntoConstraints="NO" id="911">
                         <rect key="frame" x="125" y="63" width="334" height="28"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" selectable="YES" alignment="left" id="1486">
                             <font key="font" size="10" name="Helvetica"/>
                             <string key="title">released under the GNU Public License
-source code and support available at http://chicken.sourceforge.net/</string>
+source code available at https://github.com/ays7/chicken</string>
                             <color key="textColor" red="0.117647" green="0.19215699999999999" blue="0.45882401" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="35" translatesAutoresizingMaskIntoConstraints="NO" id="1366">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="35" translatesAutoresizingMaskIntoConstraints="NO" id="1366">
                         <rect key="frame" x="20" y="20" width="39" height="10"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" alignment="left" title="Version" id="1487">
@@ -372,7 +373,7 @@ source code and support available at http://chicken.sourceforge.net/</string>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="165" translatesAutoresizingMaskIntoConstraints="NO" id="1479">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="165" translatesAutoresizingMaskIntoConstraints="NO" id="1479">
                         <rect key="frame" x="376" y="99" width="169" height="30"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" selectable="YES" alignment="right" id="1488">
@@ -398,6 +399,7 @@ source code and support available at http://chicken.sourceforge.net/</string>
         <view id="910">
             <rect key="frame" x="0.0" y="0.0" width="435" height="1"/>
             <autoresizingMask key="autoresizingMask"/>
+            <point key="canvasLocation" x="142" y="-17"/>
         </view>
     </objects>
     <resources>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment version="1020" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,19 +18,19 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="VNC Listen" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="vnc_listen" animationBehavior="default" id="6" userLabel="Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="488" y="645" width="303" height="156"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="303" height="129"/>
             <value key="maxSize" type="size" width="304" height="350"/>
             <view key="contentView" id="5">
                 <rect key="frame" x="0.0" y="0.0" width="303" height="156"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
                         <rect key="frame" x="76" y="115" width="60" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="0" drawsBackground="YES" id="31">
@@ -69,7 +69,7 @@
                             <action selector="valueChanged:" target="-2" id="29"/>
                         </connections>
                     </popUpButton>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="50" translatesAutoresizingMaskIntoConstraints="NO" id="13">
                         <rect key="frame" x="17" y="90" width="54" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" alignment="center" title="Profile:" id="33">
@@ -78,7 +78,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="34" translatesAutoresizingMaskIntoConstraints="NO" id="14">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="34" translatesAutoresizingMaskIntoConstraints="NO" id="14">
                         <rect key="frame" x="33" y="117" width="38" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" alignment="center" title="Port:" id="34">
@@ -112,7 +112,7 @@ DQ
                             <action selector="actionPressed:" target="-2" id="26"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="177" translatesAutoresizingMaskIntoConstraints="NO" id="19">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="177" translatesAutoresizingMaskIntoConstraints="NO" id="19">
                         <rect key="frame" x="15" y="20" width="181" height="19"/>
                         <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Connecting..." id="37">

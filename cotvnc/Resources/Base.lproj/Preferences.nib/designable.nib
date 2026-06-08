@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment version="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,7 +17,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="64" userLabel="KeyEquivalentPrefsController" customClass="KeyEquivalentPrefsController">
             <connections>
                 <outlet property="mConnectionType" destination="95" id="116"/>
@@ -28,7 +28,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="372" y="384" width="536" height="300"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="76">
                 <rect key="frame" x="0.0" y="0.0" width="536" height="300"/>
@@ -54,7 +54,7 @@
                                                 <action selector="frontInverseCPUSliderChanged:" target="-2" id="126"/>
                                             </connections>
                                         </slider>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="81" translatesAutoresizingMaskIntoConstraints="NO" id="93">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="81" translatesAutoresizingMaskIntoConstraints="NO" id="93">
                                             <rect key="frame" x="200" y="191" width="85" height="26"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="139">
@@ -65,7 +65,7 @@ as possible</string>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="110" translatesAutoresizingMaskIntoConstraints="NO" id="84">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="110" translatesAutoresizingMaskIntoConstraints="NO" id="84">
                                             <rect key="frame" x="185" y="98" width="114" height="13"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Only update manually" id="137">
@@ -84,7 +84,7 @@ as possible</string>
                                                 <action selector="otherInverseCPUSliderChanged:" target="-2" id="127"/>
                                             </connections>
                                         </slider>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="76" translatesAutoresizingMaskIntoConstraints="NO" id="104">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="76" translatesAutoresizingMaskIntoConstraints="NO" id="104">
                                             <rect key="frame" x="69" y="141" width="80" height="34"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="141">
@@ -95,7 +95,7 @@ Connection</string>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="83" translatesAutoresizingMaskIntoConstraints="NO" id="92">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="83" translatesAutoresizingMaskIntoConstraints="NO" id="92">
                                             <rect key="frame" x="335" y="140" width="87" height="34"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="138">
@@ -106,7 +106,7 @@ Connections</string>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="405" translatesAutoresizingMaskIntoConstraints="NO" id="82">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="405" translatesAutoresizingMaskIntoConstraints="NO" id="82">
                                             <rect key="frame" x="44" y="20" width="409" height="57"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="136">
@@ -143,7 +143,7 @@ Connections</string>
                                                     <rect key="frame" x="0.0" y="0.0" width="122" height="36"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="20" translatesAutoresizingMaskIntoConstraints="NO" id="103">
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="20" translatesAutoresizingMaskIntoConstraints="NO" id="103">
                                                             <rect key="frame" x="98" y="0.0" width="24" height="13"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Fast" id="133">
@@ -152,7 +152,7 @@ Connections</string>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                         </textField>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="23" translatesAutoresizingMaskIntoConstraints="NO" id="91">
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="23" translatesAutoresizingMaskIntoConstraints="NO" id="91">
                                                             <rect key="frame" x="0.0" y="0.0" width="27" height="13"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Slow" id="131">
@@ -173,7 +173,7 @@ Connections</string>
                                                         </slider>
                                                     </subviews>
                                                 </customView>
-                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="110" translatesAutoresizingMaskIntoConstraints="NO" id="101">
+                                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="110" translatesAutoresizingMaskIntoConstraints="NO" id="101">
                                                     <rect key="frame" x="4" y="41" width="114" height="17"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Autoscroll Speed" id="130">
@@ -207,12 +207,12 @@ Connections</string>
                                             <rect key="frame" x="20" y="41" width="450" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <clipView key="contentView" id="mTu-wC-7Jo">
-                                                <rect key="frame" x="1" y="29" width="433" height="115"/>
+                                                <rect key="frame" x="1" y="1" width="431" height="143"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" headerView="150" indentationPerLevel="13" autoresizesOutlineColumn="YES" outlineTableColumn="94" id="99">
                                                         <rect key="frame" x="0.0" y="0.0" width="442" height="115"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -252,7 +252,7 @@ Connections</string>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="148">
-                                                <rect key="frame" x="434" y="29" width="15" height="115"/>
+                                                <rect key="frame" x="432" y="29" width="17" height="115"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <tableHeaderView key="headerView" id="150">
@@ -265,7 +265,7 @@ Connections</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <popUpButtonCell key="cell" type="push" title="Non-Connection Window" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="105" id="143">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" title="OtherViews" id="109">
                                                     <items>
                                                         <menuItem title="Non-Connection Window" state="on" tag="2" id="105"/>
@@ -278,7 +278,7 @@ Connections</string>
                                                 <action selector="changeSelectedScenario:" target="64" id="118"/>
                                             </connections>
                                         </popUpButton>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="229" translatesAutoresizingMaskIntoConstraints="NO" id="102">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="229" translatesAutoresizingMaskIntoConstraints="NO" id="102">
                                             <rect key="frame" x="17" y="208" width="233" height="17"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Keyboard equivalents for:" id="144">
@@ -298,7 +298,7 @@ Connections</string>
                                                 <action selector="restoreDefaults:" target="64" id="119"/>
                                             </connections>
                                         </button>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="216" translatesAutoresizingMaskIntoConstraints="NO" id="81">
+                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="216" translatesAutoresizingMaskIntoConstraints="NO" id="81">
                                             <rect key="frame" x="17" y="17" width="220" height="13"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Enter a space to clear a key equivalent" id="142">

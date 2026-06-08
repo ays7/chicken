@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24765" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment version="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24765"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -27,12 +27,12 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="RFBConnection" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" deferred="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="MainWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
             <rect key="contentRect" x="2" y="422" width="454" height="385"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="176.357" height="5"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
@@ -73,13 +73,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="463" y="599" width="354" height="101"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="133.06100000000001" height="5"/>
             <view key="contentView" id="16">
                 <rect key="frame" x="0.0" y="0.0" width="354" height="101"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="67" translatesAutoresizingMaskIntoConstraints="NO" id="17">
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="67" translatesAutoresizingMaskIntoConstraints="NO" id="17">
                         <rect key="frame" x="17" y="62" width="71" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" alignment="center" title="New Title:" id="69">
@@ -88,7 +88,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
                         <rect key="frame" x="93" y="60" width="241" height="21"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="70">
@@ -132,7 +132,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="496" y="385" width="288" height="304"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="185.791" height="5"/>
             <view key="contentView" id="30">
                 <rect key="frame" x="0.0" y="0.0" width="288" height="304"/>
@@ -142,10 +142,10 @@ DQ
                         <rect key="frame" x="17" y="132" width="254" height="165"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="A60-hR-yXH">
-                            <rect key="frame" x="4" y="5" width="246" height="145"/>
+                            <rect key="frame" x="0.0" y="0.0" width="254" height="153"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="236" translatesAutoresizingMaskIntoConstraints="NO" id="31">
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="236" translatesAutoresizingMaskIntoConstraints="NO" id="31">
                                     <rect key="frame" x="5" y="5" width="240" height="135"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <textFieldCell key="cell" alignment="left" id="73">
@@ -172,10 +172,10 @@ Protocol Parameters
                         <rect key="frame" x="17" y="16" width="254" height="112"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="TqT-zY-7z5">
-                            <rect key="frame" x="4" y="5" width="246" height="92"/>
+                            <rect key="frame" x="0.0" y="0.0" width="254" height="100"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="227" translatesAutoresizingMaskIntoConstraints="NO" id="52">
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="227" translatesAutoresizingMaskIntoConstraints="NO" id="52">
                                     <rect key="frame" x="5" y="7" width="231" height="82"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <textFieldCell key="cell" alignment="left" id="74">
@@ -199,12 +199,12 @@ Rectangles: 89</string>
             <windowStyleMask key="styleMask" titled="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="230" y="348" width="410" height="193"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <view key="contentView" id="89">
                 <rect key="frame" x="0.0" y="0.0" width="410" height="193"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92">
                         <rect key="frame" x="17" y="91" width="156" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Enter password to retry:" id="93">
@@ -241,7 +241,7 @@ Gw
                             <action selector="dontReconnect:" target="-2" id="104"/>
                         </connections>
                     </button>
-                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="105">
+                    <secureTextField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="105">
                         <rect key="frame" x="185" y="86" width="205" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="106">
@@ -253,7 +253,7 @@ Gw
                             </allowedInputSourceLocales>
                         </secureTextFieldCell>
                     </secureTextField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="108">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="108">
                         <rect key="frame" x="19" y="126" width="318" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" id="109">
@@ -262,7 +262,7 @@ Gw
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="111">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="111">
                         <rect key="frame" x="17" y="156" width="376" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Authentication Failed" id="112">
@@ -570,7 +570,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="230" y="422" width="407" height="119"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3440" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <view key="contentView" id="116">
                 <rect key="frame" x="0.0" y="0.0" width="407" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -588,7 +588,7 @@ Gw
                             <action selector="reconnectCancelled:" target="-2" id="133"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="119">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="119">
                         <rect key="frame" x="100" y="82" width="238" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Reconnecting..." id="126">
@@ -881,11 +881,11 @@ Gw
                             </allowedInputSourceLocales>
                         </textFieldCell>
                     </textField>
-                    <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="131">
+                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="131">
                         <rect key="frame" x="371" y="83" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="144">
+                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="144">
                         <rect key="frame" x="100" y="57" width="290" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="145">

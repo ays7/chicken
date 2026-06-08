@@ -150,7 +150,6 @@
 		DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */; };
 		DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */; };
 		DAEB76F21232AE3500002E6A /* Keymap.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEB76F11232AE3400002E6A /* Keymap.m */; };
-		DAFB492212944331008C6FC4 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = DAFB492112944331008C6FC4 /* dsa_pub.pem */; };
 		E21FE449062B79AB0059585C /* KeyEquivalentScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */; };
 		E21FE44A062B79AB0059585C /* KeyEquivalentEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */; };
 		E21FE44B062B79AB0059585C /* KeyEquivalent.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43F062B79AB0059585C /* KeyEquivalent.m */; };
@@ -262,7 +261,6 @@
 		DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshTunnel.h; sourceTree = "<group>"; };
 		DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SshTunnel.m; sourceTree = "<group>"; };
 		DAEB76F11232AE3400002E6A /* Keymap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keymap.m; sourceTree = "<group>"; };
-		DAFB492112944331008C6FC4 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
 		E21FE256062B6C8D0059585C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyEquivalentScenario.m; sourceTree = "<group>"; };
 		E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyEquivalentEntry.h; sourceTree = "<group>"; };
@@ -441,7 +439,6 @@
 			isa = PBXGroup;
 			children = (
 				DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */,
-				DAFB492112944331008C6FC4 /* dsa_pub.pem */,
 				E291FAD4088161DA0061216E /* cursors.plist */,
 				E2CA650906DA451500B70BDF /* help */,
 				F5DC7177033DB40D01A8010C /* icon.icns */,
@@ -874,7 +871,6 @@
 				7FB3EA8D0804ECDB003757C9 /* CotVNC.scriptTerminology in Resources */,
 				7FB3EA8E0804ECE0003757C9 /* CotVNC.scriptSuite in Resources */,
 				E291FAD5088161DA0061216E /* cursors.plist in Resources */,
-				DAFB492212944331008C6FC4 /* dsa_pub.pem in Resources */,
 				DAD6DEEA12DCF4A3001FD9D6 /* AuthPrompt.nib in Resources */,
 				DAC8077E12FEC38400C4ADB6 /* ssh-helper.sh in Resources */,
 			);
@@ -1074,7 +1070,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1112,7 +1108,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1148,7 +1144,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1202,12 +1198,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
+				_CHICKEN_VERSION_ = 2026.6;
 			};
 			name = Development;
 		};
@@ -1246,11 +1242,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
+				_CHICKEN_VERSION_ = 2026.6;
 			};
 			name = Deployment;
 		};
@@ -1290,11 +1286,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
+				_CHICKEN_VERSION_ = 2026.6;
 			};
 			name = Default;
 		};
@@ -1318,7 +1314,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
@@ -1371,12 +1367,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = "2.2b3-ays7-0.17";
+				_CHICKEN_VERSION_ = 2026.6;
 			};
 			name = "Universal Fast Development";
 		};
