@@ -300,7 +300,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 {
     int     i;
     CARD32  pseudoEncodings[] = {rfbEncodingDesktopName, rfbEncodingLastRect,
-        rfbEncodingDesktopSize,
+        rfbEncodingDesktopSize, rfbEncodingExtendedClipboard,
         // The last NUM_INTERACTIVE_PSEUDOS are not used for view-only
         // connections.
         rfbEncodingPointerPos, rfbEncodingRichCursor};

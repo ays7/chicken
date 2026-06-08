@@ -87,6 +87,9 @@
     unsigned char   *writeBuffer;
     int             bufferLen;
     int             lastBufferedIsMouseMovement;
+    
+    BOOL            serverSupportsExtendedClipboard;
+    uint32_t        serverClipboardFlags;
 }
 
 - (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server;
@@ -149,6 +152,15 @@
 - (void)viewFrameDidChange:(NSNotification *)aNotification;
 - (NSString *)statisticsString;
 - (NSString *)infoString;
+
+- (BOOL)serverSupportsExtendedClipboard;
+- (void)setServerSupportsExtendedClipboard:(BOOL)flag;
+- (uint32_t)serverClipboardFlags;
+- (void)setServerClipboardFlags:(uint32_t)flags;
+- (void)sendClipboardCaps;
+- (void)sendClipboardRequest;
+- (void)sendClipboardNotify:(BOOL)available;
+- (void)sendClipboardProvide:(NSString *)str;
 
 - (void)installMouseMovedTrackingRect;
 - (void)removeMouseMovedTrackingRect;

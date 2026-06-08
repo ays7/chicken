@@ -322,6 +322,7 @@ typedef struct {
 #define rfbEncodingXvp                  0xFFFFFECB
 #define rfbEncodingExtendedDesktopSize  0xFFFFFECC
 #define rfbEncodingDesktopName          0xFFFFFECD
+#define rfbEncodingExtendedClipboard    0xC0A1E5CE
 #define rfbEncodingGii                  0xFFFFFECF
 
 /*

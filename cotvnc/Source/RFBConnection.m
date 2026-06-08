@@ -17,6 +17,7 @@
  */
 
 #import "RFBConnection.h"
+#import <zlib.h>
 #import "AppDelegate.h"
 #import "ByteBlockReader.h"
 #import "ConnectionWaiter.h"
@@ -90,6 +91,9 @@
         socketHandler = [file retain];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
         [socketHandler waitForDataInBackgroundAndNotify];
+
+        serverSupportsExtendedClipboard = NO;
+        serverClipboardFlags = 0;
 
         lastMouseX = -1;
         lastMouseY = -1;
@@ -707,9 +711,162 @@
     return YES;
 }
 
+static NSData *compressZlib(NSData *uncompressedData) {
+    if ([uncompressedData length] == 0) return uncompressedData;
+    
+    z_stream strm;
+    memset(&strm, 0, sizeof(strm));
+    strm.next_in = (Bytef *)[uncompressedData bytes];
+    strm.avail_in = (uInt)[uncompressedData length];
+    
+    if (deflateInit(&strm, Z_DEFAULT_COMPRESSION) != Z_OK) {
+        return nil;
+    }
+    
+    NSMutableData *compressed = [NSMutableData data];
+    unsigned char buffer[4096];
+    int status;
+    
+    do {
+        strm.next_out = buffer;
+        strm.avail_out = sizeof(buffer);
+        status = deflate(&strm, Z_SYNC_FLUSH);
+        if (status < 0) {
+            deflateEnd(&strm);
+            return nil;
+        }
+        [compressed appendBytes:buffer length:(sizeof(buffer) - strm.avail_out)];
+    } while (strm.avail_out == 0);
+    
+    deflateEnd(&strm);
+    return compressed;
+}
+
+- (BOOL)serverSupportsExtendedClipboard
+{
+    return serverSupportsExtendedClipboard;
+}
+
+- (void)setServerSupportsExtendedClipboard:(BOOL)flag
+{
+    serverSupportsExtendedClipboard = flag;
+}
+
+- (uint32_t)serverClipboardFlags
+{
+    return serverClipboardFlags;
+}
+
+- (void)setServerClipboardFlags:(uint32_t)flags
+{
+    serverClipboardFlags = flags;
+}
+
+- (void)sendClipboardCaps
+{
+    unsigned char buf[16];
+    buf[0] = rfbClientCutText;
+    buf[1] = 0;
+    buf[2] = 0;
+    buf[3] = 0;
+    
+    int32_t lenVal = htonl(-8);
+    memcpy(buf + 4, &lenVal, 4);
+    
+    uint32_t flagsVal = htonl(0x1B000001);
+    memcpy(buf + 8, &flagsVal, 4);
+    
+    uint32_t sizeVal = htonl(0);
+    memcpy(buf + 12, &sizeVal, 4);
+    
+    [self writeBytes:buf length:16];
+}
+
+- (void)sendClipboardRequest
+{
+    unsigned char buf[12];
+    buf[0] = rfbClientCutText;
+    buf[1] = 0;
+    buf[2] = 0;
+    buf[3] = 0;
+    
+    int32_t lenVal = htonl(-4);
+    memcpy(buf + 4, &lenVal, 4);
+    
+    uint32_t flagsVal = htonl(0x02000001);
+    memcpy(buf + 8, &flagsVal, 4);
+    
+    [self writeBytes:buf length:12];
+}
+
+- (void)sendClipboardNotify:(BOOL)available
+{
+    unsigned char buf[12];
+    buf[0] = rfbClientCutText;
+    buf[1] = 0;
+    buf[2] = 0;
+    buf[3] = 0;
+    
+    int32_t lenVal = htonl(-4);
+    memcpy(buf + 4, &lenVal, 4);
+    
+    uint32_t flagsVal = htonl(0x08000000 | (available ? 0x00000001 : 0));
+    memcpy(buf + 8, &flagsVal, 4);
+    
+    [self writeBytes:buf length:12];
+}
+
+- (void)sendClipboardProvide:(NSString *)str
+{
+    NSData *utf8Data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    if (!utf8Data) {
+        return;
+    }
+    
+    NSMutableData *payload = [NSMutableData data];
+    uint32_t utf8Len = htonl((uint32_t)[utf8Data length]);
+    [payload appendBytes:&utf8Len length:4];
+    [payload appendData:utf8Data];
+    
+    NSData *compressed = compressZlib(payload);
+    if (!compressed) {
+        NSLog(@"Failed to compress clipboard data");
+        return;
+    }
+    
+    unsigned int msgSz = 12 + [compressed length];
+    unsigned char *buf = malloc(msgSz);
+    if (!buf) {
+        NSLog(@"Out of memory allocating clipboard send buffer");
+        return;
+    }
+    
+    buf[0] = rfbClientCutText;
+    buf[1] = 0;
+    buf[2] = 0;
+    buf[3] = 0;
+    
+    int32_t lenVal = htonl(-(4 + (int32_t)[compressed length]));
+    memcpy(buf + 4, &lenVal, 4);
+    
+    uint32_t flagsVal = htonl(0x10000001);
+    memcpy(buf + 8, &flagsVal, 4);
+    
+    memcpy(buf + 12, [compressed bytes], [compressed length]);
+    
+    [self writeBytes:buf length:msgSz];
+    free(buf);
+}
+
 - (void)sendPasteboardToServer:(NSPasteboard *)pb
 {
     NSString    *str = [pb stringForType:NSPasteboardTypeString];
+    
+    if (serverSupportsExtendedClipboard) {
+        [self sendClipboardNotify:(str != nil && [str length] > 0)];
+        return;
+    }
+    
     const char  *cStr = [str cStringUsingEncoding:NSISOLatin1StringEncoding];
 
 #if 0 // just don't send if not convertible
