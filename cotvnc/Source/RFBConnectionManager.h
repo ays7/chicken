@@ -73,7 +73,7 @@
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;
 
-- (void)makeAllConnectionsWindowed;
+
 
 - (void)serverListDidChange:(NSNotification*)notification;
 

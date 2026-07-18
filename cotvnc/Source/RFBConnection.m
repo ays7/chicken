@@ -25,7 +25,7 @@
 #import "EventFilter.h"
 #import "FrameBuffer.h"
 #import "FrameBufferUpdateReader.h"
-#import "FullscreenWindow.h"
+
 #import "IServerData.h"
 #import "KeyEquivalent.h"
 #import "KeyEquivalentManager.h"
@@ -1131,10 +1131,7 @@ static NSString* byteString(double d)
     [[rfbView window] setAcceptsMouseMovedEvents: NO];
 }
 
-- (void)mouseDragged:(NSEvent *)theEvent
-{
-    [session mouseDragged:theEvent];
-}
+
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds {
     int     hadManualUpdates = _hasManualFrameBufferUpdates;

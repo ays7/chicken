@@ -19,7 +19,7 @@
 #import "Session.h"
 #import "AppDelegate.h"
 #import "IServerData.h"
-#import "FullscreenWindow.h"
+
 #import "KeyEquivalent.h"
 #import "KeyEquivalentManager.h"
 #import "KeyEquivalentScenario.h"
@@ -79,7 +79,7 @@ enum {
     host = [[server_ host] retain];
     sshTunnel = [[connection sshTunnel] retain];
 
-    _isFullscreen = NO; // jason added for fullscreen display
+
 
     [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil]];
@@ -89,8 +89,7 @@ enum {
     _reconnectWaiter = nil;
     _reconnectSheetTimer = nil;
 
-    _horizScrollFactor = 0;
-    _vertScrollFactor = 0;
+
 
     /* On 10.7 Lion, the overlay scrollbars don't reappear properly on hover.
      * So, for now, we're going to force legacy scrollbars. */
@@ -117,15 +116,7 @@ enum {
 
 - (void)dealloc
 {
-    if (_isFullscreen) {
-        if (CGDisplayRelease(kCGDirectMainDisplay) != kCGErrorSuccess) {
-            NSLog( @"Couldn't release the main display!" );
-            /* If we can't release the main display, then we're probably about
-             * to leave the computer in an unusable state. */
-            [NSApp terminate:self];
-        }
-        [self endFullscreenScrolling];
-    }
+
 
     [connection closeConnection];
     [connection release];
@@ -146,8 +137,9 @@ enum {
 	[newTitlePanel orderOut:self];
 	[optionPanel orderOut:self];
 	
+	[window setDelegate:nil];
 	[window close];
-    [windowedWindow close];
+
     [_connectionStartDate release];
     [super dealloc];
 }
@@ -209,7 +201,6 @@ enum {
 
 - (void)endSession
 {
-    [self endFullscreenScrolling];
     [sshTunnel close];
     [[RFBConnectionManager sharedManager] removeConnection:self];
 }
@@ -221,7 +212,6 @@ enum {
         return;
 
     [self connectionProblem];
-    [self endFullscreenScrolling];
 
     if ([passwordSheet isVisible]) {
         /* User is in middle of entering password. */
@@ -374,13 +364,12 @@ enum {
 {
     NSRect  winframe;
     NSSize	maxviewsize;
-    BOOL usesFullscreenScrollers = [[PrefController sharedController] fullscreenHasScrollbars];
     BOOL serverSupportsResize = [connection serverSupportsSetDesktopSize];
 
     horizontalScroll = verticalScroll = NO;
 
     // If server supports SetDesktopSize, allow any window size without scrollbars
-    if (serverSupportsResize && !_isFullscreen && ![self viewOnly]) {
+    if (serverSupportsResize && ![self viewOnly]) {
         return aSize;
     }
 
@@ -388,13 +377,11 @@ enum {
                                   hasHorizontalScroller:horizontalScroll
                                     hasVerticalScroller:verticalScroll
                                              borderType:NSNoBorder];
-    if (!_isFullscreen || usesFullscreenScrollers) {
-        if(aSize.width < maxviewsize.width) {
-            horizontalScroll = YES;
-        }
-        if(aSize.height < maxviewsize.height) {
-            verticalScroll = YES;
-        }
+    if(aSize.width < maxviewsize.width) {
+        horizontalScroll = YES;
+    }
+    if(aSize.height < maxviewsize.height) {
+        verticalScroll = YES;
     }
     maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
                                   hasHorizontalScroller:horizontalScroll
@@ -446,10 +433,7 @@ enum {
 	}
 	[window setFrameAutosaveName:serverName];
 
-    if ([server_ fullscreen]) {
-        [self makeConnectionFullscreen:self];
-        return;
-    }
+
 
 	contentView = [scrollView contentView];
     [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height)]];
@@ -629,6 +613,7 @@ enum {
     // dealloc closes the window, so we have to null it out here
     // The window will autorelease itself when closed.  If we allow terminateConnection
     // to close it again, it will get double-autoreleased.  Bummer.
+    [window setDelegate:nil];
     window = NULL;
     [self endSession];
 }
@@ -636,7 +621,7 @@ enum {
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
     // If server supports SetDesktopSize, allow any window size
-    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen && ![self viewOnly]) {
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         
         // allow anything not outrageously small
         if (proposedFrameSize.width < 200)
@@ -655,7 +640,7 @@ enum {
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
-    if ([connection serverSupportsSetDesktopSize] && !_isFullscreen && ![self viewOnly]) {
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         // update the server with the new desktop size
         [connection writeSetDesktopSize:[[window contentView] frame].size];
         return;
@@ -663,27 +648,11 @@ enum {
 
 	[scrollView setHasHorizontalScroller:horizontalScroll];
 	[scrollView setHasVerticalScroller:verticalScroll];
-	if (_isFullscreen) {
-		[self removeFullscreenTrackingRects];
-		[self installFullscreenTrackingRects];
-	}
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-    if (!_isFullscreen) {
-        /* If the user sets and uses a keyboard shortcut, then they can make us
-         * key while another window is in fullscreen mode. Because of this
-         * possibility, we need to make the other connections windowed. */
-        [[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
-        if (![window isKeyWindow]) {
-            /* If some other window was in fullscreen mode, it will become key,
-             * so we need to make our own window key again. Then this method
-             * will be called again, so we can return from this invocation. */
-            [window makeKeyWindow];
-            return;
-        }
-    }
+
     
     // Only install mouse tracking and update frame rate if window is actually visible
     BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;
@@ -727,318 +696,7 @@ enum {
     [optionPanel makeKeyAndOrderFront:self];
 }
 
-- (BOOL)connectionIsFullscreen {
-	return _isFullscreen;
-}
 
-- (IBAction)toggleFullscreenMode: (id)sender
-{
-	_isFullscreen ? [self makeConnectionWindowed: self] : [self makeConnectionFullscreen: self];
-}
-
-- (IBAction)makeConnectionWindowed: (id)sender {
-	_isFullscreen = NO;
-	[self removeFullscreenTrackingRects];
-	[scrollView retain];
-	[scrollView removeFromSuperview];
-	[window setDelegate: nil];
-	[window close];
-	if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-		NSLog( @"Couldn't release the main display!" );
-	}
-    window = windowedWindow;
-    windowedWindow = nil;
-    [window orderFront:nil];
-	[window setDelegate: self];
-	[window setContentView: scrollView];
-	[scrollView release];
-	[self _maxSizeForWindowSize: [[window contentView] frame].size];
-	[window setTitle:titleString];
-	[window makeFirstResponder: rfbView];
-	[self windowDidResize: nil];
-	[window makeKeyAndOrderFront:nil];
-	[connection viewFrameDidChange: nil];
-    [rfbView setTint:[[connection profile] tintWhenFront:YES]];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                name:NSApplicationWillHideNotification object:nil];
-}
-
-- (void)connectionWillGoFullscreen:(NSAlert *)sheet
-                        returnCode:(int)returnCode
-                       contextInfo:(void *)contextInfo
-{
-	int windowLevel;
-	NSRect screenRect;
-
-    if ([sheet respondsToSelector:@selector(suppressionButton)]) {
-        if ([[sheet suppressionButton] state]) // only in 10.5+
-            [[PrefController sharedController] setDisplayFullScreenWarning:NO];
-    }
-
-	if (returnCode == NSAlertFirstButtonReturn) {
-		[[RFBConnectionManager sharedManager] makeAllConnectionsWindowed];
-		if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
-			NSLog( @"Couldn't capture the main display!" );
-		}
-		windowLevel = CGShieldingWindowLevel();
-		screenRect = [[NSScreen mainScreen] frame];
-	
-		[scrollView retain];
-		[scrollView removeFromSuperview];
-        [[KeyEquivalentManager defaultManager]
-                removeEquivalentForWindow:[window title]];
-		[window setDelegate: nil];
-        windowedWindow = window;
-		window = [[FullscreenWindow alloc] initWithContentRect:screenRect
-                                            styleMask:NSWindowStyleMaskBorderless
-											backing:NSBackingStoreBuffered
-											defer:NO
-											screen:[NSScreen mainScreen]];
-		[window setDelegate: self];
-		[window setContentView: scrollView];
-		[scrollView release];
-		[window setLevel:windowLevel];
-		_isFullscreen = YES;
-		[self _maxSizeForWindowSize: screenRect.size];
-		[scrollView setHasHorizontalScroller:horizontalScroll];
-		[scrollView setHasVerticalScroller:verticalScroll];
-
-        if (_maxSize.width < screenRect.size.width
-                || _maxSize.height < screenRect.size.height) {
-            // center in screen
-            NSClipView *contentView = [scrollView contentView];
-            NSPoint     scrollPt;
-
-            scrollPt = NSMakePoint((_maxSize.width - screenRect.size.width) / 2,
-                               (_maxSize.height - screenRect.size.height) / 2);
-            [contentView scrollToPoint:scrollPt];
-            [scrollView reflectScrolledClipView:contentView];
-        }
-
-        [rfbView setTint:[NSColor clearColor]];
-
-		[self installFullscreenTrackingRects];
-		[self windowDidResize: nil];
-		[window makeFirstResponder: rfbView];
-		[window makeKeyAndOrderFront:nil];
-        [windowedWindow orderOut:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                selector:@selector(applicationWillHide:)
-                    name:NSApplicationWillHideNotification
-                  object:nil];
-	}
-}
-
-- (IBAction)makeConnectionFullscreen: (id)sender {
-	BOOL displayFullscreenWarning = [[PrefController sharedController] displayFullScreenWarning];
-
-	if (displayFullscreenWarning) {
-        NSMutableString         *reason = [NSMutableString string];
-        KeyEquivalentScenario   *scen;
-        NSMenuItem              *menuItem;
-        NSString *header = NSLocalizedString( @"FullscreenHeader", nil );
-
-        [[connection eventFilter] synthesizeRemainingEvents];
-
-        [reason appendString: NSLocalizedString( @"FullscreenReason1", nil )];
-
-            // Use the default KeyEquivalentManager to get the key equivalents
-            // for the fullscreen scenario
-        scen = [[KeyEquivalentManager defaultManager] keyEquivalentsForScenarioName: kConnectionFullscreenScenario]; 
-        menuItem = [[[NSApplication sharedApplication] delegate] getFullScreenMenuItem];
-        
-        if (scen && menuItem) {
-            KeyEquivalent *keyEquiv = [scen keyEquivalentForMenuItem: menuItem];
-            NSString      *keyStr = [keyEquiv string];
-
-            if (keyStr) {
-                // If we can determine the fullscreen key combination, we include
-                // it in the message
-                [reason appendString: @"("];
-                [reason appendString: keyStr];
-                [reason appendString: @") "];
-                [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
-            } else {
-                reason = [NSMutableString stringWithString:NSLocalizedString(@"FullscreenNoKey", nil)];
-                header = NSLocalizedString(@"FullscreenNoKeyHeader", nil);
-            }
-        } else {
-            [reason appendString: NSLocalizedString(@"FullscreenReason2", nil)];
-        }
-
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setMessageText:header];
-        [alert setInformativeText:reason];
-        if ([alert respondsToSelector:@selector(setShowsSuppressionButton:)])
-            [alert setShowsSuppressionButton:YES]; // only in 10.5+
-        [alert addButtonWithTitle:NSLocalizedString(@"Fullscreen", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-        [alert beginSheetModalForWindow:window modalDelegate:self
-                         didEndSelector:@selector(connectionWillGoFullscreen:returnCode:contextInfo:)
-                            contextInfo:NULL];
-        [alert release];
-	} else {
-		[self connectionWillGoFullscreen:nil returnCode:NSAlertFirstButtonReturn contextInfo:nil]; 
-	}
-}
-
-- (void)applicationWillHide:(NSNotification *)notif
-{
-    [self makeConnectionWindowed:self];
-}
-
-- (void)installFullscreenTrackingRects {
-	NSRect scrollRect = [scrollView bounds];
-	const float minX = NSMinX(scrollRect);
-	const float minY = NSMinY(scrollRect);
-	const float maxX = NSMaxX(scrollRect);
-	const float maxY = NSMaxY(scrollRect);
-	const float width = NSWidth(scrollRect);
-	const float height = NSHeight(scrollRect);
-	float scrollWidth = [NSScroller scrollerWidth];
-	NSRect aRect;
-
-	if ( ! [[PrefController sharedController] fullscreenHasScrollbars] )
-		scrollWidth = 0.0;
-    if (_maxSize.width > width) {
-        aRect = NSMakeRect(minX, minY, kTrackingRectThickness, height);
-        _leftTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-        aRect = NSMakeRect(maxX - kTrackingRectThickness - (horizontalScroll ? scrollWidth : 0.0), minY, kTrackingRectThickness, height);
-        _rightTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-    }
-
-    if (_maxSize.height > height) {
-        aRect = NSMakeRect(minX, minY, width, kTrackingRectThickness);
-        _topTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-        aRect = NSMakeRect(minX, maxY - kTrackingRectThickness - (verticalScroll ? scrollWidth : 0.0), width, kTrackingRectThickness);
-        _bottomTrackingTag = [scrollView addTrackingRect:aRect owner:self userData:nil assumeInside: NO];
-    }
-}
-
-- (void)removeFullscreenTrackingRects {
-	[self endFullscreenScrolling];
-    if (_leftTrackingTag)
-    {
-        [scrollView removeTrackingRect: _leftTrackingTag];
-        [scrollView removeTrackingRect: _rightTrackingTag];
-        _leftTrackingTag = 0;
-        _rightTrackingTag = 0;
-    }
-   if (_topTrackingTag)
-   {
-       [scrollView removeTrackingRect: _topTrackingTag];
-       [scrollView removeTrackingRect: _bottomTrackingTag];
-       _topTrackingTag = 0;
-       _bottomTrackingTag = 0;
-    }
-    _vertScrollFactor = _horizScrollFactor = 0;
-}
-
-- (void)mouseEntered:(NSEvent *)theEvent {
-	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
-
-    if (trackingNumber == _leftTrackingTag)
-        _horizScrollFactor = -1;
-    else if (trackingNumber == _topTrackingTag)
-        _vertScrollFactor = +1;
-    else if (trackingNumber == _rightTrackingTag)
-        _horizScrollFactor = +1;
-    else if (trackingNumber == _bottomTrackingTag)
-        _vertScrollFactor = -1;
-    else
-        NSLog(@"Unknown trackingNumber %ld", (long)trackingNumber);
-
-    if ([self connectionIsFullscreen])
-        [self beginFullscreenScrolling];
-}
-
-- (void)mouseExited:(NSEvent *)theEvent {
-	NSTrackingRectTag trackingNumber = [theEvent trackingNumber];
-
-    if (trackingNumber == _leftTrackingTag
-            || trackingNumber == _rightTrackingTag) {
-        _horizScrollFactor = 0;
-        if (_vertScrollFactor == 0)
-            [self endFullscreenScrolling];
-    } else {
-        _vertScrollFactor = 0;
-        if (_horizScrollFactor == 0)
-            [self endFullscreenScrolling];
-    }
-}
-
-/* The tracking rectangles don't apply to mouse movement when the button is
- * down. So this method tests mouse drags to see if it should trigger fullscreen
- * scrolling. */
-- (void)mouseDragged:(NSEvent *)theEvent
-{
-    if (!_isFullscreen)
-        return;
-    
-    NSPoint pt = [scrollView convertPoint: [theEvent locationInWindow]
-                                 fromView:nil];
-    NSRect  scrollRect = [scrollView bounds];
-
-    if (pt.x - NSMinX(scrollRect) < kTrackingRectThickness)
-        _horizScrollFactor = -1;
-    else if (NSMaxX(scrollRect) - pt.x < kTrackingRectThickness)
-        _horizScrollFactor = 1;
-    else
-        _horizScrollFactor = 0;
-
-    if (pt.y - NSMinY(scrollRect) < kTrackingRectThickness)
-        _vertScrollFactor = 1;
-    else if (NSMaxY(scrollRect) - pt.y < kTrackingRectThickness)
-        _vertScrollFactor = -1;
-    else
-        _vertScrollFactor = 0;
-
-    if (_horizScrollFactor || _vertScrollFactor)
-        [self beginFullscreenScrolling];
-    else
-        [self endFullscreenScrolling];
-}
-
-- (void)setFrameBufferUpdateSeconds: (float)seconds
-{
-    // miniaturized windows should keep update seconds set at maximum
-    if (![window isMiniaturized])
-        [connection setFrameBufferUpdateSeconds:seconds];
-}
-
-- (void)beginFullscreenScrolling {
-    if (_autoscrollTimer)
-        return;
-	_autoscrollTimer = [[NSTimer scheduledTimerWithTimeInterval: kAutoscrollInterval
-											target: self
-										  selector: @selector(scrollFullscreenView:)
-										  userInfo: nil repeats: YES] retain];
-}
-
-- (void)endFullscreenScrolling {
-	[_autoscrollTimer invalidate];
-	[_autoscrollTimer release];
-	_autoscrollTimer = nil;
-}
-
-- (void)scrollFullscreenView: (NSTimer *)timer {
-	NSClipView *contentView = [scrollView contentView];
-	NSPoint origin = [contentView bounds].origin;
-	float autoscrollIncrement = [[PrefController sharedController] fullscreenAutoscrollIncrement];
-    NSPoint newOrigin = NSMakePoint(origin.x + _horizScrollFactor * autoscrollIncrement, origin.y + _vertScrollFactor * autoscrollIncrement);
-
-    newOrigin = [contentView constrainScrollPoint: newOrigin];
-    // don't let constrainScrollPoint screw up centering
-    if (_horizScrollFactor == 0)
-        newOrigin.x = origin.x;
-    if (_vertScrollFactor == 0)
-        newOrigin.y = origin.y;
-
-    [contentView scrollToPoint: newOrigin];
-    [scrollView reflectScrolledClipView: contentView];
-}
 
 /* Reconnection attempts */
 
@@ -1096,8 +754,7 @@ enum {
     [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
 
-    if (_isFullscreen)
-        [self makeConnectionWindowed:self];
+
 
     connection = [newConnection retain];
     [connection setSession:self];

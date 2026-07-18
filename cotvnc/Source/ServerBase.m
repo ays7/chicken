@@ -43,7 +43,7 @@
         _password = nil;
         _port = 5900;
         _shared = NO;
-        _fullscreen = NO;
+
         _viewOnly = NO;
         _profile = [[[ProfileDataManager sharedInstance] defaultProfile]retain];
 
@@ -106,10 +106,7 @@
     return _profile;
 }
 
-- (bool)fullscreen
-{
-	return _fullscreen;
-}
+
 
 - (bool)viewOnly
 {
@@ -230,10 +227,7 @@
 	_port = port;
 }
 
-- (void)setFullscreen: (bool)fullscreen
-{
-	_fullscreen =  fullscreen;
-}
+
 
 - (void)setViewOnly: (bool)viewOnly
 {
@@ -327,7 +321,7 @@
     [self setPort:[server port]];
 	[self setPassword:[server password]];
     _shared = [server shared];
-    _fullscreen = [server fullscreen];
+
     _viewOnly = [server viewOnly];
     [self setProfile:[server profile]];
 }

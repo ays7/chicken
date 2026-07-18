@@ -38,7 +38,7 @@
 NSString *kPrefs_ListenerPort_Key       = @"ListenerPort";
 NSString *kPrefs_ListenerLocal_Key      = @"ListenerLocal";
 NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
-NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
+
 
 @interface ListenerController ( private )
 + (void)initPrefs;
@@ -166,7 +166,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [portText     setEnabled: !active];
     [localOnlyBtn setEnabled: !active];
     [profilePopup setEnabled: !active];
-    [fullscreen   setEnabled: !active];
+
 }
 
 /* Start a listening connection from the command line. The options object is not
@@ -176,7 +176,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
 {
     [self showWindow:nil];
     [self setProfilePopupToProfile:[[options profile] profileName]];
-    [fullscreen setState:[options fullscreen]];
+
     [self savePrefs];
     [self actionPressed: nil];
 }
@@ -359,7 +359,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     }
 
     server = [[ServerFromConnection alloc] initFromConnection:fh];
-    [server setFullscreen: [NSApp isActive] && [fullscreen state]];
+
     [server setProfile:listeningProfile];
     [cm createConnectionWithFileHandle:fh server:server];
     [server release];
@@ -401,7 +401,6 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
             @"NO",                          kPrefs_ListenerLocal_Key,
             NSLocalizedString(@"defaultProfileName", nil),
                                             kPrefs_ListenerProfile_Key,
-            @"NO",                          kPrefs_ListenerFullscreen_Key,
             nil, nil]];
 }
 
@@ -422,7 +421,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
         [self setProfilePopupToProfile: profileName];
     }
 
-    [fullscreen setState: [user boolForKey: kPrefs_ListenerFullscreen_Key]];
+
 }
 
 - (void)savePrefs
@@ -434,7 +433,7 @@ NSString *kPrefs_ListenerFullscreen_Key = @"ListenerFullscreen";
     [user setInteger:[portText intValue] forKey: kPrefs_ListenerPort_Key];
     [user setBool:([localOnlyBtn state] == NSControlStateValueOn) forKey: kPrefs_ListenerLocal_Key];
     [user setValue:[profilePopup titleOfSelectedItem] forKey: kPrefs_ListenerProfile_Key];
-    [user setBool:[fullscreen state] forKey: kPrefs_ListenerFullscreen_Key];
+
 }
 
 

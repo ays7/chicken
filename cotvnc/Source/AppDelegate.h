@@ -13,7 +13,7 @@
 @interface AppDelegate : NSObject {
 	IBOutlet NSMenuItem *mRendezvousMenuItem;
 	IBOutlet NSTextField *mInfoVersionNumber;
-    IBOutlet NSMenuItem *fullScreenMenuItem;
+
 	
     NSMutableArray      *dockConnections;
 }
@@ -26,7 +26,7 @@
 - (IBAction)showProfileManager: (id)sender;
 - (IBAction)showHelp: (id)sender;
 
-- (NSMenuItem *)getFullScreenMenuItem;
+
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender;
 - (void)addDockConnection:(DockConnection *)conn;

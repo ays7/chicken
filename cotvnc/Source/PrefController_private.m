@@ -12,9 +12,7 @@
 
 
 // --- Preference Keys --- //
-NSString *kPrefs_FullscreenWarning_Key = @"DisplayFullscreenWarning";
-NSString *kPrefs_AutoscrollIncrement_Key = @"FullscreenAutoscrollIncrement";
-NSString *kPrefs_FullscreenScrollbars_Key = @"FullscreenScrollbars";
+
 NSString *kPrefs_UseRendezvous_Key = @"Rendezvous Setting";
 NSString *kPrefs_ConnectionProfiles_Key = @"ConnectProfiles";
 NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key = @"FrontFrameBufferUpdateSeconds";
@@ -121,8 +119,7 @@ NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
 	
 	// set our controls' default values
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[mAutoscrollIncrement setFloatValue: [defaults floatForKey: kPrefs_AutoscrollIncrement_Key]];
-    [mFullscreenScrollbars setState: [defaults boolForKey: kPrefs_FullscreenScrollbars_Key] ? NSControlStateValueOn : NSControlStateValueOff];
+
     
 	float updateDelay;
     updateDelay = [defaults floatForKey: kPrefs_FrontFrameBufferUpdateSeconds_Key];
@@ -131,7 +128,7 @@ NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
     updateDelay = [defaults floatForKey: kPrefs_OtherFrameBufferUpdateSeconds_Key];
     updateDelay = (float)[mOtherInverseCPUSlider maxValue] - updateDelay;
     [mOtherInverseCPUSlider setFloatValue: updateDelay];
-	[mDisplayFullscreenWarning setState: [defaults boolForKey: kPrefs_FullscreenWarning_Key]];
+
 }
 
 @end

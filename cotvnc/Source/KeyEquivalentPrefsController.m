@@ -145,8 +145,6 @@ static KeyEquivalentPrefsController *sharedController = nil;
 	{
 		case 0:
 			return kConnectionWindowFrontmostScenario;
-		case 1:
-			return kConnectionFullscreenScenario;
 		case 2:
 			return kNonConnectionWindowFrontmostScenario;
 		default:

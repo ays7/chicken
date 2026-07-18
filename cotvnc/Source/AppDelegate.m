@@ -124,10 +124,6 @@
     [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:path]];
 }
 
-- (NSMenuItem *)getFullScreenMenuItem
-{
-    return fullScreenMenuItem;
-}
 
 /* Dock menu-related selectors */
 

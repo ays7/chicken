@@ -13,7 +13,7 @@
 // Scenarios
 extern NSString *kNonConnectionWindowFrontmostScenario;
 extern NSString *kConnectionWindowFrontmostScenario;
-extern NSString *kConnectionFullscreenScenario;
+
 
 
 @interface KeyEquivalentManager : NSObject {

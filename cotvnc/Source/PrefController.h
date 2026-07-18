@@ -12,9 +12,7 @@
 
 @interface PrefController : NSObject {
 	IBOutlet NSWindow *mWindow;
-	IBOutlet NSSlider *mAutoscrollIncrement;
-	IBOutlet NSButton *mFullscreenScrollbars;
-	IBOutlet NSButton *mDisplayFullscreenWarning;
+
 	IBOutlet NSSlider *mFrontInverseCPUSlider;
 	IBOutlet NSSlider *mOtherInverseCPUSlider;
 }
@@ -23,10 +21,7 @@
 + (id)sharedController;
 
 	// Settings
-- (BOOL)displayFullScreenWarning;
-- (void)setDisplayFullScreenWarning:(BOOL)warn;
-- (float)fullscreenAutoscrollIncrement;
-- (BOOL)fullscreenHasScrollbars;
+
 - (float)frontFrameBufferUpdateSeconds;
 - (float)otherFrameBufferUpdateSeconds;
 - (float)gammaCorrection;
@@ -48,9 +43,7 @@
 	// Action Methods
 - (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender;
 - (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
-- (IBAction)autoscrollSpeedChanged: (NSSlider *)sender;
-- (IBAction)toggleFullscreenScrollbars: (NSButton *)sender;
-- (IBAction)toggleFullscreenWarning: (NSButton *)sender;
+
 - (IBAction)toggleUseRendezvous: (id)sender;
 
 @end

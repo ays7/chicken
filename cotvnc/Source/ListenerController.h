@@ -30,7 +30,7 @@
     IBOutlet NSTextField *portText;
     IBOutlet NSButton *localOnlyBtn;
     IBOutlet NSPopUpButton *profilePopup;
-    IBOutlet NSButton *fullscreen;
+
 
 	IBOutlet NSButton *actionBtn;
 	IBOutlet NSTextField *statusText;

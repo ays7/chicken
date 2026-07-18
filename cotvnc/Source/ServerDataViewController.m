@@ -180,7 +180,7 @@
         [password setStringValue:[mServer password] ? [mServer password] : @""];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [shared setIntValue:[mServer shared]];
-		[fullscreen setIntValue:[mServer fullscreen]];
+
 		[viewOnly setIntValue:[mServer viewOnly]];
 		[self setProfilePopupToProfile: [mServer profile]];
         if ([mServer sshHost] == nil) {
@@ -199,7 +199,7 @@
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
 
         [viewOnly setEnabled: YES];
-        [fullscreen setEnabled: YES];
+
     }
 	else
 	{
@@ -218,7 +218,7 @@
 		[rememberPwd setIntValue:0];
 		[display setStringValue:@""];
 		[shared setIntValue:0];
-		[fullscreen setIntValue:0];
+
 		[viewOnly setIntValue:0];
         [useSshTunnel setIntValue:0];
         [sshHost setStringValue:@""];
@@ -384,13 +384,6 @@
 	}
 }
 
-- (IBAction)fullscreenChanged:(id)sender
-{
-	if( nil != mServer )
-	{
-		[mServer setFullscreen:![mServer fullscreen]];
-	}
-}
 
 - (IBAction)profileSelectionChanged:(id)sender
 {
@@ -552,7 +545,7 @@
     [password setEnabled: NO];
     [profilePopup setEnabled: NO];
     [rememberPwd setEnabled: NO];
-    [fullscreen setEnabled: NO];
+
     [shared setEnabled: NO];
     [viewOnly setEnabled: NO];
     [useSshTunnel setEnabled: NO];

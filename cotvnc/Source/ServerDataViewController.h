@@ -38,7 +38,7 @@
     IBOutlet NSTextField *password;
     IBOutlet NSPopUpButton *profilePopup;
     IBOutlet NSButton *rememberPwd;
-	IBOutlet NSButton *fullscreen;
+
     IBOutlet NSButton *shared;
 	IBOutlet NSButton *viewOnly;
 	IBOutlet NSButton *save;
@@ -69,7 +69,7 @@
 - (IBAction)passwordChanged:(id)sender;
 - (IBAction)rememberPwdChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;
-- (IBAction)fullscreenChanged:(id)sender;
+
 - (IBAction)sharedChanged:(id)sender;
 - (IBAction)viewOnlyChanged:(id)sender;
 - (IBAction)useSshTunnelChanged:(id)sender;

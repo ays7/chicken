@@ -8,10 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PrefController">
             <connections>
-                <outlet property="mAutoscrollIncrement" destination="98" id="113"/>
-                <outlet property="mDisplayFullscreenWarning" destination="107" id="115"/>
                 <outlet property="mFrontInverseCPUSlider" destination="100" id="111"/>
-                <outlet property="mFullscreenScrollbars" destination="80" id="114"/>
                 <outlet property="mOtherInverseCPUSlider" destination="78" id="112"/>
                 <outlet property="mWindow" destination="75" id="122"/>
             </connections>
@@ -119,85 +116,7 @@ Connections</string>
                                     </subviews>
                                 </view>
                             </tabViewItem>
-                            <tabViewItem label="Fullscreen" identifier="" id="85">
-                                <view key="view" id="83">
-                                    <rect key="frame" x="10" y="33" width="490" height="238"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <button imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="80">
-                                            <rect key="frame" x="80" y="97" width="294" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                            <buttonCell key="cell" type="check" title="Display scrollbars while in Fullscreen Mode" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="129">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="toggleFullscreenScrollbars:" target="-2" id="124"/>
-                                            </connections>
-                                        </button>
-                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="97">
-                                            <rect key="frame" x="178" y="162" width="122" height="56"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <subviews>
-                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="110">
-                                                    <rect key="frame" x="0.0" y="0.0" width="122" height="36"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="20" translatesAutoresizingMaskIntoConstraints="NO" id="103">
-                                                            <rect key="frame" x="98" y="0.0" width="24" height="13"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Fast" id="133">
-                                                                <font key="font" metaFont="label"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="23" translatesAutoresizingMaskIntoConstraints="NO" id="91">
-                                                            <rect key="frame" x="0.0" y="0.0" width="27" height="13"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Slow" id="131">
-                                                                <font key="font" metaFont="label"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                        <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="98">
-                                                            <rect key="frame" x="-2" y="17" width="126" height="21"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="71" doubleValue="36" tickMarkPosition="below" sliderType="linear" id="132">
-                                                                <font key="font" size="12" name="Helvetica"/>
-                                                            </sliderCell>
-                                                            <connections>
-                                                                <action selector="autoscrollSpeedChanged:" target="-2" id="123"/>
-                                                            </connections>
-                                                        </slider>
-                                                    </subviews>
-                                                </customView>
-                                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" preferredMaxLayoutWidth="110" translatesAutoresizingMaskIntoConstraints="NO" id="101">
-                                                    <rect key="frame" x="4" y="41" width="114" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Autoscroll Speed" id="130">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                            </subviews>
-                                        </customView>
-                                        <button imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="107">
-                                            <rect key="frame" x="80" y="75" width="331" height="18"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <buttonCell key="cell" type="check" title="Display warning before entering Fullscreen Mode" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="134">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="toggleFullscreenWarning:" target="-2" id="125"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                </view>
-                            </tabViewItem>
+
                             <tabViewItem label="Keyboard" identifier="" id="96">
                                 <view key="view" id="90">
                                     <rect key="frame" x="10" y="33" width="490" height="238"/>
@@ -270,7 +189,6 @@ Connections</string>
                                                     <items>
                                                         <menuItem title="Non-Connection Window" state="on" tag="2" id="105"/>
                                                         <menuItem title="Windowed Connection" id="88"/>
-                                                        <menuItem title="Fullscreen Connection" tag="1" id="79"/>
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>

@@ -44,7 +44,6 @@
 		7F7A940A05E71B5C00E20416 /* TrueColorFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F5033DB4A801A8010C /* TrueColorFrameBuffer.h */; };
 		7F7A940B05E71B5C00E20416 /* vncauth.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F8033DB4A801A8010C /* vncauth.h */; };
 		7F7A940C05E71B5C00E20416 /* ZipLengthReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71FB033DB4A801A8010C /* ZipLengthReader.h */; };
-		7F7A940D05E71B5C00E20416 /* FullscreenWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E4C9AA03416C2701A8010C /* FullscreenWindow.h */; };
 		7F7A940E05E71B5C00E20416 /* ZlibEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F564F4B70392E07E01303550 /* ZlibEncodingReader.h */; };
 		7F7A940F05E71B5C00E20416 /* ZlibHexEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */; };
 		7F7A941005E71B5C00E20416 /* ZRLEEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F536C26803937E5301178D82 /* ZRLEEncodingReader.h */; };
@@ -95,7 +94,6 @@
 		7F7A944B05E71B5C00E20416 /* vncauth.c in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F7033DB4A801A8010C /* vncauth.c */; };
 		7F7A944C05E71B5C00E20416 /* VNCViewer_main.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F9033DB4A801A8010C /* VNCViewer_main.m */; };
 		7F7A944D05E71B5C00E20416 /* ZipLengthReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71FC033DB4A801A8010C /* ZipLengthReader.m */; };
-		7F7A944E05E71B5C00E20416 /* FullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E4C9AB03416C2701A8010C /* FullscreenWindow.m */; };
 		7F7A944F05E71B5C00E20416 /* ZlibEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F564F4B60392E07E01303550 /* ZlibEncodingReader.m */; };
 		7F7A945005E71B5C00E20416 /* ZlibHexEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */; };
 		7F7A945105E71B5C00E20416 /* ZRLEEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F536C26903937E5301178D82 /* ZRLEEncodingReader.m */; };
@@ -383,8 +381,6 @@
 		F5DC71F9033DB4A801A8010C /* VNCViewer_main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = VNCViewer_main.m; sourceTree = "<group>"; };
 		F5DC71FB033DB4A801A8010C /* ZipLengthReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZipLengthReader.h; sourceTree = "<group>"; };
 		F5DC71FC033DB4A801A8010C /* ZipLengthReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZipLengthReader.m; sourceTree = "<group>"; };
-		F5E4C9AA03416C2701A8010C /* FullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FullscreenWindow.h; sourceTree = "<group>"; };
-		F5E4C9AB03416C2701A8010C /* FullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FullscreenWindow.m; sourceTree = "<group>"; };
 		F5F2D5A603B3C93B01150DB1 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		F5F2D5A703B3C93B01150DB1 /* debug.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = debug.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -643,8 +639,6 @@
 				F5DC71B6033DB4A801A8010C /* FrameBufferDrawing.h */,
 				F5DC71B7033DB4A801A8010C /* FrameBufferUpdateReader.h */,
 				F5DC71B8033DB4A801A8010C /* FrameBufferUpdateReader.m */,
-				F5E4C9AA03416C2701A8010C /* FullscreenWindow.h */,
-				F5E4C9AB03416C2701A8010C /* FullscreenWindow.m */,
 				F5DC71B9033DB4A801A8010C /* GradientFilter.h */,
 				F5DC71BA033DB4A801A8010C /* GradientFilter.m */,
 				F5DC71BB033DB4A801A8010C /* GrayScaleFrameBuffer.h */,
@@ -752,7 +746,6 @@
 				7F7A940A05E71B5C00E20416 /* TrueColorFrameBuffer.h in Headers */,
 				7F7A940B05E71B5C00E20416 /* vncauth.h in Headers */,
 				7F7A940C05E71B5C00E20416 /* ZipLengthReader.h in Headers */,
-				7F7A940D05E71B5C00E20416 /* FullscreenWindow.h in Headers */,
 				7F7A940E05E71B5C00E20416 /* ZlibEncodingReader.h in Headers */,
 				7F7A940F05E71B5C00E20416 /* ZlibHexEncodingReader.h in Headers */,
 				7F7A941005E71B5C00E20416 /* ZRLEEncodingReader.h in Headers */,
@@ -935,7 +928,6 @@
 				7F7A944B05E71B5C00E20416 /* vncauth.c in Sources */,
 				7F7A944C05E71B5C00E20416 /* VNCViewer_main.m in Sources */,
 				7F7A944D05E71B5C00E20416 /* ZipLengthReader.m in Sources */,
-				7F7A944E05E71B5C00E20416 /* FullscreenWindow.m in Sources */,
 				7F7A944F05E71B5C00E20416 /* ZlibEncodingReader.m in Sources */,
 				7F7A945005E71B5C00E20416 /* ZlibHexEncodingReader.m in Sources */,
 				7F7A945105E71B5C00E20416 /* ZRLEEncodingReader.m in Sources */,
@@ -1188,7 +1180,7 @@
 				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = "";
@@ -1233,7 +1225,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1276,7 +1268,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = "";
@@ -1358,7 +1350,7 @@
 				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

@@ -11,9 +11,7 @@
 
 // --- Preference Keys -- //
 /* These are private because they should only be used by PrefController */
-extern NSString *kPrefs_FullscreenWarning_Key;
-extern NSString *kPrefs_AutoscrollIncrement_Key;
-extern NSString *kPrefs_FullscreenScrollbars_Key;
+
 extern NSString *kPrefs_UseRendezvous_Key;
 extern NSString *kPrefs_ConnectionProfiles_Key;
 extern NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key;

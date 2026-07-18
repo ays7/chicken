@@ -52,7 +52,7 @@ typedef enum
 - (bool)rememberPassword;
 - (int)port;
 - (bool)shared;
-- (bool)fullscreen;
+
 - (bool)viewOnly;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
@@ -67,7 +67,7 @@ typedef enum
 - (void)setDisplay: (int)display;
 - (void)setPort: (int)port;
 - (void)setShared: (bool)shared;
-- (void)setFullscreen: (bool)fullscreen;
+
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;
 

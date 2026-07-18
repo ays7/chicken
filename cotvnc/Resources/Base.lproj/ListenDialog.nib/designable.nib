@@ -9,7 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ListenerController">
             <connections>
                 <outlet property="actionBtn" destination="18" id="24"/>
-                <outlet property="fullscreen" destination="38" id="40"/>
+
                 <outlet property="localOnlyBtn" destination="15" id="21"/>
                 <outlet property="portText" destination="8" id="20"/>
                 <outlet property="profilePopup" destination="12" id="22"/>
@@ -121,17 +121,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="38">
-                        <rect key="frame" x="74" y="56" width="135" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Fullscreen display" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="39">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="valueChanged:" target="-2" id="41"/>
-                        </connections>
-                    </button>
+
                 </subviews>
             </view>
             <point key="canvasLocation" x="22" y="139"/>

@@ -501,16 +501,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     [self selectedHostChanged];
 }
 
-// Jason added the following for full-screen windows
-- (void)makeAllConnectionsWindowed {
-	NSEnumerator *enumerator = [sessions objectEnumerator];
-    Session      *session;
 
-	while (session = [enumerator nextObject]) {
-		if ([session connectionIsFullscreen])
-			[session makeConnectionWindowed: self];
-	}
-}
 
 - (NSUInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {

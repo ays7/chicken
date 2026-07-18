@@ -208,8 +208,7 @@ typedef int NSInteger;
 {  [_eventFilter mouseMoved: theEvent];  }
 
 - (void)mouseDragged:(NSEvent *)theEvent
-{  [_eventFilter mouseDragged: theEvent];
-   [_delegate mouseDragged: theEvent];}
+{  [_eventFilter mouseDragged: theEvent];}
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {  [_eventFilter rightMouseDragged: theEvent];  }

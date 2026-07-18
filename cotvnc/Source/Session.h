@@ -70,16 +70,7 @@ ConnectionWaiterDelegate>
     NSTimer                         *_reconnectSheetTimer;
     ConnectionWaiter                *_reconnectWaiter;
 
-        // instance variables for managing the fullscreen display
-	BOOL _isFullscreen;
-    NSWindow *windowedWindow;
-	NSTrackingRectTag _leftTrackingTag;
-	NSTrackingRectTag _topTrackingTag;
-	NSTrackingRectTag _rightTrackingTag;
-	NSTrackingRectTag _bottomTrackingTag;
-    int         _horizScrollFactor;
-    int         _vertScrollFactor;
-	NSTimer *_autoscrollTimer;
+
 }
 
 - (id)initWithConnection:(RFBConnection*)conn;
@@ -119,21 +110,7 @@ ConnectionWaiterDelegate>
 
 - (BOOL)hasKeyWindow;
 
-// Full-screen mode
-- (BOOL)connectionIsFullscreen;
-- (IBAction)toggleFullscreenMode: (id)sender;
-- (IBAction)makeConnectionWindowed: (id)sender;
-- (IBAction)makeConnectionFullscreen: (id)sender;
-- (void)applicationWillHide:(NSNotification*)notif;
 
-- (void)installFullscreenTrackingRects;
-- (void)removeFullscreenTrackingRects;
-- (void)mouseEntered:(NSEvent *)theEvent;
-- (void)mouseExited:(NSEvent *)theEvent;
-- (void)mouseDragged:(NSEvent *)theEvent;
-- (void)beginFullscreenScrolling;
-- (void)endFullscreenScrolling;
-- (void)scrollFullscreenView: (NSTimer *)timer;
 
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
 

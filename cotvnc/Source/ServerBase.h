@@ -32,7 +32,7 @@
 	NSString* _password;
 	int       _port;
 	bool      _shared;
-	bool      _fullscreen;
+
 	bool      _viewOnly;	
     Profile   *_profile;
 
@@ -52,7 +52,7 @@
 - (BOOL)rememberPassword;
 - (int)port;
 - (bool)shared;
-- (bool)fullscreen;
+
 - (bool)viewOnly;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
@@ -68,7 +68,7 @@
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setPort: (int)port;
-- (void)setFullscreen: (bool)fullscreen;
+
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;

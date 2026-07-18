@@ -34,9 +34,6 @@ static int const kPrefsVersion = 0x00000002;
 	
 	defaults = [NSUserDefaults standardUserDefaults];
 	defaultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithBool: YES],			kPrefs_FullscreenWarning_Key,
-		[NSNumber numberWithFloat: 26.0],		kPrefs_AutoscrollIncrement_Key,
-		[NSNumber numberWithBool: NO],			kPrefs_FullscreenScrollbars_Key,
 		[NSNumber numberWithBool: YES],			kPrefs_UseRendezvous_Key,
 		[NSNumber numberWithFloat: 0],			kPrefs_FrontFrameBufferUpdateSeconds_Key,
 		[NSNumber numberWithFloat: 0.9],		kPrefs_OtherFrameBufferUpdateSeconds_Key, 
@@ -98,21 +95,7 @@ static int const kPrefsVersion = 0x00000002;
 #pragma mark Settings
 
 
-- (BOOL)displayFullScreenWarning
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_FullscreenWarning_Key] boolValue];  }
-	
-- (void)setDisplayFullScreenWarning:(BOOL)warn
-{
-    [[NSUserDefaults standardUserDefaults] setBool:warn
-                                        forKey:kPrefs_FullscreenWarning_Key];
-}
 
-- (float)fullscreenAutoscrollIncrement
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_AutoscrollIncrement_Key] floatValue];  }
-
-
-- (BOOL)fullscreenHasScrollbars
-{  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_FullscreenScrollbars_Key] boolValue];  }
 
 
 - (float)frontFrameBufferUpdateSeconds
@@ -226,25 +209,7 @@ static int const kPrefsVersion = 0x00000002;
 }
 
 
-- (IBAction)autoscrollSpeedChanged: (NSSlider *)sender
-{
-	float value = floor([sender floatValue] + 0.5);
-	[[NSUserDefaults standardUserDefaults] setFloat: value forKey: kPrefs_AutoscrollIncrement_Key];
-}
 
-
-- (IBAction)toggleFullscreenScrollbars: (NSButton *)sender
-{
-    BOOL value = ([sender state] == NSControlStateValueOn) ? YES : NO;
-	[[NSUserDefaults standardUserDefaults] setBool: value forKey: kPrefs_FullscreenScrollbars_Key];
-}
-
-
-- (IBAction)toggleFullscreenWarning: (NSButton *)sender
-{
-    BOOL value = ([sender state] == NSControlStateValueOn) ? YES : NO;
-	[[NSUserDefaults standardUserDefaults] setBool: value forKey: kPrefs_FullscreenWarning_Key];
-}
 
 
 - (IBAction)toggleUseRendezvous: (id)sender

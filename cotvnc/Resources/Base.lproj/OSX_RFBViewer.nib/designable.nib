@@ -257,12 +257,7 @@
                 <menuItem title="Window" id="1330">
                     <menu key="submenu" title="Window" systemMenu="window" id="1331">
                         <items>
-                            <menuItem title="Fullscreen Mode" keyEquivalent="`" id="1328">
-                                <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="toggleFullscreenMode:" target="-1" id="1335"/>
-                                </connections>
-                            </menuItem>
+
                             <menuItem title="Minimize" keyEquivalent="m" id="1329">
                                 <connections>
                                     <action selector="performMiniaturize:" target="-1" id="1338"/>
@@ -391,7 +386,7 @@ source code available at https://github.com/ays7/chicken</string>
         </window>
         <customObject id="1367" userLabel="AppDelegate" customClass="AppDelegate">
             <connections>
-                <outlet property="fullScreenMenuItem" destination="1328" id="1489"/>
+
                 <outlet property="mInfoVersionNumber" destination="228" id="1376"/>
                 <outlet property="mRendezvousMenuItem" destination="1361" id="1375"/>
             </connections>

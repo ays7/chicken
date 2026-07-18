@@ -20,7 +20,7 @@
 // Scenarios
 NSString *kNonConnectionWindowFrontmostScenario = @"NonConnectionWindowFrontmostScenario";
 NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenario";
-NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
+
 
 @interface KeyEquivalentManager(Private)
 
@@ -56,8 +56,6 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 	{
         if ([session viewOnly])
             [self setCurrentScenarioToName: kNonConnectionWindowFrontmostScenario];
-        else if ( [session connectionIsFullscreen] )
-			[self setCurrentScenarioToName: kConnectionFullscreenScenario];
 		else
 			[self setCurrentScenarioToName: kConnectionWindowFrontmostScenario];
 	}
@@ -205,27 +203,15 @@ NSString *kConnectionFullscreenScenario = @"ConnectionFullscreenScenario";
 - (void)loadScenariosFromDefaults
 {
     KeyEquivalentScenario   *minimal;
-    NSMenuItem              *fullscreen;
-    KeyEquivalentEntry      *entry;
     
-    /* For connection window and fullscreen scenarios, use only a single
-     * equivalent: for entering and exiting fullscreen mode. */
-    fullscreen = [(AppDelegate *)[NSApp delegate] getFullScreenMenuItem];
-    entry = [[KeyEquivalentEntry alloc] initWithMenuItem:fullscreen];
     minimal = [[KeyEquivalentScenario alloc] init];
-    [minimal setEntry:entry
-        forEquivalent:[standardKeyEquivalents
-                                        keyEquivalentForMenuItem:fullscreen]];
 
     [mScenarioDict release];
     mScenarioDict = [[NSMutableDictionary alloc] init];
     [mScenarioDict setObject:[[standardKeyEquivalents copy] autorelease]
                       forKey:kNonConnectionWindowFrontmostScenario];
     [mScenarioDict setObject:minimal forKey:kConnectionWindowFrontmostScenario];
-    [mScenarioDict setObject:[[minimal copy] autorelease]
-                      forKey:kConnectionFullscreenScenario];
 
-    [entry release];
     [minimal release];
 }
 

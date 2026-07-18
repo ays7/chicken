@@ -564,6 +564,7 @@
       }
     },
     "Fullscreen" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -592,6 +593,7 @@
       }
     },
     "FullscreenHeader" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -620,6 +622,7 @@
       }
     },
     "FullscreenNoKey" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -648,6 +651,7 @@
       }
     },
     "FullscreenNoKeyHeader" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -676,6 +680,7 @@
       }
     },
     "FullscreenReason1" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -704,6 +709,7 @@
       }
     },
     "FullscreenReason2" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

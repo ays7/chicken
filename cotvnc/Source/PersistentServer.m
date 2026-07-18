@@ -38,7 +38,7 @@
     if (self = [super init]) {
         _rememberPassword = [[dict objectForKey:@"rememberPassword"] boolValue];
         _shared = [[dict objectForKey:@"shared"] boolValue];
-        _fullscreen = [[dict objectForKey:@"fullscreen"] boolValue];
+
         _viewOnly = [[dict objectForKey:@"viewOnly"] boolValue];
         [_profile autorelease];
         _profile = [[ProfileDataManager sharedInstance]
@@ -63,7 +63,7 @@
 	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithBool:_rememberPassword],	@"rememberPassword",
 		[NSNumber numberWithBool:_shared],				@"shared",
-		[NSNumber numberWithBool:_fullscreen],			@"fullscreen",
+
 		[NSNumber numberWithBool:_viewOnly],            @"viewOnly", 
 		[_profile profileName],							@"lastProfile",
             // note that _sshHost or _sshUser might be nil, thus marking the end
