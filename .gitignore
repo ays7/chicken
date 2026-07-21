@@ -2,7 +2,7 @@
 cotvnc/build/*
 *.pbxuser
 *.mode1v3
-*~.nib/ 
+*~.nib/
 *.perspective 
 *.perspectivev3
 
@@ -11,4 +11,6 @@ xcuserdata/
 
 # packages
 *.ipa
-
+cotvnc/DerivedData/
+build/
+.build/

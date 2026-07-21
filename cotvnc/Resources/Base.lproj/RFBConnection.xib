@@ -32,7 +32,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
             <rect key="contentRect" x="2" y="422" width="454" height="385"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <value key="minSize" type="size" width="176.357" height="5"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
@@ -45,7 +45,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <customView id="7" customClass="RFBView">
+                                <customView id="7">
                                     <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </customView>
@@ -73,7 +73,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="463" y="599" width="354" height="101"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <value key="minSize" type="size" width="133.06100000000001" height="5"/>
             <view key="contentView" id="16">
                 <rect key="frame" x="0.0" y="0.0" width="354" height="101"/>
@@ -132,7 +132,7 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="496" y="385" width="288" height="304"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <value key="minSize" type="size" width="185.791" height="5"/>
             <view key="contentView" id="30">
                 <rect key="frame" x="0.0" y="0.0" width="288" height="304"/>
@@ -199,7 +199,7 @@ Rectangles: 89</string>
             <windowStyleMask key="styleMask" titled="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="230" y="348" width="410" height="193"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <view key="contentView" id="89">
                 <rect key="frame" x="0.0" y="0.0" width="410" height="193"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -570,7 +570,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="230" y="422" width="407" height="119"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <view key="contentView" id="116">
                 <rect key="frame" x="0.0" y="0.0" width="407" height="119"/>
                 <autoresizingMask key="autoresizingMask"/>
