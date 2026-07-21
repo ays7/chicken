@@ -1225,7 +1225,6 @@
       }
     },
     "PasteAnyways" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1254,7 +1253,6 @@
       }
     },
     "PasteConversionBody" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1283,7 +1281,6 @@
       }
     },
     "PasteConversionHeader" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

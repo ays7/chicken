@@ -45,7 +45,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <customView id="7">
+                                <customView id="7" customClass="RFBView">
                                     <rect key="frame" x="0.0" y="0.0" width="454" height="385"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </customView>
