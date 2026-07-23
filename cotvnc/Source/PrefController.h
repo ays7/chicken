@@ -25,8 +25,6 @@
 - (float)frontFrameBufferUpdateSeconds;
 - (float)otherFrameBufferUpdateSeconds;
 - (float)gammaCorrection;
-- (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
-- (id)defaultFrameBufferClass;
 - (float)maxPossibleFrameBufferUpdateSeconds;
 - (BOOL)usesRendezvous;
 - (NSDictionary *)hostInfo;

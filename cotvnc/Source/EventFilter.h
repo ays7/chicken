@@ -7,8 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class RFBConnection;
 @class Profile;
-@class RFBConnection, RFBView;
 
 /*
  * Philosophy:  The EventFilter sits between an NSResponder and an object that sends
@@ -103,7 +103,7 @@ typedef enum {
 @interface EventFilter : NSObject {
 	RFBConnection *_connection;
 	Profile *_profile;
-	RFBView *_view;
+	NSView *_view;
 	
 	NSMutableArray *_pendingEvents;
 	unsigned int _queuedModifiers;
@@ -124,8 +124,8 @@ typedef enum {
 // Talking to the server
 - (RFBConnection *)connection;
 - (void)setConnection: (RFBConnection *)connection;
-- (RFBView *)view;
-- (void)setView: (RFBView *)view;
+- (NSView *)view;
+- (void)setView: (NSView *)view;
 
 // Local Mouse Events
 - (void)mouseDown: (NSEvent *)theEvent;

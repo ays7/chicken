@@ -1,0 +1,3 @@
+[submodule "cotvnc/royalvnc"]
+	path = cotvnc/royalvnc
+	url = git@github.com:ays7/royalvnc.git

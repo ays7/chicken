@@ -27,10 +27,19 @@
 #import "ProfileManager.h"
 #import "RFBConnection.h"
 #import "RFBConnectionManager.h"
-#import "RFBView.h"
 #import "SshWaiter.h"
 #define XK_MISCELLANY
 #include "keysymdef.h"
+
+@interface NSView (ChickenTint)
+- (void)setTint:(NSColor *)tint;
+@end
+
+@implementation NSView (ChickenTint)
+- (void)setTint:(NSColor *)tint {
+    // No-op
+}
+@end
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
 @interface NSAlert(AvailableInLeopard)
@@ -81,7 +90,7 @@ enum {
 
 
 
-    [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
+    [NSBundle loadNibNamed:@"RFBConnection" owner:self];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil]];
 
     password = [[connection password] retain];
@@ -95,6 +104,8 @@ enum {
      * So, for now, we're going to force legacy scrollbars. */
     if ([scrollView respondsToSelector:@selector(setScrollerStyle:)])
         [scrollView setScrollerStyle:NSScrollerStyleLegacy];
+    [scrollView setWantsLayer:YES];
+    [[scrollView contentView] setWantsLayer:YES];
 
     _connectionStartDate = [[NSDate alloc] init];
 
@@ -116,8 +127,8 @@ enum {
 
 - (void)dealloc
 {
-
-
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [connection setSession:nil];
     [connection closeConnection];
     [connection release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -401,6 +412,7 @@ enum {
 	NSClipView *contentView;
 	NSString *serverName;
 
+    [window setRestorable:NO];
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
     wf.size = [NSScrollView frameSizeForContentSize:_maxSize hasHorizontalScroller:NO hasVerticalScroller:NO borderType:NSNoBorder];
@@ -442,7 +454,6 @@ enum {
     [window makeFirstResponder:rfbView];
 	[self windowDidResize: nil];
     [window makeKeyAndOrderFront:self];
-    [window display];
 }
 
 - (void)setNewTitle:(id)sender
@@ -464,6 +475,14 @@ enum {
     [window setTitle:titleString];
 }
 
+- (void)setRfbView:(NSView *)view
+{
+    rfbView = view;
+    if (scrollView) {
+        [scrollView setDocumentView:rfbView];
+    }
+}
+
 - (void)frameBufferUpdateComplete
 {
     if ([optionPanel isVisible])
@@ -472,19 +491,55 @@ enum {
 
 - (void)resize:(NSSize)size
 {
-    NSSize  maxSize;
-    NSRect  frame;
+    inServerResize = YES;
 
-    // resize window, if necessary
-    maxSize = [self _maxSizeForWindowSize:[[window contentView] frame].size];
-    frame = [window frame];
-    if (frame.size.width > maxSize.width)
-        frame.size.width = maxSize.width;
-    if (frame.size.height > maxSize.height)
-        frame.size.height = maxSize.height;
-    [window setFrame:frame display:YES];
+    BOOL serverSupportsResize = [connection serverSupportsSetDesktopSize];
+    if (serverSupportsResize && ![self viewOnly]) {
+        if (pendingClientResize) {
+            // This resize was confirmed in response to a resize we requested.
+            // The window is already the correct size (user dragged it to the
+            // desired size). Resizing the window back to the server's integer
+            // pixel size would cause sub-pixel mismatches on Retina / fractional-
+            // scaling displays, leaving empty bands along the edges.
+            //
+            // Instead, fit the rfbView to exactly fill the current scroll view
+            // content area so there are no gaps.
+            pendingClientResize = NO;
+            NSSize contentSize = [scrollView contentSize];
+            [rfbView setFrameSize:contentSize];
+        } else {
+            // Server-initiated resize (e.g. server changed its own display
+            // resolution). Resize the window to fit the new framebuffer.
+            [rfbView setFrameSize:size];
+            NSRect frame = [window frame];
+            NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
+            NSRect targetFrame = [window frameRectForContentRect:contentRect];
 
-    [self windowDidResize:nil]; // setup scroll bars if necessary
+            // Preserve the top-left corner of the window when resizing
+            targetFrame.origin.x = frame.origin.x;
+            targetFrame.origin.y = frame.origin.y + frame.size.height - targetFrame.size.height;
+
+            [window setFrame:targetFrame display:YES];
+        }
+        [self windowDidResize:nil];
+    } else {
+        [rfbView setFrameSize:size];
+        NSSize  maxSize;
+        NSRect  frame;
+
+        // resize window, if necessary
+        maxSize = [self _maxSizeForWindowSize:[[window contentView] frame].size];
+        frame = [window frame];
+        if (frame.size.width > maxSize.width)
+            frame.size.width = maxSize.width;
+        if (frame.size.height > maxSize.height)
+            frame.size.height = maxSize.height;
+        [window setFrame:frame display:YES];
+
+        [self windowDidResize:nil]; // setup scroll bars if necessary
+    }
+    
+    inServerResize = NO;
 }
 
 - (void)requestFrameBufferUpdate:(id)sender
@@ -640,19 +695,68 @@ enum {
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
-    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
-        // update the server with the new desktop size
-        [connection writeSetDesktopSize:[[window contentView] frame].size];
+    BOOL serverSupportsResize = [connection serverSupportsSetDesktopSize];
+
+    if (!inServerResize && serverSupportsResize && ![self viewOnly]) {
+        if ([window inLiveResize]) {
+            // Defer resizing until live resize ends
+            return;
+        }
+        // Snap to exact integer pixel count before sending to server.
+        // scrollView contentSize may be fractional on Retina/non-integer-scaled displays;
+        // writeSetDesktopSize truncates to uint16_t.  If we don't snap the window frame,
+        // the view bounds will be fractional but framebufferSize will be integer, leaving
+        // sub-pixel empty bands around the Metal layer.
+        [self snapWindowToIntegerContentSize];
+        pendingClientResize = YES;
+        [connection writeSetDesktopSize:[scrollView contentSize]];
         return;
     }
 
-	[scrollView setHasHorizontalScroller:horizontalScroll];
-	[scrollView setHasVerticalScroller:verticalScroll];
+    if (serverSupportsResize && ![self viewOnly]) {
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setHasVerticalScroller:NO];
+    } else {
+        [scrollView setHasHorizontalScroller:horizontalScroll];
+        [scrollView setHasVerticalScroller:verticalScroll];
+    }
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)notification
+{
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+        // Snap to exact integer pixel count before sending to server (see windowDidResize:).
+        [self snapWindowToIntegerContentSize];
+        pendingClientResize = YES;
+        [connection writeSetDesktopSize:[scrollView contentSize]];
+    }
+}
+
+// Resize the window so that its content area is exactly floor(contentSize), eliminating
+// sub-pixel fractions that would otherwise leave empty bands between the VNC view and the
+// window edge after the server confirms the resize with integer pixel dimensions.
+- (void)snapWindowToIntegerContentSize
+{
+    NSSize cs = [scrollView contentSize];
+    NSSize intCS = NSMakeSize(floor(cs.width), floor(cs.height));
+    if (NSEqualSizes(cs, intCS)) {
+        return; // already integer
+    }
+    NSRect frame = [window frame];
+    NSRect contentRect = [window contentRectForFrameRect:frame];
+    NSRect intContentRect = NSMakeRect(contentRect.origin.x,
+                                       contentRect.origin.y + (contentRect.size.height - intCS.height),
+                                       intCS.width,
+                                       intCS.height);
+    NSRect newFrame = [window frameRectForContentRect:intContentRect];
+    inServerResize = YES;
+    [window setFrame:newFrame display:NO];
+    inServerResize = NO;
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-
+    NSLog(@"[Chicken] windowDidBecomeKey called");
     
     // Only install mouse tracking and update frame rate if window is actually visible
     BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;

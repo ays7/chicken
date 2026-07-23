@@ -10,7 +10,6 @@
 #import "EventFilter.h"
 #import "KeyEquivalentManager.h"
 #import "RFBConnection.h"
-#import "RFBView.h"
 
 
 @implementation MyApp
@@ -27,11 +26,11 @@
 	 */
 	
 	// do some static lookups for a tiny speed gain
-	static Class RFBViewClass = nil;
+	static Class VNCViewClass = nil;
 	static Class NSScrollViewClass = nil;
-	if ( ! RFBViewClass )
+	if ( ! VNCViewClass )
 	{
-		RFBViewClass = [RFBView class];
+		VNCViewClass = NSClassFromString(@"VNCCAFramebufferView");
 		NSScrollViewClass = [NSScrollView class];
 	}
 
@@ -47,7 +46,7 @@
 		NSEventType eventType = [anEvent type];
         if ( NSEventTypeKeyDown == eventType || NSEventTypeKeyUp == eventType )
 		{
-			RFBView *rfbView = [keyManager keyRFBView];;
+			NSView *rfbView = [keyManager keyRFBView];;
 			NSParameterAssert( rfbView != nil );
 			static NSString *lastCharacters = nil;
 			NSString *characters = [anEvent charactersIgnoringModifiers];
@@ -63,7 +62,13 @@
 				if ( [keyManager performEquivalentWithCharacters: characters modifiers: modifiers] )
 				{
 					lastCharacters = [characters retain];
-					RFBConnection *delegate = [rfbView delegate];
+					id delegate = nil;
+					if ([rfbView respondsToSelector:@selector(connection)]) {
+						id conn = [rfbView performSelector:@selector(connection)];
+						if (conn && [conn respondsToSelector:@selector(delegate)]) {
+							delegate = [conn performSelector:@selector(delegate)];
+						}
+					}
 					[[delegate eventFilter] clearAllEmulationStates];
 				}
 				else

@@ -17,21 +17,17 @@
  */
 
 #import <AppKit/AppKit.h>
-#import "ConnectionWaiter.h"
 #import "rfbproto.h"
+#import "IServerData.h"
 
-@class ByteBlockReader;
-@class ByteReader;
-@class EventFilter;
-@class FrameBuffer;
-@class Profile;
-@class RFBHandshaker;
-@class RFBProtocol;
-@class RFBView;
-@class ServerInitMessage;
 @class Session;
 @class SshTunnel;
-@protocol IServerData;
+@class Profile;
+@class VNCConnection;
+@class VNCCAFramebufferView;
+@class VNCCredential;
+@class EventFilter;
+@class EventFilterViewDelegate;
 
 #define RFB_HOST		@"Host"
 #define RFB_PASSWORD		@"Password"
@@ -52,120 +48,65 @@
 @interface RFBConnection : NSObject
 {
     Session     *session;
-    IBOutlet RFBView *rfbView;
-    FrameBuffer *frameBuffer;
-    NSFileHandle    *socketHandler;
-	EventFilter     *_eventFilter;
-    ByteReader      *currentReader;
-    RFBHandshaker	*handshaker;
+    VNCCAFramebufferView *rfbView;
+    VNCConnection *connection;
     id<IServerData> server_;
     NSString        *password;
-    RFBProtocol     *rfbProtocol;
-    CARD16  lastMouseX; // location of last mouse position we sent
-    CARD16  lastMouseY;
-    NSDate  *lastMouseMovement;
-    unichar highSurrogate[2];
 
     SshTunnel   *sshTunnel;
     Profile *_profile;
-
-	NSTrackingRectTag _mouseMovedTrackingTag;
-	float _frameBufferUpdateSeconds; // how much to delay update requests
-	NSTimer *_frameUpdateTimer; // timer for update request
-    NSDate  *_lastUpdateRequestDate; // time of last update request
-
-    BOOL isReceivingUpdate; // middle of receiving frame buffer update?
-	BOOL _hasManualFrameBufferUpdates;
-    double    bytesReceived; // number of framebuffer update bytes received
-	
-	int serverMajorVersion;
-	int serverMinorVersion;
-	BOOL _serverSupportsSetDesktopSize;
-	NSSize lastDesktopSizeSent;	// Track last size sent to server
-	NSDate *lastDesktopSizeTime;	// Track when last size was sent (for debouncing)
-
-    unsigned char   *writeBuffer;
-    int             bufferLen;
-    int             lastBufferedIsMouseMovement;
     
-    BOOL            serverSupportsExtendedClipboard;
-    uint32_t        serverClipboardFlags;
+    void (^authCompletion)(VNCCredential *);
+    int pendingAuthType;
+    
+    NSString *resolvedHost_;
+    int resolvedPort_;
+    
+    EventFilter *_eventFilter;
+    EventFilterViewDelegate *_eventFilterDelegate;
 }
 
 - (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server;
+- (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server host:(NSString *)resolvedHost port:(int)resolvedPort;
 
 - (void)dealloc;
 
 - (void)closeConnection;
 - (id<IServerData>)server;
 
-- (void)setRfbView:(RFBView *)view;
+- (void)setRfbView:(VNCCAFramebufferView *)view;
 - (void)setSession:(Session *)aSession;
 - (void)setPassword:(NSString *)password;
 - (void)setSshTunnel:(SshTunnel *)tunnel;
-- (void)setReader:(ByteReader*)aReader;
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard*)pb;
 - (void)sendPasteboardToServer:(NSPasteboard *)pb;
-- (void)setServerVersion:(NSData*)aVersion;
-- (void)setCursor: (NSCursor *)aCursor;
 - (BOOL)serverSupportsSetDesktopSize;
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
 - (void)promptForPassword;
-- (void)sizeDisplay:(NSSize)aSize withPixelFormat:(rfbPixelFormat*)pixf;
-- (void)setDisplayName:(NSString*)aName;
 
-- (void)start:(ServerInitMessage*)info;
-- (void)invalidateRect:(NSRect)aRect;
-- (void)frameBufferUpdateBeginning;
-- (void)frameBufferUpdateComplete;
-- (void)frameBufferUpdateCompleteWithResize:(NSSize)newSize;
-- (void)queueUpdateRequest;
-- (void) forceFrameBufferUpdate;
-- (IBAction)requestFrameBufferUpdate:(id)sender;
-- (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag;
-- (void)serverMovedMouseTo:(NSPoint)pos;
-
-    // events sent to server
 - (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask;
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask;
 - (void)sendKey:(unichar)key pressed:(BOOL)pressed;
 - (void)sendModifier:(unsigned int)m pressed:(BOOL)pressed;
 - (void)sendKeyCode:(CARD32)key pressed:(BOOL)pressed;
-- (void)writeBytes:(unsigned char*)bytes length:(unsigned int)length;
-- (void)writeBufferedBytes:(unsigned char*)bytes length:(unsigned int)length;
-- (void)writeRFBString:(NSString *)aString;
-- (void)writeBuffer;
-- (void)writeSetDesktopSize:(NSSize)size;
 
 - (Profile*)profile;
-- (int) protocolMajorVersion;
-- (int) protocolMinorVersion;
 - (NSString*)password;
-- (BOOL)connectShared;
-- (BOOL)viewOnly;
-- (EventFilter *)eventFilter;
 - (Session *)session;
 - (SshTunnel *)sshTunnel;
+- (BOOL)viewOnly;
 
-- (void)viewFrameDidChange:(NSNotification *)aNotification;
-- (NSString *)statisticsString;
+- (id)eventFilter;
 - (NSString *)infoString;
-
-- (BOOL)serverSupportsExtendedClipboard;
-- (void)setServerSupportsExtendedClipboard:(BOOL)flag;
-- (uint32_t)serverClipboardFlags;
-- (void)setServerClipboardFlags:(uint32_t)flags;
-- (void)sendClipboardCaps;
-- (void)sendClipboardRequest;
-- (void)sendClipboardNotify:(BOOL)available;
-- (void)sendClipboardProvide:(NSString *)str;
-
+- (NSString *)statisticsString;
+- (void)setFrameBufferUpdateSeconds:(float)seconds;
 - (void)installMouseMovedTrackingRect;
 - (void)removeMouseMovedTrackingRect;
-
-
-- (void)setFrameBufferUpdateSeconds: (float)seconds;
+- (void)writeBuffer;
+- (void)requestFrameBufferUpdate:(id)sender;
+- (void)forceFrameBufferUpdate;
+- (void)writeSetDesktopSize:(NSSize)size;
 
 @end

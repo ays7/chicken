@@ -30,6 +30,7 @@
       }
     },
     "ARDAuthWarning" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -86,6 +87,7 @@
       }
     },
     "AuthenticationFailedTooMany" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -284,6 +286,7 @@
       }
     },
     "ConnectionStatistics" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -450,6 +453,9 @@
           }
         }
       }
+    },
+    "Disconnected" : {
+
     },
     "DisplayIsPort" : {
       "localizations" : {
@@ -796,6 +802,7 @@
       }
     },
     "InflateMem" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1140,6 +1147,7 @@
       }
     },
     "NotVNC" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1223,6 +1231,9 @@
           }
         }
       }
+    },
+    "Password:" : {
+
     },
     "PasteAnyways" : {
       "extractionState" : "stale",
@@ -1368,6 +1379,7 @@
       }
     },
     "ProtocolError" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1537,6 +1549,7 @@
       }
     },
     "ServerError" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1565,6 +1578,7 @@
       }
     },
     "ServerInfo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1593,6 +1607,7 @@
       }
     },
     "ServerReports" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1822,6 +1837,7 @@
       }
     },
     "TightBadSubencoding" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1850,6 +1866,7 @@
       }
     },
     "TightInflateErr" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1876,12 +1893,6 @@
           }
         }
       }
-    },
-    "TightInflateInitErr" : {
-
-    },
-    "TightInflateInitErrMsg" : {
-
     },
     "TightInflateInitError" : {
       "extractionState" : "stale",
@@ -1942,6 +1953,7 @@
       }
     },
     "TightUnknownFilter" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1970,6 +1982,7 @@
       }
     },
     "TightWrongJpeg" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1998,6 +2011,7 @@
       }
     },
     "TightZeroPalette" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2167,6 +2181,7 @@
       }
     },
     "UnknownAuthResult" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2195,6 +2210,7 @@
       }
     },
     "UnknownAuthType" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2223,6 +2239,7 @@
       }
     },
     "UnknownMessageType" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2251,6 +2268,7 @@
       }
     },
     "UnknownMessageTypeLastEncoding" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2279,6 +2297,7 @@
       }
     },
     "UnknownRectangle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2307,6 +2326,7 @@
       }
     },
     "UnknownRectangleLastEncoding" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2333,6 +2353,9 @@
           }
         }
       }
+    },
+    "Username:" : {
+
     },
     "yes" : {
       "extractionState" : "stale",
@@ -2364,6 +2387,7 @@
       }
     },
     "ZlibHexDeflateTooSmall" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2421,6 +2445,7 @@
       }
     },
     "ZlibHexInflateError" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2447,9 +2472,6 @@
           }
         }
       }
-    },
-    "ZlibInflateErr" : {
-
     },
     "ZlibInflateError" : {
       "extractionState" : "stale",
@@ -2539,6 +2561,7 @@
       }
     },
     "ZrleTooSmall" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2567,6 +2590,7 @@
       }
     },
     "ZrleUnknownSubencoding" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

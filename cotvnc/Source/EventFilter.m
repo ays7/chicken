@@ -11,7 +11,6 @@
 #import "Profile.h"
 #import "QueuedEvent.h"
 #import "RFBConnection.h"
-#import "RFBView.h"
 
 /* The basic path of an event through this system is as follows (this ignores
  * any emulation scenarios which might be triggered):
@@ -141,11 +140,11 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 }
 
 
-- (RFBView *)view
+- (NSView *)view
 {  return _view;  }
 
 
-- (void)setView: (RFBView *)view
+- (void)setView: (NSView *)view
 {  _view = view;  }
 
 

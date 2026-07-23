@@ -11,10 +11,7 @@
 #import "ProfileManager.h"
 #import "RFBConnectionManager.h"
 
-#import "GrayScaleFrameBuffer.h"
-#import "LowColorFrameBuffer.h"
-#import "HighColorFrameBuffer.h"
-#import "TrueColorFrameBuffer.h"
+// Obsolete framebuffer imports removed
 
 
 // --- Preferences Version --- //
@@ -106,32 +103,9 @@ static int const kPrefsVersion = 0x00000002;
 {  return [[[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_OtherFrameBufferUpdateSeconds_Key] floatValue];  }
 
 
-- (void)getLocalPixelFormat:(rfbPixelFormat*)pf
-{
-    id fbc = [self defaultFrameBufferClass];
-    [fbc getPixelFormat:pf];
-}
-
 - (float)gammaCorrection
 {
-	// we won't need this method once we move to a sane way of drawing into our local buffer
 	return 1.1;
-}
-
-
-- (id)defaultFrameBufferClass
-{
-	// we won't need this method once we move to a sane way of drawing into our local buffer
-	NSWindowDepth windowDepth = [[NSScreen deepestScreen] depth];
-	if( 1 == NSNumberOfColorComponents(NSColorSpaceFromDepth(windowDepth)) )
-		return [GrayScaleFrameBuffer class];
-
-	NSInteger bpp = NSBitsPerPixelFromDepth( windowDepth );
-	if ( bpp <= 8 )
-		return [LowColorFrameBuffer class];
-	if ( bpp <= 16 )
-		return [HighColorFrameBuffer class];
-	return [TrueColorFrameBuffer class];
 }
 
 - (float)maxPossibleFrameBufferUpdateSeconds;

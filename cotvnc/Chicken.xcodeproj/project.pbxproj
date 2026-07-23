@@ -3,50 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719B033DB4A801A8010C /* ByteBlockReader.h */; };
-		7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719D033DB4A801A8010C /* ByteReader.h */; };
-		7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719F033DB4A801A8010C /* CARD16Reader.h */; };
-		7F7A93E805E71B5C00E20416 /* CARD32Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71A1033DB4A801A8010C /* CARD32Reader.h */; };
-		7F7A93E905E71B5C00E20416 /* CARD8Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71A3033DB4A801A8010C /* CARD8Reader.h */; };
-		7F7A93EB05E71B5C00E20416 /* CopyRectangleEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71A7033DB4A801A8010C /* CopyRectangleEncodingReader.h */; };
-		7F7A93EC05E71B5C00E20416 /* CoRREEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71A9033DB4A801A8010C /* CoRREEncodingReader.h */; };
+		5E0405A72DA0CFF300C3B312 /* RoyalVNCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5E0405A62DA0CFF300C3B312 /* RoyalVNCKit */; };
 		7F7A93ED05E71B5C00E20416 /* d3des.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71AD033DB4A801A8010C /* d3des.h */; };
-		7F7A93EE05E71B5C00E20416 /* EncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B0033DB4A801A8010C /* EncodingReader.h */; };
-		7F7A93EF05E71B5C00E20416 /* FilterReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B2033DB4A801A8010C /* FilterReader.h */; };
-		7F7A93F005E71B5C00E20416 /* FrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B4033DB4A801A8010C /* FrameBuffer.h */; };
-		7F7A93F105E71B5C00E20416 /* FrameBufferDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B6033DB4A801A8010C /* FrameBufferDrawing.h */; };
-		7F7A93F205E71B5C00E20416 /* FrameBufferUpdateReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B7033DB4A801A8010C /* FrameBufferUpdateReader.h */; };
-		7F7A93F305E71B5C00E20416 /* GradientFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71B9033DB4A801A8010C /* GradientFilter.h */; };
-		7F7A93F405E71B5C00E20416 /* GrayScaleFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71BB033DB4A801A8010C /* GrayScaleFrameBuffer.h */; };
-		7F7A93F505E71B5C00E20416 /* HextileEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71BD033DB4A801A8010C /* HextileEncodingReader.h */; };
-		7F7A93F605E71B5C00E20416 /* HighColorFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71BF033DB4A801A8010C /* HighColorFrameBuffer.h */; };
-		7F7A93F705E71B5C00E20416 /* LowColorFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71CE033DB4A801A8010C /* LowColorFrameBuffer.h */; };
-		7F7A93F905E71B5C00E20416 /* PaletteFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D3033DB4A801A8010C /* PaletteFilter.h */; };
 		7F7A93FA05E71B5C00E20416 /* Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D5033DB4A801A8010C /* Profile.h */; };
 		7F7A93FB05E71B5C00E20416 /* ProfileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D7033DB4A801A8010C /* ProfileManager.h */; };
-		7F7A93FC05E71B5C00E20416 /* RawEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */; };
 		7F7A93FE05E71B5C00E20416 /* RFBConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DD033DB4A801A8010C /* RFBConnection.h */; };
 		7F7A93FF05E71B5C00E20416 /* RFBConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */; };
-		7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */; };
 		7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E3033DB4A801A8010C /* rfbproto.h */; };
-		7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E4033DB4A801A8010C /* RFBProtocol.h */; };
-		7F7A940305E71B5C00E20416 /* RFBServerInitReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E6033DB4A801A8010C /* RFBServerInitReader.h */; };
-		7F7A940405E71B5C00E20416 /* RFBStringReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E8033DB4A801A8010C /* RFBStringReader.h */; };
-		7F7A940505E71B5C00E20416 /* RFBView.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71EA033DB4A801A8010C /* RFBView.h */; };
-		7F7A940605E71B5C00E20416 /* RREEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71EC033DB4A801A8010C /* RREEncodingReader.h */; };
-		7F7A940705E71B5C00E20416 /* ServerCutTextReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71EE033DB4A801A8010C /* ServerCutTextReader.h */; };
-		7F7A940805E71B5C00E20416 /* SetColorMapEntriesReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F0033DB4A801A8010C /* SetColorMapEntriesReader.h */; };
-		7F7A940905E71B5C00E20416 /* TightEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F2033DB4A801A8010C /* TightEncodingReader.h */; };
-		7F7A940A05E71B5C00E20416 /* TrueColorFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F5033DB4A801A8010C /* TrueColorFrameBuffer.h */; };
 		7F7A940B05E71B5C00E20416 /* vncauth.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71F8033DB4A801A8010C /* vncauth.h */; };
-		7F7A940C05E71B5C00E20416 /* ZipLengthReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71FB033DB4A801A8010C /* ZipLengthReader.h */; };
-		7F7A940E05E71B5C00E20416 /* ZlibEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F564F4B70392E07E01303550 /* ZlibEncodingReader.h */; };
-		7F7A940F05E71B5C00E20416 /* ZlibHexEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */; };
-		7F7A941005E71B5C00E20416 /* ZRLEEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F536C26803937E5301178D82 /* ZRLEEncodingReader.h */; };
 		7F7A941105E71B5C00E20416 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = F5F2D5A603B3C93B01150DB1 /* debug.h */; };
 		7F7A941205E71B5C00E20416 /* KeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = E2F48D74040EDD2200BD55BA /* KeyChain.h */; };
 		7F7A941305E71B5C00E20416 /* IServerData.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC6DF2705C315C20028A970 /* IServerData.h */; };
@@ -56,47 +24,15 @@
 		7F7A941C05E71B5C00E20416 /* rfbCursor3.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */; };
 		7F7A941F05E71B5C00E20416 /* rfbCursor2.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */; };
 		7F7A942005E71B5C00E20416 /* rfbCursor.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717C033DB40D01A8010C /* rfbCursor.tiff */; };
-		7F7A942705E71B5C00E20416 /* ByteBlockReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC719C033DB4A801A8010C /* ByteBlockReader.m */; };
-		7F7A942805E71B5C00E20416 /* ByteReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC719E033DB4A801A8010C /* ByteReader.m */; };
-		7F7A942905E71B5C00E20416 /* CARD16Reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A0033DB4A801A8010C /* CARD16Reader.m */; };
-		7F7A942A05E71B5C00E20416 /* CARD32Reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A2033DB4A801A8010C /* CARD32Reader.m */; };
-		7F7A942B05E71B5C00E20416 /* CARD8Reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A4033DB4A801A8010C /* CARD8Reader.m */; };
-		7F7A942D05E71B5C00E20416 /* CopyRectangleEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A8033DB4A801A8010C /* CopyRectangleEncodingReader.m */; };
-		7F7A942E05E71B5C00E20416 /* CoRREEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71AA033DB4A801A8010C /* CoRREEncodingReader.m */; };
 		7F7A942105E71B5C00E20416 /* RFBConnection.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7185033DB44301A8010C /* RFBConnection.xib */; };
 		7F7A942205E71B5C00E20416 /* OSX_RFBViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7187033DB44301A8010C /* OSX_RFBViewer.xib */; };
 		7F7A942F05E71B5C00E20416 /* d3des.c in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71AC033DB4A801A8010C /* d3des.c */; };
-		7F7A943005E71B5C00E20416 /* EncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B1033DB4A801A8010C /* EncodingReader.m */; };
-		7F7A943105E71B5C00E20416 /* FilterReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B3033DB4A801A8010C /* FilterReader.m */; };
-		7F7A943205E71B5C00E20416 /* FrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B5033DB4A801A8010C /* FrameBuffer.m */; };
-		7F7A943305E71B5C00E20416 /* FrameBufferUpdateReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B8033DB4A801A8010C /* FrameBufferUpdateReader.m */; };
-		7F7A943405E71B5C00E20416 /* GradientFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71BA033DB4A801A8010C /* GradientFilter.m */; };
-		7F7A943505E71B5C00E20416 /* GrayScaleFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71BC033DB4A801A8010C /* GrayScaleFrameBuffer.m */; settings = {COMPILER_FLAGS = "-O2"; }; };
-		7F7A943605E71B5C00E20416 /* HextileEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71BE033DB4A801A8010C /* HextileEncodingReader.m */; };
-		7F7A943705E71B5C00E20416 /* HighColorFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71C0033DB4A801A8010C /* HighColorFrameBuffer.m */; settings = {COMPILER_FLAGS = "-O2"; }; };
-		7F7A943805E71B5C00E20416 /* LowColorFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71CF033DB4A801A8010C /* LowColorFrameBuffer.m */; settings = {COMPILER_FLAGS = "-O2"; }; };
-		7F7A943A05E71B5C00E20416 /* PaletteFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71D4033DB4A801A8010C /* PaletteFilter.m */; };
 		7F7A943B05E71B5C00E20416 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71D6033DB4A801A8010C /* Profile.m */; };
 		7F7A943C05E71B5C00E20416 /* ProfileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71D8033DB4A801A8010C /* ProfileManager.m */; };
-		7F7A943D05E71B5C00E20416 /* RawEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */; };
 		7F7A943F05E71B5C00E20416 /* RFBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71DE033DB4A801A8010C /* RFBConnection.m */; };
 		7F7A944005E71B5C00E20416 /* RFBConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71E0033DB4A801A8010C /* RFBConnectionManager.m */; };
-		7F7A944105E71B5C00E20416 /* RFBHandshaker.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */; };
-		7F7A944205E71B5C00E20416 /* RFBProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71E5033DB4A801A8010C /* RFBProtocol.m */; };
-		7F7A944305E71B5C00E20416 /* RFBServerInitReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71E7033DB4A801A8010C /* RFBServerInitReader.m */; };
-		7F7A944405E71B5C00E20416 /* RFBStringReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71E9033DB4A801A8010C /* RFBStringReader.m */; };
-		7F7A944505E71B5C00E20416 /* RFBView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71EB033DB4A801A8010C /* RFBView.m */; };
-		7F7A944605E71B5C00E20416 /* RREEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71ED033DB4A801A8010C /* RREEncodingReader.m */; };
-		7F7A944705E71B5C00E20416 /* ServerCutTextReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71EF033DB4A801A8010C /* ServerCutTextReader.m */; };
-		7F7A944805E71B5C00E20416 /* SetColorMapEntriesReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F1033DB4A801A8010C /* SetColorMapEntriesReader.m */; };
-		7F7A944905E71B5C00E20416 /* TightEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F3033DB4A801A8010C /* TightEncodingReader.m */; };
-		7F7A944A05E71B5C00E20416 /* TrueColorFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F6033DB4A801A8010C /* TrueColorFrameBuffer.m */; settings = {COMPILER_FLAGS = "-O2"; }; };
 		7F7A944B05E71B5C00E20416 /* vncauth.c in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F7033DB4A801A8010C /* vncauth.c */; };
 		7F7A944C05E71B5C00E20416 /* VNCViewer_main.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71F9033DB4A801A8010C /* VNCViewer_main.m */; };
-		7F7A944D05E71B5C00E20416 /* ZipLengthReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71FC033DB4A801A8010C /* ZipLengthReader.m */; };
-		7F7A944F05E71B5C00E20416 /* ZlibEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F564F4B60392E07E01303550 /* ZlibEncodingReader.m */; };
-		7F7A945005E71B5C00E20416 /* ZlibHexEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */; };
-		7F7A945105E71B5C00E20416 /* ZRLEEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F536C26903937E5301178D82 /* ZRLEEncodingReader.m */; };
 		7F7A945205E71B5C00E20416 /* debug.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F2D5A703B3C93B01150DB1 /* debug.m */; };
 		7F7A945305E71B5C00E20416 /* KeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F48D75040EDD2200BD55BA /* KeyChain.m */; };
 		7F7A945405E71B5C00E20416 /* ServerFromPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6DF6805C31AF50028A970 /* ServerFromPrefs.m */; };
@@ -119,10 +55,6 @@
 		7FFA8FEC062BA6330008D381 /* ServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA8FEA062BA6330008D381 /* ServerBase.m */; };
 		7FFA903D062BA74F0008D381 /* ServerDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FFA903B062BA74F0008D381 /* ServerDisplay.xib */; };
 		8A5828462FAA24D700A4E226 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8A5828452FAA24D700A4E226 /* Localizable.xcstrings */; };
-		8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */; };
-		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
-		DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */; };
-		DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */; };
 		DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1FD8C312D5100400632D78 /* PersistentServer.h */; };
 		DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1FD8C412D5100400632D78 /* PersistentServer.m */; };
 		DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9112D6B1A000632D78 /* Security.framework */; };
@@ -135,12 +67,8 @@
 		DA68E53311E7867500F23347 /* ConnectionWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA68E53111E7867500F23347 /* ConnectionWaiter.m */; };
 		DA78379912DE159800F1893E /* SshWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA78379712DE159800F1893E /* SshWaiter.h */; };
 		DA78379A12DE159800F1893E /* SshWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA78379812DE159800F1893E /* SshWaiter.m */; };
-		DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */; };
-		DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */; };
 		DAA856D116B8717100A40AB5 /* DockConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA856CF16B8717100A40AB5 /* DockConnection.h */; };
 		DAA856D216B8717100A40AB5 /* DockConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA856D016B8717100A40AB5 /* DockConnection.m */; };
-		DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */; };
-		DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */; };
 		DAC8077E12FEC38400C4ADB6 /* ssh-helper.sh in Resources */ = {isa = PBXBuildFile; fileRef = DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */; };
 		DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */; };
 		DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */; };
@@ -223,10 +151,6 @@
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
 		7FFA8FEA062BA6330008D381 /* ServerBase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerBase.m; sourceTree = "<group>"; };
 		8A5828452FAA24D700A4E226 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = "<group>"; };
-		8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = "libjpeg-turbo/lib/libturbojpeg.a"; sourceTree = "<group>"; };
-		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZlibStreamReader.h; sourceTree = "<group>"; };
-		DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZlibStreamReader.m; sourceTree = "<group>"; };
 		8AC541EB2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/AuthPrompt.xib; sourceTree = "<group>"; };
 		8AC541EC2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ConnectionDialog.xib; sourceTree = "<group>"; };
 		8AC541ED2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ListenDialog.xib; sourceTree = "<group>"; };
@@ -247,12 +171,8 @@
 		DA68E53111E7867500F23347 /* ConnectionWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionWaiter.m; sourceTree = "<group>"; };
 		DA78379712DE159800F1893E /* SshWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SshWaiter.h; sourceTree = "<group>"; };
 		DA78379812DE159800F1893E /* SshWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SshWaiter.m; sourceTree = "<group>"; };
-		DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CursorPseudoEncodingReader.h; sourceTree = "<group>"; };
-		DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CursorPseudoEncodingReader.m; sourceTree = "<group>"; };
 		DAA856CF16B8717100A40AB5 /* DockConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DockConnection.h; sourceTree = "<group>"; };
 		DAA856D016B8717100A40AB5 /* DockConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DockConnection.m; sourceTree = "<group>"; };
-		DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DesktopNameEncodingReader.h; sourceTree = "<group>"; };
-		DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DesktopNameEncodingReader.m; sourceTree = "<group>"; };
 		DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "ssh-helper.sh"; path = "Resources/ssh-helper.sh"; sourceTree = "<group>"; };
 		DAD6DEDF12DCF37A001FD9D6 /* AuthPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuthPrompt.h; sourceTree = "<group>"; };
 		DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuthPrompt.m; sourceTree = "<group>"; };
@@ -298,89 +218,24 @@
 		E2F48D75040EDD2200BD55BA /* KeyChain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyChain.m; sourceTree = "<group>"; };
 		E2F48D78040EDD5100BD55BA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		F52128E40368AF9F01F702E0 /* GNU Public License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "GNU Public License.txt"; sourceTree = "<group>"; };
-		F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibHexEncodingReader.h; sourceTree = "<group>"; };
-		F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibHexEncodingReader.m; sourceTree = "<group>"; };
-		F536C26803937E5301178D82 /* ZRLEEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZRLEEncodingReader.h; sourceTree = "<group>"; };
-		F536C26903937E5301178D82 /* ZRLEEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZRLEEncodingReader.m; sourceTree = "<group>"; };
-		F564F4B60392E07E01303550 /* ZlibEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibEncodingReader.m; sourceTree = "<group>"; };
-		F564F4B70392E07E01303550 /* ZlibEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibEncodingReader.h; sourceTree = "<group>"; };
 		F5DC7177033DB40D01A8010C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = "<group>"; };
 		F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor3.tiff; path = Resources/rfbCursor3.tiff; sourceTree = "<group>"; };
 		F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor2.tiff; path = Resources/rfbCursor2.tiff; sourceTree = "<group>"; };
 		F5DC717C033DB40D01A8010C /* rfbCursor.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor.tiff; path = Resources/rfbCursor.tiff; sourceTree = "<group>"; };
-		F5DC719B033DB4A801A8010C /* ByteBlockReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteBlockReader.h; sourceTree = "<group>"; };
-		F5DC719C033DB4A801A8010C /* ByteBlockReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ByteBlockReader.m; sourceTree = "<group>"; };
-		F5DC719D033DB4A801A8010C /* ByteReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteReader.h; sourceTree = "<group>"; };
-		F5DC719E033DB4A801A8010C /* ByteReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ByteReader.m; sourceTree = "<group>"; };
-		F5DC719F033DB4A801A8010C /* CARD16Reader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CARD16Reader.h; sourceTree = "<group>"; };
-		F5DC71A0033DB4A801A8010C /* CARD16Reader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CARD16Reader.m; sourceTree = "<group>"; };
-		F5DC71A1033DB4A801A8010C /* CARD32Reader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CARD32Reader.h; sourceTree = "<group>"; };
-		F5DC71A2033DB4A801A8010C /* CARD32Reader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CARD32Reader.m; sourceTree = "<group>"; };
-		F5DC71A3033DB4A801A8010C /* CARD8Reader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CARD8Reader.h; sourceTree = "<group>"; };
-		F5DC71A4033DB4A801A8010C /* CARD8Reader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CARD8Reader.m; sourceTree = "<group>"; };
-		F5DC71A7033DB4A801A8010C /* CopyRectangleEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CopyRectangleEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71A8033DB4A801A8010C /* CopyRectangleEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CopyRectangleEncodingReader.m; sourceTree = "<group>"; };
-		F5DC71A9033DB4A801A8010C /* CoRREEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CoRREEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71AA033DB4A801A8010C /* CoRREEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CoRREEncodingReader.m; sourceTree = "<group>"; };
 		F5DC71AC033DB4A801A8010C /* d3des.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = d3des.c; sourceTree = "<group>"; };
 		F5DC71AD033DB4A801A8010C /* d3des.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = d3des.h; sourceTree = "<group>"; };
-		F5DC71B0033DB4A801A8010C /* EncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EncodingReader.h; sourceTree = "<group>"; };
-		F5DC71B1033DB4A801A8010C /* EncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = EncodingReader.m; sourceTree = "<group>"; };
-		F5DC71B2033DB4A801A8010C /* FilterReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FilterReader.h; sourceTree = "<group>"; };
-		F5DC71B3033DB4A801A8010C /* FilterReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FilterReader.m; sourceTree = "<group>"; };
-		F5DC71B4033DB4A801A8010C /* FrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FrameBuffer.h; sourceTree = "<group>"; };
-		F5DC71B5033DB4A801A8010C /* FrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FrameBuffer.m; sourceTree = "<group>"; };
-		F5DC71B6033DB4A801A8010C /* FrameBufferDrawing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FrameBufferDrawing.h; sourceTree = "<group>"; };
-		F5DC71B7033DB4A801A8010C /* FrameBufferUpdateReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FrameBufferUpdateReader.h; sourceTree = "<group>"; };
-		F5DC71B8033DB4A801A8010C /* FrameBufferUpdateReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FrameBufferUpdateReader.m; sourceTree = "<group>"; };
-		F5DC71B9033DB4A801A8010C /* GradientFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GradientFilter.h; sourceTree = "<group>"; };
-		F5DC71BA033DB4A801A8010C /* GradientFilter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GradientFilter.m; sourceTree = "<group>"; };
-		F5DC71BB033DB4A801A8010C /* GrayScaleFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GrayScaleFrameBuffer.h; sourceTree = "<group>"; };
-		F5DC71BC033DB4A801A8010C /* GrayScaleFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GrayScaleFrameBuffer.m; sourceTree = "<group>"; };
-		F5DC71BD033DB4A801A8010C /* HextileEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = HextileEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71BE033DB4A801A8010C /* HextileEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = HextileEncodingReader.m; sourceTree = "<group>"; };
-		F5DC71BF033DB4A801A8010C /* HighColorFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = HighColorFrameBuffer.h; sourceTree = "<group>"; };
-		F5DC71C0033DB4A801A8010C /* HighColorFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = HighColorFrameBuffer.m; sourceTree = "<group>"; };
-		F5DC71CE033DB4A801A8010C /* LowColorFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LowColorFrameBuffer.h; sourceTree = "<group>"; };
-		F5DC71CF033DB4A801A8010C /* LowColorFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = LowColorFrameBuffer.m; sourceTree = "<group>"; };
-		F5DC71D3033DB4A801A8010C /* PaletteFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PaletteFilter.h; sourceTree = "<group>"; };
-		F5DC71D4033DB4A801A8010C /* PaletteFilter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = PaletteFilter.m; sourceTree = "<group>"; };
 		F5DC71D5033DB4A801A8010C /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
 		F5DC71D6033DB4A801A8010C /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
 		F5DC71D7033DB4A801A8010C /* ProfileManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ProfileManager.h; sourceTree = "<group>"; };
 		F5DC71D8033DB4A801A8010C /* ProfileManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ProfileManager.m; sourceTree = "<group>"; };
-		F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RawEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RawEncodingReader.m; sourceTree = "<group>"; };
 		F5DC71DD033DB4A801A8010C /* RFBConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnection.h; sourceTree = "<group>"; };
 		F5DC71DE033DB4A801A8010C /* RFBConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnection.m; sourceTree = "<group>"; };
 		F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnectionManager.h; sourceTree = "<group>"; };
 		F5DC71E0033DB4A801A8010C /* RFBConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnectionManager.m; sourceTree = "<group>"; };
-		F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBHandshaker.h; sourceTree = "<group>"; };
-		F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBHandshaker.m; sourceTree = "<group>"; };
 		F5DC71E3033DB4A801A8010C /* rfbproto.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = rfbproto.h; sourceTree = "<group>"; };
-		F5DC71E4033DB4A801A8010C /* RFBProtocol.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBProtocol.h; sourceTree = "<group>"; };
-		F5DC71E5033DB4A801A8010C /* RFBProtocol.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBProtocol.m; sourceTree = "<group>"; };
-		F5DC71E6033DB4A801A8010C /* RFBServerInitReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBServerInitReader.h; sourceTree = "<group>"; };
-		F5DC71E7033DB4A801A8010C /* RFBServerInitReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBServerInitReader.m; sourceTree = "<group>"; };
-		F5DC71E8033DB4A801A8010C /* RFBStringReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBStringReader.h; sourceTree = "<group>"; };
-		F5DC71E9033DB4A801A8010C /* RFBStringReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBStringReader.m; sourceTree = "<group>"; };
-		F5DC71EA033DB4A801A8010C /* RFBView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBView.h; sourceTree = "<group>"; };
-		F5DC71EB033DB4A801A8010C /* RFBView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBView.m; sourceTree = "<group>"; };
-		F5DC71EC033DB4A801A8010C /* RREEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RREEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71ED033DB4A801A8010C /* RREEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RREEncodingReader.m; sourceTree = "<group>"; };
-		F5DC71EE033DB4A801A8010C /* ServerCutTextReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerCutTextReader.h; sourceTree = "<group>"; };
-		F5DC71EF033DB4A801A8010C /* ServerCutTextReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerCutTextReader.m; sourceTree = "<group>"; };
-		F5DC71F0033DB4A801A8010C /* SetColorMapEntriesReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SetColorMapEntriesReader.h; sourceTree = "<group>"; };
-		F5DC71F1033DB4A801A8010C /* SetColorMapEntriesReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SetColorMapEntriesReader.m; sourceTree = "<group>"; };
-		F5DC71F2033DB4A801A8010C /* TightEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TightEncodingReader.h; sourceTree = "<group>"; };
-		F5DC71F3033DB4A801A8010C /* TightEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TightEncodingReader.m; sourceTree = "<group>"; };
-		F5DC71F5033DB4A801A8010C /* TrueColorFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TrueColorFrameBuffer.h; sourceTree = "<group>"; };
-		F5DC71F6033DB4A801A8010C /* TrueColorFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = TrueColorFrameBuffer.m; sourceTree = "<group>"; };
 		F5DC71F7033DB4A801A8010C /* vncauth.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vncauth.c; sourceTree = "<group>"; };
 		F5DC71F8033DB4A801A8010C /* vncauth.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = vncauth.h; sourceTree = "<group>"; };
 		F5DC71F9033DB4A801A8010C /* VNCViewer_main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = VNCViewer_main.m; sourceTree = "<group>"; };
-		F5DC71FB033DB4A801A8010C /* ZipLengthReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZipLengthReader.h; sourceTree = "<group>"; };
-		F5DC71FC033DB4A801A8010C /* ZipLengthReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZipLengthReader.m; sourceTree = "<group>"; };
 		F5F2D5A603B3C93B01150DB1 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		F5F2D5A703B3C93B01150DB1 /* debug.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = debug.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -390,8 +245,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */,
-				8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */,
+				5E0405A72DA0CFF300C3B312 /* RoyalVNCKit in Frameworks */,
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
@@ -458,8 +312,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8A84A09A2D5BC78E00277CAC /* libz.tbd */,
-				8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -593,10 +445,6 @@
 				DAD6DEE012DCF37A001FD9D6 /* AuthPrompt.m */,
 				DA335CCD12DA4A6C00C70987 /* Session.h */,
 				DA335CCE12DA4A6C00C70987 /* Session.m */,
-				DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */,
-				DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */,
-				DAA91C8F1234319B000F1CCD /* DesktopNameEncodingReader.h */,
-				DAA91C901234319B000F1CCD /* DesktopNameEncodingReader.m */,
 				DAEB76F11232AE3400002E6A /* Keymap.m */,
 				7FE7F82F06D8003200647AA1 /* Connection Management */,
 				7FE7F82E06D7FFC700647AA1 /* Preferences */,
@@ -606,96 +454,29 @@
 				7FB3EA1D0804E77F003757C9 /* AppleScript Processing */,
 				E2F3A2E306D4483D005EB917 /* AppDelegate.h */,
 				E2F3A2E406D4483D005EB917 /* AppDelegate.m */,
-				F5DC719B033DB4A801A8010C /* ByteBlockReader.h */,
-				F5DC719C033DB4A801A8010C /* ByteBlockReader.m */,
-				F5DC719D033DB4A801A8010C /* ByteReader.h */,
-				F5DC719E033DB4A801A8010C /* ByteReader.m */,
-				F5DC719F033DB4A801A8010C /* CARD16Reader.h */,
-				F5DC71A0033DB4A801A8010C /* CARD16Reader.m */,
-				F5DC71A1033DB4A801A8010C /* CARD32Reader.h */,
-				F5DC71A2033DB4A801A8010C /* CARD32Reader.m */,
-				F5DC71A3033DB4A801A8010C /* CARD8Reader.h */,
-				F5DC71A4033DB4A801A8010C /* CARD8Reader.m */,
-				F5DC71A7033DB4A801A8010C /* CopyRectangleEncodingReader.h */,
-				F5DC71A8033DB4A801A8010C /* CopyRectangleEncodingReader.m */,
-				F5DC71A9033DB4A801A8010C /* CoRREEncodingReader.h */,
-				F5DC71AA033DB4A801A8010C /* CoRREEncodingReader.m */,
 				DA68E53011E7867500F23347 /* ConnectionWaiter.h */,
 				DA68E53111E7867500F23347 /* ConnectionWaiter.m */,
-				DA80A6ED11E27B430076CB0A /* CursorPseudoEncodingReader.h */,
-				DA80A6EE11E27B430076CB0A /* CursorPseudoEncodingReader.m */,
 				F5DC71AC033DB4A801A8010C /* d3des.c */,
 				F5DC71AD033DB4A801A8010C /* d3des.h */,
 				F5F2D5A603B3C93B01150DB1 /* debug.h */,
 				F5F2D5A703B3C93B01150DB1 /* debug.m */,
-				F5DC71B0033DB4A801A8010C /* EncodingReader.h */,
-				F5DC71B1033DB4A801A8010C /* EncodingReader.m */,
 				E291FA1308815A950061216E /* EventFilter.h */,
 				E291FA1408815A950061216E /* EventFilter.m */,
-				F5DC71B2033DB4A801A8010C /* FilterReader.h */,
-				F5DC71B3033DB4A801A8010C /* FilterReader.m */,
-				F5DC71B4033DB4A801A8010C /* FrameBuffer.h */,
-				F5DC71B5033DB4A801A8010C /* FrameBuffer.m */,
-				F5DC71B6033DB4A801A8010C /* FrameBufferDrawing.h */,
-				F5DC71B7033DB4A801A8010C /* FrameBufferUpdateReader.h */,
-				F5DC71B8033DB4A801A8010C /* FrameBufferUpdateReader.m */,
-				F5DC71B9033DB4A801A8010C /* GradientFilter.h */,
-				F5DC71BA033DB4A801A8010C /* GradientFilter.m */,
-				F5DC71BB033DB4A801A8010C /* GrayScaleFrameBuffer.h */,
-				F5DC71BC033DB4A801A8010C /* GrayScaleFrameBuffer.m */,
 				DA231DF512BD562100D3AD44 /* Keymap.h */,
-				F5DC71BD033DB4A801A8010C /* HextileEncodingReader.h */,
-				F5DC71BE033DB4A801A8010C /* HextileEncodingReader.m */,
-				F5DC71BF033DB4A801A8010C /* HighColorFrameBuffer.h */,
-				F5DC71C0033DB4A801A8010C /* HighColorFrameBuffer.m */,
 				E2F48D74040EDD2200BD55BA /* KeyChain.h */,
 				E2F48D75040EDD2200BD55BA /* KeyChain.m */,
-				F5DC71CE033DB4A801A8010C /* LowColorFrameBuffer.h */,
-				F5DC71CF033DB4A801A8010C /* LowColorFrameBuffer.m */,
 				E2929DD307675DE800190669 /* MyApp.h */,
 				E2929DD407675DE800190669 /* MyApp.m */,
 				E2F3AD6F06D5E11D005EB917 /* NSObject_Chicken.h */,
 				E2F3AD7006D5E11D005EB917 /* NSObject_Chicken.m */,
-				F5DC71D3033DB4A801A8010C /* PaletteFilter.h */,
-				F5DC71D4033DB4A801A8010C /* PaletteFilter.m */,
 				E291FB21088168E20061216E /* QueuedEvent.h */,
 				E291FB22088168E20061216E /* QueuedEvent.m */,
-				F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */,
-				F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */,
 				F5DC71DD033DB4A801A8010C /* RFBConnection.h */,
 				F5DC71DE033DB4A801A8010C /* RFBConnection.m */,
-				F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */,
-				F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */,
 				F5DC71E3033DB4A801A8010C /* rfbproto.h */,
-				F5DC71E4033DB4A801A8010C /* RFBProtocol.h */,
-				F5DC71E5033DB4A801A8010C /* RFBProtocol.m */,
-				F5DC71E6033DB4A801A8010C /* RFBServerInitReader.h */,
-				F5DC71E7033DB4A801A8010C /* RFBServerInitReader.m */,
-				F5DC71E8033DB4A801A8010C /* RFBStringReader.h */,
-				F5DC71E9033DB4A801A8010C /* RFBStringReader.m */,
-				F5DC71EA033DB4A801A8010C /* RFBView.h */,
-				F5DC71EB033DB4A801A8010C /* RFBView.m */,
-				F5DC71EC033DB4A801A8010C /* RREEncodingReader.h */,
-				F5DC71ED033DB4A801A8010C /* RREEncodingReader.m */,
-				F5DC71EE033DB4A801A8010C /* ServerCutTextReader.h */,
-				F5DC71EF033DB4A801A8010C /* ServerCutTextReader.m */,
-				F5DC71F0033DB4A801A8010C /* SetColorMapEntriesReader.h */,
-				F5DC71F1033DB4A801A8010C /* SetColorMapEntriesReader.m */,
-				F5DC71F2033DB4A801A8010C /* TightEncodingReader.h */,
-				F5DC71F3033DB4A801A8010C /* TightEncodingReader.m */,
-				F5DC71F5033DB4A801A8010C /* TrueColorFrameBuffer.h */,
-				F5DC71F6033DB4A801A8010C /* TrueColorFrameBuffer.m */,
 				F5DC71F7033DB4A801A8010C /* vncauth.c */,
 				F5DC71F8033DB4A801A8010C /* vncauth.h */,
 				F5DC71F9033DB4A801A8010C /* VNCViewer_main.m */,
-				F5DC71FB033DB4A801A8010C /* ZipLengthReader.h */,
-				F5DC71FC033DB4A801A8010C /* ZipLengthReader.m */,
-				F564F4B70392E07E01303550 /* ZlibEncodingReader.h */,
-				F564F4B60392E07E01303550 /* ZlibEncodingReader.m */,
-				F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */,
-				F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */,
-				F536C26803937E5301178D82 /* ZRLEEncodingReader.h */,
-				F536C26903937E5301178D82 /* ZRLEEncodingReader.m */,
 				DAA856CF16B8717100A40AB5 /* DockConnection.h */,
 				DAA856D016B8717100A40AB5 /* DockConnection.m */,
 			);
@@ -709,46 +490,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */,
-				7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */,
-				7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */,
-				7F7A93E805E71B5C00E20416 /* CARD32Reader.h in Headers */,
-				7F7A93E905E71B5C00E20416 /* CARD8Reader.h in Headers */,
-				7F7A93EB05E71B5C00E20416 /* CopyRectangleEncodingReader.h in Headers */,
-				7F7A93EC05E71B5C00E20416 /* CoRREEncodingReader.h in Headers */,
 				7F7A93ED05E71B5C00E20416 /* d3des.h in Headers */,
-				7F7A93EE05E71B5C00E20416 /* EncodingReader.h in Headers */,
-				7F7A93EF05E71B5C00E20416 /* FilterReader.h in Headers */,
-				7F7A93F005E71B5C00E20416 /* FrameBuffer.h in Headers */,
-				7F7A93F105E71B5C00E20416 /* FrameBufferDrawing.h in Headers */,
-				7F7A93F205E71B5C00E20416 /* FrameBufferUpdateReader.h in Headers */,
-				7F7A93F305E71B5C00E20416 /* GradientFilter.h in Headers */,
-				7F7A93F405E71B5C00E20416 /* GrayScaleFrameBuffer.h in Headers */,
-				7F7A93F505E71B5C00E20416 /* HextileEncodingReader.h in Headers */,
-				7F7A93F605E71B5C00E20416 /* HighColorFrameBuffer.h in Headers */,
-				7F7A93F705E71B5C00E20416 /* LowColorFrameBuffer.h in Headers */,
-				7F7A93F905E71B5C00E20416 /* PaletteFilter.h in Headers */,
 				7F7A93FA05E71B5C00E20416 /* Profile.h in Headers */,
 				7F7A93FB05E71B5C00E20416 /* ProfileManager.h in Headers */,
-				7F7A93FC05E71B5C00E20416 /* RawEncodingReader.h in Headers */,
 				7F7A93FE05E71B5C00E20416 /* RFBConnection.h in Headers */,
 				7F7A93FF05E71B5C00E20416 /* RFBConnectionManager.h in Headers */,
-				7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */,
 				7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */,
-				7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */,
-				7F7A940305E71B5C00E20416 /* RFBServerInitReader.h in Headers */,
-				7F7A940405E71B5C00E20416 /* RFBStringReader.h in Headers */,
-				7F7A940505E71B5C00E20416 /* RFBView.h in Headers */,
-				7F7A940605E71B5C00E20416 /* RREEncodingReader.h in Headers */,
-				7F7A940705E71B5C00E20416 /* ServerCutTextReader.h in Headers */,
-				7F7A940805E71B5C00E20416 /* SetColorMapEntriesReader.h in Headers */,
-				7F7A940905E71B5C00E20416 /* TightEncodingReader.h in Headers */,
-				7F7A940A05E71B5C00E20416 /* TrueColorFrameBuffer.h in Headers */,
 				7F7A940B05E71B5C00E20416 /* vncauth.h in Headers */,
-				7F7A940C05E71B5C00E20416 /* ZipLengthReader.h in Headers */,
-				7F7A940E05E71B5C00E20416 /* ZlibEncodingReader.h in Headers */,
-				7F7A940F05E71B5C00E20416 /* ZlibHexEncodingReader.h in Headers */,
-				7F7A941005E71B5C00E20416 /* ZRLEEncodingReader.h in Headers */,
 				7F7A941105E71B5C00E20416 /* debug.h in Headers */,
 				7F7A941205E71B5C00E20416 /* KeyChain.h in Headers */,
 				7F7A941305E71B5C00E20416 /* IServerData.h in Headers */,
@@ -776,11 +524,8 @@
 				7F7DE7D6080F39DF006BF1DF /* ServerStandAlone.h in Headers */,
 				E291FA1508815A950061216E /* EventFilter.h in Headers */,
 				E291FB23088168E20061216E /* QueuedEvent.h in Headers */,
-				DA80A6EF11E27B430076CB0A /* CursorPseudoEncodingReader.h in Headers */,
 				DA68E53211E7867500F23347 /* ConnectionWaiter.h in Headers */,
-				DAA91C911234319B000F1CCD /* DesktopNameEncodingReader.h in Headers */,
 				DA231DF612BD562100D3AD44 /* Keymap.h in Headers */,
-				DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */,
 				DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */,
 				DA335CCF12DA4A6C00C70987 /* Session.h in Headers */,
 				DAD6DEE112DCF37A001FD9D6 /* AuthPrompt.h in Headers */,
@@ -803,6 +548,7 @@
 				7F7A942605E71B5C00E20416 /* Sources */,
 				7F7A945805E71B5C00E20416 /* Frameworks */,
 				DA36490A1293A27900FB8272 /* CopyFiles */,
+				5E0405B02DA1000000C3B312 /* Re-sign Package Frameworks */,
 				1A6258971DBAA6AA008CD537 /* ShellScript */,
 			);
 			buildRules = (
@@ -810,6 +556,9 @@
 			dependencies = (
 			);
 			name = Chicken;
+			packageProductDependencies = (
+				5E0405A62DA0CFF300C3B312 /* RoyalVNCKit */,
+			);
 			productName = "Chicken of the VNC";
 			productReference = 7FD66F5805E9E2B500229E5C /* Chicken.app */;
 			productType = "com.apple.product-type.application";
@@ -835,6 +584,9 @@
 				it,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* Chicken of the VNC */;
+			packageReferences = (
+				5E0405A52DA0CFF300C3B312 /* XCLocalSwiftPackageReference "royalvnc" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -885,6 +637,20 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n# builds dmg\nDMG=${BUILD_ROOT}/${PRODUCT_NAME}_${_CHICKEN_VERSION_}.dmg\n\nrm -f $DMG\nhdiutil create $DMG -volname \"${PRODUCT_NAME}\" -fs HFS+ \\\n    -srcfolder \"${TARGET_BUILD_DIR}\"\n";
 		};
+		5E0405B02DA1000000C3B312 /* Re-sign Package Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Re-sign Package Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Copy all package frameworks to the app bundle's Frameworks folder\nFRAMEWORKS_DIR=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nmkdir -p \"$FRAMEWORKS_DIR\"\nif [ -d \"${BUILT_PRODUCTS_DIR}/PackageFrameworks\" ]; then\n    cp -R \"${BUILT_PRODUCTS_DIR}/PackageFrameworks/\"*.framework \"$FRAMEWORKS_DIR/\"\nfi\n\n# Re-sign all Swift Package Manager frameworks with the ad-hoc identity\n# to resolve Team ID mismatch (e.g. RoyalVNCKit.framework)\nif [ -d \"$FRAMEWORKS_DIR\" ]; then\n    find \"$FRAMEWORKS_DIR\" -name '*.framework' -maxdepth 1 | while read fw; do\n        echo \"Re-signing: $fw\"\n        codesign --force --sign \"-\" --timestamp=none \"$fw\"\n    done\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -892,45 +658,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F7A942705E71B5C00E20416 /* ByteBlockReader.m in Sources */,
-				7F7A942805E71B5C00E20416 /* ByteReader.m in Sources */,
-				7F7A942905E71B5C00E20416 /* CARD16Reader.m in Sources */,
-				7F7A942A05E71B5C00E20416 /* CARD32Reader.m in Sources */,
-				7F7A942B05E71B5C00E20416 /* CARD8Reader.m in Sources */,
-				7F7A942D05E71B5C00E20416 /* CopyRectangleEncodingReader.m in Sources */,
-				7F7A942E05E71B5C00E20416 /* CoRREEncodingReader.m in Sources */,
 				7F7A942F05E71B5C00E20416 /* d3des.c in Sources */,
-				7F7A943005E71B5C00E20416 /* EncodingReader.m in Sources */,
-				7F7A943105E71B5C00E20416 /* FilterReader.m in Sources */,
-				7F7A943205E71B5C00E20416 /* FrameBuffer.m in Sources */,
-				7F7A943305E71B5C00E20416 /* FrameBufferUpdateReader.m in Sources */,
-				7F7A943405E71B5C00E20416 /* GradientFilter.m in Sources */,
-				7F7A943505E71B5C00E20416 /* GrayScaleFrameBuffer.m in Sources */,
-				7F7A943605E71B5C00E20416 /* HextileEncodingReader.m in Sources */,
-				7F7A943705E71B5C00E20416 /* HighColorFrameBuffer.m in Sources */,
-				7F7A943805E71B5C00E20416 /* LowColorFrameBuffer.m in Sources */,
-				7F7A943A05E71B5C00E20416 /* PaletteFilter.m in Sources */,
 				7F7A943B05E71B5C00E20416 /* Profile.m in Sources */,
 				7F7A943C05E71B5C00E20416 /* ProfileManager.m in Sources */,
-				7F7A943D05E71B5C00E20416 /* RawEncodingReader.m in Sources */,
 				7F7A943F05E71B5C00E20416 /* RFBConnection.m in Sources */,
 				7F7A944005E71B5C00E20416 /* RFBConnectionManager.m in Sources */,
-				7F7A944105E71B5C00E20416 /* RFBHandshaker.m in Sources */,
-				7F7A944205E71B5C00E20416 /* RFBProtocol.m in Sources */,
-				7F7A944305E71B5C00E20416 /* RFBServerInitReader.m in Sources */,
-				7F7A944405E71B5C00E20416 /* RFBStringReader.m in Sources */,
-				7F7A944505E71B5C00E20416 /* RFBView.m in Sources */,
-				7F7A944605E71B5C00E20416 /* RREEncodingReader.m in Sources */,
-				7F7A944705E71B5C00E20416 /* ServerCutTextReader.m in Sources */,
-				7F7A944805E71B5C00E20416 /* SetColorMapEntriesReader.m in Sources */,
-				7F7A944905E71B5C00E20416 /* TightEncodingReader.m in Sources */,
-				7F7A944A05E71B5C00E20416 /* TrueColorFrameBuffer.m in Sources */,
 				7F7A944B05E71B5C00E20416 /* vncauth.c in Sources */,
 				7F7A944C05E71B5C00E20416 /* VNCViewer_main.m in Sources */,
-				7F7A944D05E71B5C00E20416 /* ZipLengthReader.m in Sources */,
-				7F7A944F05E71B5C00E20416 /* ZlibEncodingReader.m in Sources */,
-				7F7A945005E71B5C00E20416 /* ZlibHexEncodingReader.m in Sources */,
-				7F7A945105E71B5C00E20416 /* ZRLEEncodingReader.m in Sources */,
 				7F7A945205E71B5C00E20416 /* debug.m in Sources */,
 				7F7A945305E71B5C00E20416 /* KeyChain.m in Sources */,
 				7F7A945405E71B5C00E20416 /* ServerFromPrefs.m in Sources */,
@@ -957,11 +691,8 @@
 				7F7DE7D7080F39DF006BF1DF /* ServerStandAlone.m in Sources */,
 				E291FB1B088168BB0061216E /* EventFilter.m in Sources */,
 				E291FB24088168E20061216E /* QueuedEvent.m in Sources */,
-				DA80A6F011E27B430076CB0A /* CursorPseudoEncodingReader.m in Sources */,
 				DA68E53311E7867500F23347 /* ConnectionWaiter.m in Sources */,
 				DAEB76F21232AE3500002E6A /* Keymap.m in Sources */,
-				DAA91C921234319B000F1CCD /* DesktopNameEncodingReader.m in Sources */,
-				DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */,
 				DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */,
 				DA335CD012DA4A6C00C70987 /* Session.m in Sources */,
 				DAD6DEE212DCF37A001FD9D6 /* AuthPrompt.m in Sources */,
@@ -1045,14 +776,24 @@
 		E20426E7087531990026AA26 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				AUTOMATION_APPLE_EVENTS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1061,6 +802,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
@@ -1068,6 +810,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
 				PRODUCT_NAME = Chicken;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
+				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
+				RUNTIME_EXCEPTION_DEBUGGING_TOOL = NO;
+				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -1082,15 +830,25 @@
 		E20426E8087531990026AA26 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				AUTOMATION_APPLE_EVENTS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1099,6 +857,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
@@ -1106,6 +865,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
 				PRODUCT_NAME = Chicken;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
+				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
+				RUNTIME_EXCEPTION_DEBUGGING_TOOL = NO;
+				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -1120,13 +885,23 @@
 		E20426E9087531990026AA26 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				AUTOMATION_APPLE_EVENTS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1135,6 +910,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
@@ -1142,6 +918,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
 				PRODUCT_NAME = Chicken;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
+				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
+				RUNTIME_EXCEPTION_DEBUGGING_TOOL = NO;
+				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -1158,6 +940,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1177,7 +961,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 4X5WA3953A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1204,6 +988,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1223,7 +1009,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 4X5WA3953A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1247,6 +1033,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1266,7 +1054,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 4X5WA3953A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1289,14 +1077,24 @@
 		E21DEC9C097EC77E00F015DE /* Universal Fast Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				AUTOMATION_APPLE_EVENTS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1305,6 +1103,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "";
@@ -1312,6 +1111,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
 				PRODUCT_NAME = Chicken;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
+				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
+				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
+				RUNTIME_EXCEPTION_DEBUGGING_TOOL = NO;
+				RUNTIME_EXCEPTION_DISABLE_EXECUTABLE_PAGE_PROTECTION = NO;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -1328,6 +1133,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_MODULES = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1347,7 +1154,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 4X5WA3953A;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1394,6 +1201,21 @@
 			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		5E0405A52DA0CFF300C3B312 /* XCLocalSwiftPackageReference "royalvnc" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = royalvnc;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5E0405A62DA0CFF300C3B312 /* RoyalVNCKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E0405A52DA0CFF300C3B312 /* XCLocalSwiftPackageReference "royalvnc" */;
+			productName = RoyalVNCKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }

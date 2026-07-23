@@ -23,7 +23,6 @@
 @protocol IServerData;
 
 @class RFBConnection;
-@class RFBView;
 @class SshTunnel;
 
 @interface Session : NSObject <
@@ -33,7 +32,7 @@ NSNetServiceDelegate,NSWindowDelegate,
 ConnectionWaiterDelegate>
 {
     RFBConnection   *connection;
-    IBOutlet RFBView *rfbView;
+    IBOutlet NSView *rfbView;
     IBOutlet NSWindow    *window;
     id<IServerData> server_;
     NSString        *password;
@@ -49,6 +48,8 @@ ConnectionWaiterDelegate>
 
     BOOL	horizontalScroll;
     BOOL	verticalScroll;
+    BOOL    inServerResize;
+    BOOL    pendingClientResize;  // YES while waiting for the server to confirm a client-requested resize
 
     id optionPanel;
     id infoField;
@@ -112,6 +113,7 @@ ConnectionWaiterDelegate>
 
 
 
+- (void)setRfbView:(NSView *)view;
 - (void)setFrameBufferUpdateSeconds: (float)seconds;
 
 // For reconnect

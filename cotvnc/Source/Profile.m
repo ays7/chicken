@@ -21,8 +21,6 @@
 #import "Profile.h"
 #import "NSObject_Chicken.h"
 #import "ProfileManager.h"
-#import "FrameBuffer.h"
-#import "FrameBufferUpdateReader.h"
 #import <Carbon/Carbon.h>
 #define XK_MISCELLANY
 #include "keysymdef.h"
@@ -160,8 +158,8 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
         } else {
             isDefault = YES;
 
-            commandKeyPreference = kRemoteAltModifier;
-            altKeyPreference =  kRemoteMetaModifier;
+            commandKeyPreference = kRemoteMetaModifier;
+            altKeyPreference =  kRemoteAltModifier;
             shiftKeyPreference = kRemoteShiftModifier;
             controlKeyPreference = kRemoteControlModifier;
             enableCopyRect = YES;
@@ -520,7 +518,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 
 - (void)getPixelFormat:(rfbPixelFormat*)format
 {
-    format->bigEndian = [FrameBuffer bigEndian];
+    format->bigEndian = (NSHostByteOrder() == NS_BigEndian);
     format->trueColour = YES;
     switch(pixelFormatIndex) {
         case 0:
@@ -631,11 +629,19 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 - (NSString *)encodingNameAtIndex: (int)index
 {
     CARD32  encoding = encodings[index].encoding;
-
-    if (encoding <= rfbEncodingMax)
-        return encodingNames[encoding];
-    else
-        return @"";
+    switch (encoding) {
+        case 0: return @"Raw";
+        case 1: return @"CopyRect";
+        case 2: return @"RRE";
+        case 4: return @"CoRRE";
+        case 5: return @"Hextile";
+        case 6: return @"Zlib";
+        case 7: return @"Tight";
+        case 8: return @"ZlibHex";
+        case 9: return @"Ultra";
+        case 16: return @"ZRLE";
+        default: return @"";
+    }
 }
 
 - (BOOL)encodingEnabledAtIndex: (int)index

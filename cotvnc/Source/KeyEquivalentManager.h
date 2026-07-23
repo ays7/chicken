@@ -6,8 +6,8 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-@class KeyEquivalentScenario, RFBView;
+#import <Cocoa/Cocoa.h>
+@class KeyEquivalentScenario;
 
 
 // Scenarios
@@ -21,7 +21,7 @@ extern NSString *kConnectionWindowFrontmostScenario;
 	NSMutableDictionary *mScenarioDict;		// Scenario -> KeyEquivalentScenario
 	NSString *mCurrentScenarioName;
 	KeyEquivalentScenario *mCurrentScenario;
-	RFBView *mKeyRFBView;
+	NSView *mKeyRFBView;
 }
 
 // Obtaining An Instance
@@ -46,7 +46,7 @@ extern NSString *kConnectionWindowFrontmostScenario;
 - (BOOL)performEquivalentWithCharacters: (NSString *)characters modifiers: (unsigned int)modifiers;
 
 // Obtaining the current RFBView
-- (RFBView *)keyRFBView;
+- (NSView *)keyRFBView;
 
 - (void)removeEquivalentForWindow:(NSString *)title;
 

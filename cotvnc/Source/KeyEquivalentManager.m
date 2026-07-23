@@ -12,8 +12,6 @@
 #import "KeyEquivalentEntry.h"
 #import "KeyEquivalentPrefsController.h"
 #import "KeyEquivalentScenario.h"
-#import "RFBConnection.h"
-#import "RFBView.h"
 #import "Session.h"
 
 
@@ -48,10 +46,19 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 }
 
 
-- (void)rfbViewDidBecomeKey: (RFBView *)view
+- (void)rfbViewDidBecomeKey: (NSView *)view
 {
 	mKeyRFBView = view;
-	Session *session = [[view delegate] session];
+	Session *session = nil;
+	if ([view respondsToSelector:@selector(connection)]) {
+		id conn = [view performSelector:@selector(connection)];
+		if (conn && [conn respondsToSelector:@selector(delegate)]) {
+			id delegate = [conn performSelector:@selector(delegate)];
+			if (delegate && [delegate respondsToSelector:@selector(session)]) {
+				session = [delegate performSelector:@selector(session)];
+			}
+		}
+	}
 	if (session)
 	{
         if ([session viewOnly])
@@ -64,26 +71,20 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-	Class RFBViewClass = [RFBView class];
+	Class VNCViewClass = NSClassFromString(@"VNCCAFramebufferView");
 	Class NSScrollViewClass = [NSScrollView class];
 	
 	NSWindow *window = [aNotification object];
     if ([[window className] isEqualToString: @"NSCarbonMenuWindow"]) {
-        /* Opening the help menu causes an NSCarbonMenuWindow to become key, but
-         * then when it closes, we don't get windowDidBecomeKey for the
-         * frontmost window. So, we ignore events for NSCarbonMenuWindow
-         * instances. Since NSCarbonMenuWindow is not part of the public API, we
-         * we can't do [NSCarbonMenuWindow class], so we have to a string
-         * compare. */
         return;
     }
 
 	NSView *contentView = [window contentView];
 	if ( [contentView isKindOfClass: NSScrollViewClass] )
 		contentView = [(NSScrollView *)contentView documentView];
-	if ( [contentView isKindOfClass: RFBViewClass] )
+	if ( VNCViewClass && [contentView isKindOfClass: VNCViewClass] )
 	{
-		[self rfbViewDidBecomeKey: (RFBView *)contentView];
+		[self rfbViewDidBecomeKey: (NSView *)contentView];
  		return;
 	}
 	
@@ -94,9 +95,9 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 	{
 		if ( [subview isKindOfClass: NSScrollViewClass] )
 			subview = [(NSScrollView *)subview documentView];
-		if ( [subview isKindOfClass: RFBViewClass] )
+		if ( VNCViewClass && [subview isKindOfClass: VNCViewClass] )
 		{
-			[self rfbViewDidBecomeKey: (RFBView *)subview];
+			[self rfbViewDidBecomeKey: (NSView *)subview];
 			return;
 		}
 	}
@@ -315,7 +316,7 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 #pragma mark Performing Key Equivalants
 
 
-- (RFBView *)keyRFBView
+- (NSView *)keyRFBView
 {  return mKeyRFBView;  }
 
 
