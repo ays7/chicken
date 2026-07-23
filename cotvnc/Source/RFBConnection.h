@@ -60,6 +60,7 @@
     RFBHandshaker	*handshaker;
     id<IServerData> server_;
     NSString        *password;
+    NSString        *username;
     RFBProtocol     *rfbProtocol;
     CARD16  lastMouseX; // location of last mouse position we sent
     CARD16  lastMouseY;
@@ -90,6 +91,7 @@
     
     BOOL            serverSupportsExtendedClipboard;
     uint32_t        serverClipboardFlags;
+    BOOL            isAppleServer;
 }
 
 - (id)initWithFileHandle:(NSFileHandle*)file server:(id<IServerData>)server;
@@ -102,6 +104,7 @@
 - (void)setRfbView:(RFBView *)view;
 - (void)setSession:(Session *)aSession;
 - (void)setPassword:(NSString *)password;
+- (void)setUsername:(NSString *)aUsername;
 - (void)setSshTunnel:(SshTunnel *)tunnel;
 - (void)setReader:(ByteReader*)aReader;
 
@@ -113,6 +116,7 @@
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
 - (void)promptForPassword;
+- (void)promptForUsernameAndPassword;
 - (void)sizeDisplay:(NSSize)aSize withPixelFormat:(rfbPixelFormat*)pixf;
 - (void)setDisplayName:(NSString*)aName;
 
@@ -143,6 +147,7 @@
 - (int) protocolMajorVersion;
 - (int) protocolMinorVersion;
 - (NSString*)password;
+- (NSString*)username;
 - (BOOL)connectShared;
 - (BOOL)viewOnly;
 - (EventFilter *)eventFilter;
@@ -153,6 +158,8 @@
 - (NSString *)statisticsString;
 - (NSString *)infoString;
 
+- (BOOL)isAppleServer;
+- (void)setIsAppleServer:(BOOL)flag;
 - (BOOL)serverSupportsExtendedClipboard;
 - (void)setServerSupportsExtendedClipboard:(BOOL)flag;
 - (uint32_t)serverClipboardFlags;

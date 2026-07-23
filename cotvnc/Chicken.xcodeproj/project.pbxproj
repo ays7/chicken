@@ -7,6 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */; };
+		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
+		B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F81447C3F26F481900F1674 /* BigInt.swift */; };
+		9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E2A364B41F949C9C5126B6 /* BigUInt.swift */; };
+		7773F14FD8174578998B6782 /* BitwiseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */; };
+		C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C2C28573CF34D12230072 /* CS.swift */; };
+		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
+		D72BD34AE07E1BB4AB16B161 /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E22E2631423B8283517A360 /* Comparable.swift */; };
+		48D7AF65F3DCCA67BD72B8ED /* DataConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B50326C055A5CFECEAB74A /* DataConversion.swift */; };
+		20767A8CD642EB992B7D2C76 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA4506AC7AE0E801C327D4B /* Division.swift */; };
+		8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */; };
+		284E02D93BAF58CBBFA17E1D /* FloatingPointConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */; };
+		F059DE40859A4E3F2D7DCFF2 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E2FDA4AEA9CE89624F909E /* GCD.swift */; };
+		8890B20647BC6A8C46317F86 /* Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C46970E529D6B943172B5B9 /* Hashable.swift */; };
+		498E019385F3326ED4527225 /* IntegerConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */; };
+		C1DB65427CF08686781F946F /* Multiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2414BD5025D38343B896663 /* Multiplication.swift */; };
+		F4FF95E1001AB651ED3D8D12 /* PrimeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4165244CCF1AA2DCF758B024 /* PrimeTest.swift */; };
+		9EF4AB0FE722A093EE774A06 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF34D9BB98B98C6741057041 /* Random.swift */; };
+		C68A7701D2AC549231897A86 /* Shifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3268AEF31863553C9B05C7E /* Shifts.swift */; };
+		64F2D99144E70ECDA4D7E4EE /* SquareRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */; };
+		530EE4570F00F88882D36BF7 /* Strideable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68605BB65168A397BF48C5A3 /* Strideable.swift */; };
+		DB708995F3A83FD65FF77D40 /* StringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */; };
+		A11CEB86DA3AF191B3679527 /* Subtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B99EF228C2BA8102DB86645 /* Subtraction.swift */; };
+		11EAE6575614382A4C13EBEC /* WordsAndBits.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */; };
 		7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719B033DB4A801A8010C /* ByteBlockReader.h */; };
 		7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719D033DB4A801A8010C /* ByteReader.h */; };
 		7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719F033DB4A801A8010C /* CARD16Reader.h */; };
@@ -201,6 +225,30 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ARDAuthHelper.swift"; path = "ARDAuthHelper.swift"; sourceTree = "<group>"; };
+		0F2149C1B8288F348A035BA7 /* Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Addition.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Addition.swift"; sourceTree = "<group>"; };
+		5F81447C3F26F481900F1674 /* BigInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BigInt.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigInt.swift"; sourceTree = "<group>"; };
+		F0E2A364B41F949C9C5126B6 /* BigUInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BigUInt.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigUInt.swift"; sourceTree = "<group>"; };
+		D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BitwiseOps.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BitwiseOps.swift"; sourceTree = "<group>"; };
+		291C2C28573CF34D12230072 /* CS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CS.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/CS.swift"; sourceTree = "<group>"; };
+		81C982E772F26EA68BBEAF6D /* Codable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Codable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Codable.swift"; sourceTree = "<group>"; };
+		5E22E2631423B8283517A360 /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Comparable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Comparable.swift"; sourceTree = "<group>"; };
+		57B50326C055A5CFECEAB74A /* DataConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DataConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/DataConversion.swift"; sourceTree = "<group>"; };
+		9FA4506AC7AE0E801C327D4B /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Division.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Division.swift"; sourceTree = "<group>"; };
+		D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Exponentiation.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Exponentiation.swift"; sourceTree = "<group>"; };
+		90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "FloatingPointConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/FloatingPointConversion.swift"; sourceTree = "<group>"; };
+		90E2FDA4AEA9CE89624F909E /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "GCD.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/GCD.swift"; sourceTree = "<group>"; };
+		6C46970E529D6B943172B5B9 /* Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Hashable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Hashable.swift"; sourceTree = "<group>"; };
+		0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "IntegerConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/IntegerConversion.swift"; sourceTree = "<group>"; };
+		F2414BD5025D38343B896663 /* Multiplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Multiplication.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Multiplication.swift"; sourceTree = "<group>"; };
+		4165244CCF1AA2DCF758B024 /* PrimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PrimeTest.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/PrimeTest.swift"; sourceTree = "<group>"; };
+		CF34D9BB98B98C6741057041 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Random.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Random.swift"; sourceTree = "<group>"; };
+		C3268AEF31863553C9B05C7E /* Shifts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Shifts.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Shifts.swift"; sourceTree = "<group>"; };
+		85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SquareRoot.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/SquareRoot.swift"; sourceTree = "<group>"; };
+		68605BB65168A397BF48C5A3 /* Strideable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Strideable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Strideable.swift"; sourceTree = "<group>"; };
+		0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "StringConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/StringConversion.swift"; sourceTree = "<group>"; };
+		3B99EF228C2BA8102DB86645 /* Subtraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Subtraction.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Subtraction.swift"; sourceTree = "<group>"; };
+		A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WordsAndBits.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/WordsAndBits.swift"; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		7F088F2405E1D81100336456 /* ServerDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerDataManager.h; sourceTree = "<group>"; };
 		7F088F2505E1D81100336456 /* ServerDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerDataManager.m; sourceTree = "<group>"; };
@@ -583,6 +631,30 @@
 		F5DC7198033DB4A801A8010C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */,
+				0F2149C1B8288F348A035BA7 /* Addition.swift */,
+				5F81447C3F26F481900F1674 /* BigInt.swift */,
+				F0E2A364B41F949C9C5126B6 /* BigUInt.swift */,
+				D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */,
+				291C2C28573CF34D12230072 /* CS.swift */,
+				81C982E772F26EA68BBEAF6D /* Codable.swift */,
+				5E22E2631423B8283517A360 /* Comparable.swift */,
+				57B50326C055A5CFECEAB74A /* DataConversion.swift */,
+				9FA4506AC7AE0E801C327D4B /* Division.swift */,
+				D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */,
+				90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */,
+				90E2FDA4AEA9CE89624F909E /* GCD.swift */,
+				6C46970E529D6B943172B5B9 /* Hashable.swift */,
+				0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */,
+				F2414BD5025D38343B896663 /* Multiplication.swift */,
+				4165244CCF1AA2DCF758B024 /* PrimeTest.swift */,
+				CF34D9BB98B98C6741057041 /* Random.swift */,
+				C3268AEF31863553C9B05C7E /* Shifts.swift */,
+				85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */,
+				68605BB65168A397BF48C5A3 /* Strideable.swift */,
+				0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */,
+				3B99EF228C2BA8102DB86645 /* Subtraction.swift */,
+				A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */,
 				DA22199716BC615600410C5A /* CommandLineConnection.h */,
 				DA22199816BC615600410C5A /* CommandLineConnection.m */,
 				DA78379712DE159800F1893E /* SshWaiter.h */,
@@ -892,6 +964,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */,
+				93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */,
+				B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */,
+				9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */,
+				7773F14FD8174578998B6782 /* BitwiseOps.swift in Sources */,
+				C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */,
+				91B500FDFA5A346B6964C098 /* Codable.swift in Sources */,
+				D72BD34AE07E1BB4AB16B161 /* Comparable.swift in Sources */,
+				48D7AF65F3DCCA67BD72B8ED /* DataConversion.swift in Sources */,
+				20767A8CD642EB992B7D2C76 /* Division.swift in Sources */,
+				8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */,
+				284E02D93BAF58CBBFA17E1D /* FloatingPointConversion.swift in Sources */,
+				F059DE40859A4E3F2D7DCFF2 /* GCD.swift in Sources */,
+				8890B20647BC6A8C46317F86 /* Hashable.swift in Sources */,
+				498E019385F3326ED4527225 /* IntegerConversion.swift in Sources */,
+				C1DB65427CF08686781F946F /* Multiplication.swift in Sources */,
+				F4FF95E1001AB651ED3D8D12 /* PrimeTest.swift in Sources */,
+				9EF4AB0FE722A093EE774A06 /* Random.swift in Sources */,
+				C68A7701D2AC549231897A86 /* Shifts.swift in Sources */,
+				64F2D99144E70ECDA4D7E4EE /* SquareRoot.swift in Sources */,
+				530EE4570F00F88882D36BF7 /* Strideable.swift in Sources */,
+				DB708995F3A83FD65FF77D40 /* StringConversion.swift in Sources */,
+				A11CEB86DA3AF191B3679527 /* Subtraction.swift in Sources */,
+				11EAE6575614382A4C13EBEC /* WordsAndBits.swift in Sources */,
 				7F7A942705E71B5C00E20416 /* ByteBlockReader.m in Sources */,
 				7F7A942805E71B5C00E20416 /* ByteReader.m in Sources */,
 				7F7A942905E71B5C00E20416 /* CARD16Reader.m in Sources */,
@@ -1046,6 +1142,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1083,6 +1180,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1121,6 +1219,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1290,6 +1389,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;

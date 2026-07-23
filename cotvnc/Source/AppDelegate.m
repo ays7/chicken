@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "debug.h"
 #import "KeyEquivalentManager.h"
 #import "PrefController.h"
 #import "ProfileManager.h"
@@ -122,6 +123,32 @@
 {
 	NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
     [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:path]];
+}
+
+- (IBAction)setDiagnosticLogLevel:(id)sender
+{
+    NSInteger level = [sender tag];
+    [[NSUserDefaults standardUserDefaults] setInteger:level forKey:@"DiagnosticLoggingLevel"];
+    [[NSUserDefaults standardUserDefaults] setBool:(level > DiagnosticLogLevelNone) forKey:@"EnableDiagnosticLogging"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    NSString *levelName = @"None";
+    if (level == DiagnosticLogLevelBasic) {
+        levelName = @"Basic";
+    } else if (level == DiagnosticLogLevelVerbose) {
+        levelName = @"Verbose";
+    }
+    NSLog(@"[Chicken] Diagnostic logging level set to %@", levelName);
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+    if ([menuItem action] == @selector(setDiagnosticLogLevel:)) {
+        DiagnosticLogLevel currentLevel = GetDiagnosticLogLevel();
+        [menuItem setState:([menuItem tag] == currentLevel) ? NSControlStateValueOn : NSControlStateValueOff];
+        return YES;
+    }
+    return YES;
 }
 
 

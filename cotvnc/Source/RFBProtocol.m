@@ -20,6 +20,7 @@
 
 #import "RFBProtocol.h"
 #import "CARD8Reader.h"
+#import "debug.h"
 #import "FrameBuffer.h"
 #import "FrameBufferUpdateReader.h"
 #import "PrefController.h"
@@ -38,6 +39,7 @@
 {
     if (self = [super init]) {
         connection = aConnection;
+        DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol: Initializing post-handshake RFB protocol handling...");
        
         [self setPixelFormat:[info pixelFormatData]];
 
@@ -50,6 +52,7 @@
         msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc]
                 initWithProtocol:self connection:connection];
 
+        DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol: Setting socket reader to typeReader (CARD8Reader)...");
         [connection setReader: typeReader];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -81,13 +84,18 @@
     CARD16 i;
     CARD16 l = [profile numEnabledEncodingsIfViewOnly:[connection viewOnly]];
     rfbSetEncodingsMsg msg;
+    memset(&msg, 0, sizeof(msg));
 
     msg.type = rfbSetEncodings;
     msg.nEncodings = htons(l);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol sendType: sent client message type %u (rfbSetEncodings)", rfbSetEncodings);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol setEncodings: sending %d encodings...", l);
     [connection writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
 
     for(i=0; i<l; i++) {
-        CARD32  enc = htonl([profile encodingAtIndex:i]);
+        CARD32  encVal = [profile encodingAtIndex:i];
+        CARD32  enc = htonl(encVal);
+        DiagnosticLog(DiagnosticLogLevelBasic, @"  Encoding #%d: %u (0x%X)", i, encVal, encVal);
         [connection writeBufferedBytes:(unsigned char*)&enc
                                 length:sizeof(CARD32)];
     }
@@ -105,8 +113,10 @@
 {
     Profile* profile = [connection profile];
     rfbSetPixelFormatMsg	msg;
+    memset(&msg, 0, sizeof(msg));
 
     msg.type = rfbSetPixelFormat;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol sendType: sent client message type %u (rfbSetPixelFormat)", rfbSetPixelFormat);
     aFormat->trueColour = YES;
     if([profile useServerNativeFormat]) {
         if(!aFormat->redMax || !aFormat->bitsPerPixel) {
@@ -120,15 +130,10 @@
         aFormat->bigEndian = [FrameBuffer bigEndian];
     }
 
-#if 0
-    NSLog(@"Transport Pixelformat:");
-    NSLog(@"\ttrueColor = %s", aFormat->trueColour ? "YES" : "NO");
-    NSLog(@"\tbigEndian = %s", aFormat->bigEndian ? "YES" : "NO");
-    NSLog(@"\tbitsPerPixel = %d", aFormat->bitsPerPixel);
-    NSLog(@"\tdepth = %d", aFormat->depth);
-    NSLog(@"\tmaxValue(r/g/b) = (%d/%d/%d)", aFormat->redMax, aFormat->greenMax, aFormat->blueMax);
-    NSLog(@"\tshift(r/g/b) = (%d/%d/%d)", aFormat->redShift, aFormat->greenShift, aFormat->blueShift);
-#endif
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol setPixelFormat: bpp=%d depth=%d bigEndian=%d trueColour=%d redMax=%d greenMax=%d blueMax=%d redShift=%d greenShift=%d blueShift=%d",
+           aFormat->bitsPerPixel, aFormat->depth, aFormat->bigEndian, aFormat->trueColour,
+           aFormat->redMax, aFormat->greenMax, aFormat->blueMax,
+           aFormat->redShift, aFormat->greenShift, aFormat->blueShift);
     
     memcpy(&msg.format, aFormat, sizeof(rfbPixelFormat));
     msg.format.redMax = htons(msg.format.redMax);
@@ -156,6 +161,17 @@
 - (void)receiveType:(NSNumber*)type
 {
     unsigned t = [type unsignedIntValue];
+    DiagnosticLogLevel reqLevel = (t == 0) ? DiagnosticLogLevelVerbose : DiagnosticLogLevelBasic;
+    if (IsDiagnosticLoggingEnabled(reqLevel)) {
+        NSString *typeName = @"Unknown";
+        switch (t) {
+            case rfbFramebufferUpdate:   typeName = @"rfbFramebufferUpdate"; break;
+            case rfbSetColourMapEntries: typeName = @"rfbSetColourMapEntries"; break;
+            case rfbBell:                typeName = @"rfbBell"; break;
+            case rfbServerCutText:       typeName = @"rfbServerCutText"; break;
+        }
+        DiagnosticLog(reqLevel, @"RFBProtocol receiveType: received server message type %u (%@)", t, typeName);
+    }
 
     if(t > MAX_MSGTYPE) {
         NSString    *lastEnc = nil;

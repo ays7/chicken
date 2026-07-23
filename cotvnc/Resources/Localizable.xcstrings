@@ -30,6 +30,7 @@
       }
     },
     "ARDAuthWarning" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1225,6 +1226,7 @@
       }
     },
     "PasteAnyways" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1253,6 +1255,7 @@
       }
     },
     "PasteConversionBody" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1281,6 +1284,7 @@
       }
     },
     "PasteConversionHeader" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2330,6 +2334,9 @@
           }
         }
       }
+    },
+    "Username:" : {
+
     },
     "yes" : {
       "extractionState" : "stale",

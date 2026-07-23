@@ -36,6 +36,7 @@ ConnectionWaiterDelegate>
     IBOutlet RFBView *rfbView;
     IBOutlet NSWindow    *window;
     id<IServerData> server_;
+    NSString        *username;
     NSString        *password;
     SshTunnel       *sshTunnel;
 
@@ -89,6 +90,7 @@ ConnectionWaiterDelegate>
 - (void)terminateConnection:(NSString*)aReason;
 - (void)authenticationFailed:(NSString *)aReason;
 - (void)promptForPassword;
+- (void)promptForUsernameAndPassword;
 - (IBAction)reconnectWithNewPassword:(id)sender;
 - (IBAction)dontReconnect:(id)sender;
 - (IBAction)forceReconnect:(id)sender;

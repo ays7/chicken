@@ -21,6 +21,7 @@
 #import "AppDelegate.h"
 #import "ByteBlockReader.h"
 #import "ConnectionWaiter.h"
+#import "debug.h"
 #import "EncodingReader.h"
 #import "EventFilter.h"
 #import "FrameBuffer.h"
@@ -146,6 +147,7 @@
 	[handshaker release];
     [server_ release];
     [password release];
+    [username release];
 	[rfbProtocol release];
 	[frameBuffer release];
     [lastMouseMovement release];
@@ -186,6 +188,22 @@
     password = [aPassword retain];
     
     [handshaker gotPassword];
+}
+
+- (void)setUsername:(NSString *)aUsername
+{
+    [username release];
+    username = [aUsername retain];
+}
+
+- (NSString *)username
+{
+    return username;
+}
+
+- (void)promptForUsernameAndPassword
+{
+    [session promptForUsernameAndPassword];
 }
 
 - (void)setSshTunnel:(SshTunnel *)tunnel
@@ -234,14 +252,16 @@
         return;
     }
 	
-    // ARD sends this bogus 889 version#, at least for ARD 2.2 they actually
-    // comply with version 003.007 so we'll force that
+    // ARD sends 889 version#, force 3.8 to match modern macOS Screen Sharing & RoyalVNCKit
 	if (serverMinorVersion == 889) {
-		serverMinorVersion = 7;
+		serverMinorVersion = 8;
 	}
 	
 	// Detect SetDesktopSize support (RFB 3.8+)
 	_serverSupportsSetDesktopSize = (serverMajorVersion > 3 || (serverMajorVersion == 3 && serverMinorVersion >= 8));
+	if (isAppleServer) {
+		_serverSupportsSetDesktopSize = NO;
+	}
 	
     handshaker = [[RFBHandshaker alloc] initWithConnection: self];
 	[handshaker handshake];
@@ -255,6 +275,9 @@
 
 - (BOOL)serverSupportsSetDesktopSize
 {
+    if (isAppleServer) {
+        return NO;
+    }
     return _serverSupportsSetDesktopSize;
 }
 
@@ -295,20 +318,24 @@
 /* Handshaking has been completed */
 - (void)start:(ServerInitMessage*)info
 {
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Starting RFB session post-handshake...");
     [rfbProtocol release];
     rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Display size (%d x %d)", [info size].width, [info size].height);
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
     [session setSize:[info size]];
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
     [session setupWindow];
     [session setDisplayName: [info name]];
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Requesting initial non-incremental update...");
     [self requestUpdate:[rfbView bounds] incremental:NO];
     [rfbProtocol setFrameBuffer:frameBuffer];
 
     [handshaker release];
     handshaker = nil;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Handshaker released.");
 }
 
 - (NSString*)password
@@ -387,17 +414,29 @@
             break; // no data
 
         if(length <= 0) {	// server closed socket
+            DiagnosticLog(DiagnosticLogLevelBasic, @"Socket read returned %ld (errno %d: %s). Server closed socket during reader: %@", (long)length, errno, strerror(errno), NSStringFromClass([currentReader class]));
             NSString *reason = NSLocalizedString( @"ServerClosed", nil );
             [self terminateConnection:reason];
             [pool release];
             free(buf);
             return;
         }
+
+        if (IsDiagnosticLoggingEnabled(DiagnosticLogLevelVerbose)) {
+            NSMutableString *hexStr = [NSMutableString string];
+            NSUInteger dumpLen = length < 32 ? (NSUInteger)length : 32;
+            for (NSUInteger i = 0; i < dumpLen; i++) {
+                [hexStr appendFormat:@"%02X ", bytes[i]];
+            }
+            if (length > 32) [hexStr appendString:@"..."];
+            DiagnosticLog(DiagnosticLogLevelVerbose, @"Socket read received %ld bytes during reader %@: %@", (long)length, NSStringFromClass([currentReader class]), hexStr);
+        }
         
         while(length) {
             consumed = [currentReader readBytes:bytes length:length];
 
             if (consumed == 0) {
+                DiagnosticLog(DiagnosticLogLevelBasic, @"Reader %@ consumed 0 bytes of %ld bytes remaining. Protocol error terminating connection.", NSStringFromClass([currentReader class]), (long)length);
                 [self terminateConnection: NSLocalizedString(@"ProtocolError", nil)];
                 [pool release];
                 return;
@@ -462,6 +501,10 @@
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag
 {
     rfbFramebufferUpdateRequestMsg	msg;
+    memset(&msg, 0, sizeof(msg));
+
+    DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection requestUpdate: origin=(%.0f, %.0f) size=(%.0f x %.0f) incremental=%d",
+           frame.origin.x, frame.origin.y, frame.size.width, frame.size.height, aFlag);
 
     msg.type = rfbFramebufferUpdateRequest;
     msg.incremental = aFlag;
@@ -521,6 +564,7 @@
     rfbPointerEventMsg  msg;
 
     msg.type = rfbPointerEvent;
+    DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection sendType: sent client message type %u (rfbPointerEvent)", rfbPointerEvent);
     msg.buttonMask = mask;
     [self putPosition:thePoint inPointerMessage:&msg];
 
@@ -584,6 +628,7 @@
 
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
+    DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection sendType: sent client message type %u (rfbKeyEvent)", rfbKeyEvent);
 	msg.down = pressed;
 	
     if( NSEventModifierFlagShift == m )
@@ -618,6 +663,7 @@
 
     memset(&msg, 0, sizeof(msg));
     msg.type = rfbKeyEvent;
+    DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection sendType: sent client message type %u (rfbKeyEvent)", rfbKeyEvent);
     msg.down = pressed;
 
     if ((c & 0xf800) == 0xd800) { // surrogate code point
@@ -686,6 +732,7 @@
     rfbKeyEventMsg msg;
 	
     msg.type = rfbKeyEvent;
+    DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection sendType: sent client message type %u (rfbKeyEvent)", rfbKeyEvent);
     msg.down = pressed;
     msg.pad = 0;
 	msg.key = htonl(key);
@@ -742,6 +789,19 @@ static NSData *compressZlib(NSData *uncompressedData) {
     return compressed;
 }
 
+- (BOOL)isAppleServer
+{
+    return isAppleServer;
+}
+
+- (void)setIsAppleServer:(BOOL)flag
+{
+    isAppleServer = flag;
+    if (isAppleServer) {
+        _serverSupportsSetDesktopSize = NO;
+    }
+}
+
 - (BOOL)serverSupportsExtendedClipboard
 {
     return serverSupportsExtendedClipboard;
@@ -766,6 +826,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 {
     unsigned char buf[16];
     buf[0] = rfbClientCutText;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbClientCutText)", rfbClientCutText);
     buf[1] = 0;
     buf[2] = 0;
     buf[3] = 0;
@@ -786,6 +847,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 {
     unsigned char buf[12];
     buf[0] = rfbClientCutText;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbClientCutText)", rfbClientCutText);
     buf[1] = 0;
     buf[2] = 0;
     buf[3] = 0;
@@ -803,6 +865,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 {
     unsigned char buf[12];
     buf[0] = rfbClientCutText;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbClientCutText)", rfbClientCutText);
     buf[1] = 0;
     buf[2] = 0;
     buf[3] = 0;
@@ -842,6 +905,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
     }
     
     buf[0] = rfbClientCutText;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbClientCutText)", rfbClientCutText);
     buf[1] = 0;
     buf[2] = 0;
     buf[3] = 0;
@@ -900,6 +964,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
     }
 
     msg->type = rfbClientCutText;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbClientCutText)", rfbClientCutText);
     msg->length = htonl(len);
     memcpy((char *)(msg + 1), cStr, len);
     [self writeBytes:(unsigned char *)msg length:msgSz];
@@ -935,6 +1000,16 @@ static NSData *compressZlib(NSData *uncompressedData) {
     int result;
     int written = 0;
 
+    if (IsDiagnosticLoggingEnabled(DiagnosticLogLevelVerbose)) {
+        NSMutableString *hexStr = [NSMutableString string];
+        NSUInteger dumpLen = length < 32 ? length : 32;
+        for (NSUInteger i = 0; i < dumpLen; i++) {
+            [hexStr appendFormat:@"%02X ", bytes[i]];
+        }
+        if (length > 32) [hexStr appendString:@"..."];
+        DiagnosticLog(DiagnosticLogLevelVerbose, @"Socket write %u bytes [Type byte: %d]: %@", length, length > 0 ? bytes[0] : -1, hexStr);
+    }
+
     do {
         result = write([socketHandler fileDescriptor], bytes + written, length);
         if(result >= 0) {
@@ -945,10 +1020,12 @@ static NSData *compressZlib(NSData *uncompressedData) {
                 continue;
             }
             if(errno == EPIPE) {
+                DiagnosticLog(DiagnosticLogLevelBasic, @"Socket write failed with EPIPE (Server closed connection)");
 				NSString *reason = NSLocalizedString( @"ServerClosed", nil );
                 [self terminateConnection:reason];
                 return;
             }
+            DiagnosticLog(DiagnosticLogLevelBasic, @"Socket write failed with errno %d (%s)", errno, strerror(errno));
 			NSString *reason = NSLocalizedString( @"ServerError", nil );
 			reason = [NSString stringWithFormat: reason, strerror(errno)];
             [self terminateConnection:reason];
@@ -1005,7 +1082,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
     rfbSetDesktopSizeMsg msg;
     rfbScreenLayout screen;
 
-    if (!_serverSupportsSetDesktopSize) {
+    if (isAppleServer || !_serverSupportsSetDesktopSize) {
         return;
     }
 
@@ -1020,6 +1097,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 
     // Build the message header
     msg.type = rfbSetDesktopSize;
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection sendType: sent client message type %u (rfbSetDesktopSize)", rfbSetDesktopSize);
     msg.pad1 = 0;
     msg.width = htons((CARD16)size.width);
     msg.height = htons((CARD16)size.height);

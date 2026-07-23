@@ -282,6 +282,28 @@
                                     <action selector="showHelp:" target="1367" id="1453"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="1990"/>
+                            <menuItem title="Diagnostic Logging" id="1991">
+                                <menu key="submenu" title="Diagnostic Logging" id="1993">
+                                    <items>
+                                        <menuItem title="None" id="1994">
+                                            <connections>
+                                                <action selector="setDiagnosticLogLevel:" target="1367" id="1997"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Basic" tag="1" id="1995">
+                                            <connections>
+                                                <action selector="setDiagnosticLogLevel:" target="1367" id="1998"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Verbose" tag="2" id="1996">
+                                            <connections>
+                                                <action selector="setDiagnosticLogLevel:" target="1367" id="1999"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

@@ -33,6 +33,11 @@
     id	serverInitReader;
     BOOL    triedPassword;
     NSData  *vncAuthChallenge;
+    NSData  *ardGenerator;
+    int     ardKeySize;
+    NSData  *ardPrime;
+    NSData  *ardPeerKey;
+    BOOL    waitingForArdCredentials;
 }
 
 - (id)initWithConnection: (RFBConnection *)aConnection;

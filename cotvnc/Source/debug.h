@@ -7,14 +7,16 @@
  *
  */
 
-#import <Foundation/NSString.h>
+#import <Foundation/Foundation.h>
 
-//#define FULL_DEBUG
+typedef NS_ENUM(NSInteger, DiagnosticLogLevel) {
+    DiagnosticLogLevelNone = 0,
+    DiagnosticLogLevelBasic = 1,
+    DiagnosticLogLevelVerbose = 2
+};
 
-#ifdef FULL_DEBUG
-#define FULLDebug NSLog
-#else
-#define FULLDebug DoNothing
-#endif
+DiagnosticLogLevel GetDiagnosticLogLevel(void);
+BOOL IsDiagnosticLoggingEnabled(DiagnosticLogLevel level);
+void DiagnosticLog(DiagnosticLogLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 void DoNothing(NSString *format, ...);

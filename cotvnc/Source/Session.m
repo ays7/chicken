@@ -125,6 +125,7 @@ enum {
 	[titleString release];
 	[(id)server_ release];
 	[host release];
+    [username release];
     [password release];
     [sshTunnel close];
     [sshTunnel release];
@@ -272,11 +273,57 @@ enum {
 
 - (void)promptForPassword
 {
+    NSTextField *usernameField = [[passwordSheet contentView] viewWithTag:9999];
+    NSTextField *usernameLabel = [[passwordSheet contentView] viewWithTag:9998];
+    if (usernameField) {
+        [usernameField setHidden:YES];
+        [usernameLabel setHidden:YES];
+    }
+
     [authHeader setStringValue:NSLocalizedString(@"AuthenticationRequired",
             nil)];
     [authMessage setStringValue:@""];
     [[passwordSheet defaultButtonCell] setTitle:NSLocalizedString(@"Connect",
             nil)];
+    [self displayPasswordSheet];
+}
+
+- (void)promptForUsernameAndPassword
+{
+    NSTextField *usernameField = [[passwordSheet contentView] viewWithTag:9999];
+    NSTextField *usernameLabel = [[passwordSheet contentView] viewWithTag:9998];
+    if (!usernameField) {
+        usernameLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(17, 120, 156, 17)];
+        [usernameLabel setTag:9998];
+        [usernameLabel setStringValue:NSLocalizedString(@"Username:", nil)];
+        [usernameLabel setEditable:NO];
+        [usernameLabel setBordered:NO];
+        [usernameLabel setDrawsBackground:NO];
+        [[usernameLabel cell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSize]]];
+        [[passwordSheet contentView] addSubview:usernameLabel];
+        [usernameLabel release];
+
+        usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(185, 117, 205, 22)];
+        [usernameField setTag:9999];
+        [[usernameField cell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSize]]];
+        [[usernameField cell] setScrollable:YES];
+        [[usernameField cell] setUsesSingleLineMode:YES];
+        [[passwordSheet contentView] addSubview:usernameField];
+        [usernameField release];
+    }
+
+    [usernameField setHidden:NO];
+    [usernameLabel setHidden:NO];
+
+    NSString *defaultUser = [server_ respondsToSelector:@selector(sshUser)] ? [server_ sshUser] : nil;
+    if (!defaultUser || [defaultUser length] == 0) {
+        defaultUser = NSUserName();
+    }
+    [usernameField setStringValue:defaultUser];
+
+    [authHeader setStringValue:NSLocalizedString(@"AuthenticationRequired", nil)];
+    [authMessage setStringValue:@""];
+    [[passwordSheet defaultButtonCell] setTitle:NSLocalizedString(@"Connect", nil)];
     [self displayPasswordSheet];
 }
 
@@ -303,6 +350,16 @@ enum {
         [server_ setRememberPassword: [rememberNewPassword state]];
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
                                                             object:server_];
+    }
+
+    NSTextField *usernameField = [[passwordSheet contentView] viewWithTag:9999];
+    if (usernameField && ![usernameField isHidden]) {
+        NSString *enteredUsername = [usernameField stringValue];
+        [username release];
+        username = [enteredUsername copy];
+        if (connection) {
+            [connection setUsername:username];
+        }
     }
 
     [_reconnectReason setStringValue:@""];
@@ -759,6 +816,8 @@ enum {
     connection = [newConnection retain];
     [connection setSession:self];
     [connection setRfbView:rfbView];
+    if (username)
+        [connection setUsername:username];
     [connection setPassword:password];
     [connection installMouseMovedTrackingRect];
     if (sshTunnel == nil)

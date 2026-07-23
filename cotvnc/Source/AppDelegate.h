@@ -25,6 +25,7 @@
 - (IBAction)showListenerDialog: (id)sender;
 - (IBAction)showProfileManager: (id)sender;
 - (IBAction)showHelp: (id)sender;
+- (IBAction)setDiagnosticLogLevel:(id)sender;
 
 
 
