@@ -7,30 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */; };
-		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
-		B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F81447C3F26F481900F1674 /* BigInt.swift */; };
-		9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E2A364B41F949C9C5126B6 /* BigUInt.swift */; };
-		7773F14FD8174578998B6782 /* BitwiseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */; };
-		C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C2C28573CF34D12230072 /* CS.swift */; };
-		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
-		D72BD34AE07E1BB4AB16B161 /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E22E2631423B8283517A360 /* Comparable.swift */; };
-		48D7AF65F3DCCA67BD72B8ED /* DataConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B50326C055A5CFECEAB74A /* DataConversion.swift */; };
-		20767A8CD642EB992B7D2C76 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA4506AC7AE0E801C327D4B /* Division.swift */; };
-		8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */; };
-		284E02D93BAF58CBBFA17E1D /* FloatingPointConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */; };
-		F059DE40859A4E3F2D7DCFF2 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E2FDA4AEA9CE89624F909E /* GCD.swift */; };
-		8890B20647BC6A8C46317F86 /* Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C46970E529D6B943172B5B9 /* Hashable.swift */; };
-		498E019385F3326ED4527225 /* IntegerConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */; };
-		C1DB65427CF08686781F946F /* Multiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2414BD5025D38343B896663 /* Multiplication.swift */; };
-		F4FF95E1001AB651ED3D8D12 /* PrimeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4165244CCF1AA2DCF758B024 /* PrimeTest.swift */; };
-		9EF4AB0FE722A093EE774A06 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF34D9BB98B98C6741057041 /* Random.swift */; };
-		C68A7701D2AC549231897A86 /* Shifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3268AEF31863553C9B05C7E /* Shifts.swift */; };
-		64F2D99144E70ECDA4D7E4EE /* SquareRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */; };
-		530EE4570F00F88882D36BF7 /* Strideable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68605BB65168A397BF48C5A3 /* Strideable.swift */; };
-		DB708995F3A83FD65FF77D40 /* StringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */; };
-		A11CEB86DA3AF191B3679527 /* Subtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B99EF228C2BA8102DB86645 /* Subtraction.swift */; };
 		11EAE6575614382A4C13EBEC /* WordsAndBits.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */; };
+		20767A8CD642EB992B7D2C76 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA4506AC7AE0E801C327D4B /* Division.swift */; };
+		284E02D93BAF58CBBFA17E1D /* FloatingPointConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */; };
+		48D7AF65F3DCCA67BD72B8ED /* DataConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B50326C055A5CFECEAB74A /* DataConversion.swift */; };
+		498E019385F3326ED4527225 /* IntegerConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */; };
+		530EE4570F00F88882D36BF7 /* Strideable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68605BB65168A397BF48C5A3 /* Strideable.swift */; };
+		64F2D99144E70ECDA4D7E4EE /* SquareRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */; };
+		7773F14FD8174578998B6782 /* BitwiseOps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */; };
 		7F7A93E505E71B5C00E20416 /* ByteBlockReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719B033DB4A801A8010C /* ByteBlockReader.h */; };
 		7F7A93E605E71B5C00E20416 /* ByteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719D033DB4A801A8010C /* ByteReader.h */; };
 		7F7A93E705E71B5C00E20416 /* CARD16Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC719F033DB4A801A8010C /* CARD16Reader.h */; };
@@ -80,6 +64,8 @@
 		7F7A941C05E71B5C00E20416 /* rfbCursor3.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */; };
 		7F7A941F05E71B5C00E20416 /* rfbCursor2.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */; };
 		7F7A942005E71B5C00E20416 /* rfbCursor.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717C033DB40D01A8010C /* rfbCursor.tiff */; };
+		7F7A942105E71B5C00E20416 /* RFBConnection.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7185033DB44301A8010C /* RFBConnection.xib */; };
+		7F7A942205E71B5C00E20416 /* OSX_RFBViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7187033DB44301A8010C /* OSX_RFBViewer.xib */; };
 		7F7A942705E71B5C00E20416 /* ByteBlockReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC719C033DB4A801A8010C /* ByteBlockReader.m */; };
 		7F7A942805E71B5C00E20416 /* ByteReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC719E033DB4A801A8010C /* ByteReader.m */; };
 		7F7A942905E71B5C00E20416 /* CARD16Reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A0033DB4A801A8010C /* CARD16Reader.m */; };
@@ -87,8 +73,6 @@
 		7F7A942B05E71B5C00E20416 /* CARD8Reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A4033DB4A801A8010C /* CARD8Reader.m */; };
 		7F7A942D05E71B5C00E20416 /* CopyRectangleEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71A8033DB4A801A8010C /* CopyRectangleEncodingReader.m */; };
 		7F7A942E05E71B5C00E20416 /* CoRREEncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71AA033DB4A801A8010C /* CoRREEncodingReader.m */; };
-		7F7A942105E71B5C00E20416 /* RFBConnection.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7185033DB44301A8010C /* RFBConnection.xib */; };
-		7F7A942205E71B5C00E20416 /* OSX_RFBViewer.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7187033DB44301A8010C /* OSX_RFBViewer.xib */; };
 		7F7A942F05E71B5C00E20416 /* d3des.c in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71AC033DB4A801A8010C /* d3des.c */; };
 		7F7A943005E71B5C00E20416 /* EncodingReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B1033DB4A801A8010C /* EncodingReader.m */; };
 		7F7A943105E71B5C00E20416 /* FilterReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC71B3033DB4A801A8010C /* FilterReader.m */; };
@@ -142,9 +126,21 @@
 		7FFA8FEB062BA6330008D381 /* ServerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FFA8FE9062BA6330008D381 /* ServerBase.h */; };
 		7FFA8FEC062BA6330008D381 /* ServerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFA8FEA062BA6330008D381 /* ServerBase.m */; };
 		7FFA903D062BA74F0008D381 /* ServerDisplay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FFA903B062BA74F0008D381 /* ServerDisplay.xib */; };
+		8890B20647BC6A8C46317F86 /* Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C46970E529D6B943172B5B9 /* Hashable.swift */; };
+		8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */; };
 		8A5828462FAA24D700A4E226 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8A5828452FAA24D700A4E226 /* Localizable.xcstrings */; };
 		8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */; };
 		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
+		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
+		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
+		9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E2A364B41F949C9C5126B6 /* BigUInt.swift */; };
+		9EF4AB0FE722A093EE774A06 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF34D9BB98B98C6741057041 /* Random.swift */; };
+		A11CEB86DA3AF191B3679527 /* Subtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B99EF228C2BA8102DB86645 /* Subtraction.swift */; };
+		B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F81447C3F26F481900F1674 /* BigInt.swift */; };
+		C1DB65427CF08686781F946F /* Multiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2414BD5025D38343B896663 /* Multiplication.swift */; };
+		C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C2C28573CF34D12230072 /* CS.swift */; };
+		C68A7701D2AC549231897A86 /* Shifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3268AEF31863553C9B05C7E /* Shifts.swift */; };
+		D72BD34AE07E1BB4AB16B161 /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E22E2631423B8283517A360 /* Comparable.swift */; };
 		DA00481512CCF82E004E2C70 /* ZlibStreamReader.h in Headers */ = {isa = PBXBuildFile; fileRef = DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */; };
 		DA00481612CCF82E004E2C70 /* ZlibStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */; };
 		DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1FD8C312D5100400632D78 /* PersistentServer.h */; };
@@ -172,6 +168,8 @@
 		DAD6DEFE12DCF583001FD9D6 /* SshTunnel.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD6DEFC12DCF583001FD9D6 /* SshTunnel.h */; };
 		DAD6DEFF12DCF583001FD9D6 /* SshTunnel.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD6DEFD12DCF583001FD9D6 /* SshTunnel.m */; };
 		DAEB76F21232AE3500002E6A /* Keymap.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEB76F11232AE3400002E6A /* Keymap.m */; };
+		DB708995F3A83FD65FF77D40 /* StringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */; };
+		DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */; };
 		E21FE449062B79AB0059585C /* KeyEquivalentScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */; };
 		E21FE44A062B79AB0059585C /* KeyEquivalentEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */; };
 		E21FE44B062B79AB0059585C /* KeyEquivalent.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43F062B79AB0059585C /* KeyEquivalent.m */; };
@@ -210,6 +208,8 @@
 		E2F3AB0506D5B86A005EB917 /* ProfileManager_private.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F3AB0306D5B86A005EB917 /* ProfileManager_private.m */; };
 		E2F3AD7106D5E11D005EB917 /* NSObject_Chicken.h in Headers */ = {isa = PBXBuildFile; fileRef = E2F3AD6F06D5E11D005EB917 /* NSObject_Chicken.h */; };
 		E2F3AD7206D5E11D005EB917 /* NSObject_Chicken.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F3AD7006D5E11D005EB917 /* NSObject_Chicken.m */; };
+		F059DE40859A4E3F2D7DCFF2 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E2FDA4AEA9CE89624F909E /* GCD.swift */; };
+		F4FF95E1001AB651ED3D8D12 /* PrimeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4165244CCF1AA2DCF758B024 /* PrimeTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -225,31 +225,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ARDAuthHelper.swift"; path = "ARDAuthHelper.swift"; sourceTree = "<group>"; };
-		0F2149C1B8288F348A035BA7 /* Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Addition.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Addition.swift"; sourceTree = "<group>"; };
-		5F81447C3F26F481900F1674 /* BigInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BigInt.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigInt.swift"; sourceTree = "<group>"; };
-		F0E2A364B41F949C9C5126B6 /* BigUInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BigUInt.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigUInt.swift"; sourceTree = "<group>"; };
-		D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BitwiseOps.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/BitwiseOps.swift"; sourceTree = "<group>"; };
-		291C2C28573CF34D12230072 /* CS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CS.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/CS.swift"; sourceTree = "<group>"; };
-		81C982E772F26EA68BBEAF6D /* Codable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Codable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Codable.swift"; sourceTree = "<group>"; };
-		5E22E2631423B8283517A360 /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Comparable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Comparable.swift"; sourceTree = "<group>"; };
-		57B50326C055A5CFECEAB74A /* DataConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DataConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/DataConversion.swift"; sourceTree = "<group>"; };
-		9FA4506AC7AE0E801C327D4B /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Division.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Division.swift"; sourceTree = "<group>"; };
-		D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Exponentiation.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Exponentiation.swift"; sourceTree = "<group>"; };
-		90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "FloatingPointConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/FloatingPointConversion.swift"; sourceTree = "<group>"; };
-		90E2FDA4AEA9CE89624F909E /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "GCD.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/GCD.swift"; sourceTree = "<group>"; };
-		6C46970E529D6B943172B5B9 /* Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Hashable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Hashable.swift"; sourceTree = "<group>"; };
-		0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "IntegerConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/IntegerConversion.swift"; sourceTree = "<group>"; };
-		F2414BD5025D38343B896663 /* Multiplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Multiplication.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Multiplication.swift"; sourceTree = "<group>"; };
-		4165244CCF1AA2DCF758B024 /* PrimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "PrimeTest.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/PrimeTest.swift"; sourceTree = "<group>"; };
-		CF34D9BB98B98C6741057041 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Random.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Random.swift"; sourceTree = "<group>"; };
-		C3268AEF31863553C9B05C7E /* Shifts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Shifts.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Shifts.swift"; sourceTree = "<group>"; };
-		85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SquareRoot.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/SquareRoot.swift"; sourceTree = "<group>"; };
-		68605BB65168A397BF48C5A3 /* Strideable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Strideable.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Strideable.swift"; sourceTree = "<group>"; };
-		0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "StringConversion.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/StringConversion.swift"; sourceTree = "<group>"; };
-		3B99EF228C2BA8102DB86645 /* Subtraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Subtraction.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/Subtraction.swift"; sourceTree = "<group>"; };
-		A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WordsAndBits.swift"; path = "CryptoSwift/Sources/CryptoSwift/CS_BigInt/WordsAndBits.swift"; sourceTree = "<group>"; };
+		08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARDAuthHelper.swift; sourceTree = "<group>"; };
+		0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/StringConversion.swift; sourceTree = "<group>"; };
+		0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntegerConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/IntegerConversion.swift; sourceTree = "<group>"; };
+		0F2149C1B8288F348A035BA7 /* Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Addition.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Addition.swift; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		291C2C28573CF34D12230072 /* CS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CS.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/CS.swift; sourceTree = "<group>"; };
+		3B99EF228C2BA8102DB86645 /* Subtraction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Subtraction.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Subtraction.swift; sourceTree = "<group>"; };
+		4165244CCF1AA2DCF758B024 /* PrimeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrimeTest.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/PrimeTest.swift; sourceTree = "<group>"; };
+		57B50326C055A5CFECEAB74A /* DataConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/DataConversion.swift; sourceTree = "<group>"; };
+		5E22E2631423B8283517A360 /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Comparable.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Comparable.swift; sourceTree = "<group>"; };
+		5F81447C3F26F481900F1674 /* BigInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BigInt.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigInt.swift; sourceTree = "<group>"; };
+		68605BB65168A397BF48C5A3 /* Strideable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Strideable.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Strideable.swift; sourceTree = "<group>"; };
+		6C46970E529D6B943172B5B9 /* Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Hashable.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Hashable.swift; sourceTree = "<group>"; };
 		7F088F2405E1D81100336456 /* ServerDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerDataManager.h; sourceTree = "<group>"; };
 		7F088F2505E1D81100336456 /* ServerDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerDataManager.m; sourceTree = "<group>"; };
 		7F088F2805E1DA4800336456 /* URLHandlerCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = URLHandlerCommand.h; sourceTree = "<group>"; };
@@ -270,11 +258,11 @@
 		7FF0C9A705CDC9A0008E39DD /* CotVNC.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; name = CotVNC.scriptTerminology; path = Resources/CotVNC.scriptTerminology; sourceTree = SOURCE_ROOT; };
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
 		7FFA8FEA062BA6330008D381 /* ServerBase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ServerBase.m; sourceTree = "<group>"; };
+		81C982E772F26EA68BBEAF6D /* Codable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Codable.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Codable.swift; sourceTree = "<group>"; };
+		85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SquareRoot.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/SquareRoot.swift; sourceTree = "<group>"; };
 		8A5828452FAA24D700A4E226 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = "<group>"; };
 		8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = "libjpeg-turbo/lib/libturbojpeg.a"; sourceTree = "<group>"; };
 		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZlibStreamReader.h; sourceTree = "<group>"; };
-		DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZlibStreamReader.m; sourceTree = "<group>"; };
 		8AC541EB2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/AuthPrompt.xib; sourceTree = "<group>"; };
 		8AC541EC2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ConnectionDialog.xib; sourceTree = "<group>"; };
 		8AC541ED2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ListenDialog.xib; sourceTree = "<group>"; };
@@ -283,6 +271,16 @@
 		8AC541F02413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/OSX_RFBViewer.xib; sourceTree = "<group>"; };
 		8AC541F12413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/RFBConnection.xib; sourceTree = "<group>"; };
 		8AC541F22413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ServerDisplay.xib; sourceTree = "<group>"; };
+		90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FloatingPointConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/FloatingPointConversion.swift; sourceTree = "<group>"; };
+		90E2FDA4AEA9CE89624F909E /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCD.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/GCD.swift; sourceTree = "<group>"; };
+		9FA4506AC7AE0E801C327D4B /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Division.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Division.swift; sourceTree = "<group>"; };
+		A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WordsAndBits.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/WordsAndBits.swift; sourceTree = "<group>"; };
+		C3268AEF31863553C9B05C7E /* Shifts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Shifts.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Shifts.swift; sourceTree = "<group>"; };
+		CF34D9BB98B98C6741057041 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Random.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Random.swift; sourceTree = "<group>"; };
+		D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exponentiation.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Exponentiation.swift; sourceTree = "<group>"; };
+		D7785712E0EF491D83B9C5C7 /* BitwiseOps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BitwiseOps.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/BitwiseOps.swift; sourceTree = "<group>"; };
+		DA00481312CCF82E004E2C70 /* ZlibStreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZlibStreamReader.h; sourceTree = "<group>"; };
+		DA00481412CCF82E004E2C70 /* ZlibStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZlibStreamReader.m; sourceTree = "<group>"; };
 		DA1FD8C312D5100400632D78 /* PersistentServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentServer.h; sourceTree = "<group>"; };
 		DA1FD8C412D5100400632D78 /* PersistentServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentServer.m; sourceTree = "<group>"; };
 		DA1FDD9112D6B1A000632D78 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -345,6 +343,8 @@
 		E2F48D74040EDD2200BD55BA /* KeyChain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = KeyChain.h; sourceTree = "<group>"; };
 		E2F48D75040EDD2200BD55BA /* KeyChain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = KeyChain.m; sourceTree = "<group>"; };
 		E2F48D78040EDD5100BD55BA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		F0E2A364B41F949C9C5126B6 /* BigUInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BigUInt.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/BigUInt.swift; sourceTree = "<group>"; };
+		F2414BD5025D38343B896663 /* Multiplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Multiplication.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Multiplication.swift; sourceTree = "<group>"; };
 		F52128E40368AF9F01F702E0 /* GNU Public License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = "GNU Public License.txt"; sourceTree = "<group>"; };
 		F536C26603937E5301178D82 /* ZlibHexEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibHexEncodingReader.h; sourceTree = "<group>"; };
 		F536C26703937E5301178D82 /* ZlibHexEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibHexEncodingReader.m; sourceTree = "<group>"; };
@@ -893,7 +893,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2660;
 			};
 			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */;
 			compatibilityVersion = "Xcode 2.4";
@@ -1142,7 +1142,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1167,6 +1166,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1180,7 +1180,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1206,6 +1205,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1219,7 +1219,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1243,6 +1242,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1290,7 +1290,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
@@ -1337,6 +1337,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				_CHICKEN_VERSION_ = 2026.6;
 			};
 			name = Deployment;
@@ -1389,7 +1390,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				SWIFT_VERSION = 5.0;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -1414,6 +1414,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1460,7 +1461,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;

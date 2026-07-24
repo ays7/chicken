@@ -25,7 +25,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="386" y="407" width="544" height="370"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <value key="minSize" type="size" width="509" height="370"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="544" height="370"/>
@@ -54,7 +54,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="444" y="449" width="392" height="306"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2129"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="28">
                 <rect key="frame" x="0.0" y="0.0" width="392" height="306"/>
@@ -72,7 +72,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <clipView key="contentView" id="5O7-Da-eZa">
                                         <rect key="frame" x="1" y="1" width="159" height="230"/>
-                                        <autoresizingMask key="autoresizingMask"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="14" headerView="55" id="24">
                                                 <rect key="frame" x="0.0" y="0.0" width="159" height="202"/>
@@ -109,7 +109,7 @@
                                         <rect key="frame" x="-30" y="17" width="15" height="158"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
-                                    <tableHeaderView key="headerView" id="55">
+                                    <tableHeaderView key="headerView" wantsLayer="YES" id="55">
                                         <rect key="frame" x="0.0" y="0.0" width="159" height="28"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </tableHeaderView>
@@ -152,7 +152,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <clipView key="contentView" id="RUZ-us-m19">
                                         <rect key="frame" x="1" y="1" width="159" height="230"/>
-                                        <autoresizingMask key="autoresizingMask"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="58" id="16">
                                                 <rect key="frame" x="0.0" y="0.0" width="159" height="202"/>
@@ -189,7 +189,7 @@
                                         <rect key="frame" x="-30" y="17" width="15" height="189"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
-                                    <tableHeaderView key="headerView" id="58">
+                                    <tableHeaderView key="headerView" wantsLayer="YES" id="58">
                                         <rect key="frame" x="0.0" y="0.0" width="159" height="28"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </tableHeaderView>
@@ -216,6 +216,7 @@
                     </box>
                 </subviews>
             </view>
+            <point key="canvasLocation" x="-396" y="-322"/>
         </window>
     </objects>
 </document>

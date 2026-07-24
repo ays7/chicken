@@ -11,5 +11,8 @@ xcodebuild \
     -project Chicken.xcodeproj \
     -scheme Chicken \
     -configuration Deployment \
-    -derivedDataPath "$DERIVED_DATA"
+    -derivedDataPath "$DERIVED_DATA" \
+    ONLY_ACTIVE_ARCH=NO \
+    ARCHS="x86_64 arm64"
+
 
