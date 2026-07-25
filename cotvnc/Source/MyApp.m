@@ -28,11 +28,9 @@
 	
 	// do some static lookups for a tiny speed gain
 	static Class RFBViewClass = nil;
-	static Class NSScrollViewClass = nil;
 	if ( ! RFBViewClass )
 	{
 		RFBViewClass = [RFBView class];
-		NSScrollViewClass = [NSScrollView class];
 	}
 
 	// if the frontmost window isn't a VNC connection, let's just skip all this and let things

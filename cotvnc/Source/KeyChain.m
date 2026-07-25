@@ -1,22 +1,12 @@
 //
 //  KeyChain.m
-//  Fire
-//
-//  Created by Colter Reed on Thu Jan 24 2002.
-//  Copyright (c) 2002 Colter Reed. All rights reserved.
-//  Released under GPL.  You know how to get a copy.
+//  Chicken of the VNC
 //
 
 #import "KeyChain.h"
-#import "Security/Security.h"
+#import <Security/Security.h>
 
 static KeyChain* defaultKeyChain = nil;
-
-@interface KeyChain (KeyChainPrivate)
-
--(SecKeychainItemRef)_genericPasswordReferenceForService:(NSString *)service account:(NSString*)account;
-
-@end
 
 @implementation KeyChain
 
@@ -28,84 +18,81 @@ static KeyChain* defaultKeyChain = nil;
 
 - (BOOL)setGenericPassword:(NSString*)password forService:(NSString *)service account:(NSString*)account
 {
-    OSStatus ret;
-    SecKeychainItemRef itemref;
-    
     if ([service length] == 0 || [account length] == 0) {
         return NO;
     }
     
     if (!password || [password length] == 0) {
         [self removeGenericPasswordForService:service account:account];
-        return TRUE;
-    } else {
-        const char  *pass = [password UTF8String];
-        itemref = [self _genericPasswordReferenceForService:service
-                        account:account];
-
-        if (itemref)
-            ret = SecKeychainItemModifyContent(itemref, NULL, strlen(pass), pass);
-        else {
-            const char  *serv = [service UTF8String];
-            const char  *acc = [account UTF8String];
-            ret = SecKeychainAddGenericPassword(NULL, strlen(serv), serv,
-                        strlen(acc), acc, strlen(pass), pass, NULL);
-        }
-        if (ret)
-            NSLog(@"Couldn't save to keychain: %d", ret);
-        return ret == 0;
+        return YES;
     }
+    
+    NSDictionary *query = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrService: service,
+        (__bridge id)kSecAttrAccount: account
+    };
+    
+    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, NULL);
+    
+    if (status == errSecSuccess) {
+        NSDictionary *attributesToUpdate = @{
+            (__bridge id)kSecValueData: passwordData
+        };
+        status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
+    } else {
+        NSMutableDictionary *newItem = [query mutableCopy];
+        newItem[(__bridge id)kSecValueData] = passwordData;
+        status = SecItemAdd((__bridge CFDictionaryRef)newItem, NULL);
+        [newItem release];
+    }
+    
+    if (status != errSecSuccess) {
+        NSLog(@"Couldn't save to keychain: %d", (int)status);
+    }
+    return status == errSecSuccess;
 }
 
 - (NSString*)genericPasswordForService:(NSString *)service account:(NSString*)account
 {
-    OSStatus ret;
-    UInt32 length;
-    void *p = NULL;
-    NSString *string = @"";
-    const char  *serv = [service UTF8String];
-    const char  *acc = [account UTF8String];
-    
     if ([service length] == 0 || [account length] == 0) {
         return @"";
     }
     
-    ret = SecKeychainFindGenericPassword(NULL, strlen(serv), serv, strlen(acc),
-                acc, &length, &p, NULL);
-
-    if (!ret) {
-        string = [[NSString alloc] initWithBytes:p length:length
-                encoding:NSUTF8StringEncoding];
-        [string autorelease];
+    NSDictionary *query = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrService: service,
+        (__bridge id)kSecAttrAccount: account,
+        (__bridge id)kSecReturnData: @YES,
+        (__bridge id)kSecMatchLimit: (__bridge id)kSecMatchLimitOne
+    };
+    
+    CFTypeRef dataTypeRef = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataTypeRef);
+    
+    if (status == errSecSuccess && dataTypeRef != NULL) {
+        NSData *passwordData = (NSData *)dataTypeRef;
+        NSString *result = [[[NSString alloc] initWithData:passwordData encoding:NSUTF8StringEncoding] autorelease];
+        return result ? result : @"";
     }
-    if (p)
-        SecKeychainItemFreeContent(NULL, p);
-    return string;
+    
+    return @"";
 }
 
 - (void)removeGenericPasswordForService:(NSString *)service account:(NSString*)account
 {
-    SecKeychainItemRef itemref; 
-
-    itemref = [self _genericPasswordReferenceForService:service account:account];
-    if (itemref)
-        SecKeychainItemDelete(itemref);
-}
-
-@end
-
-@implementation KeyChain (KeyChainPrivate)
-
-- (SecKeychainItemRef)_genericPasswordReferenceForService:(NSString *)service account:(NSString*)account
-{
-    const char  *serv = [service UTF8String];
-    const char  *acc = [account UTF8String];
-    SecKeychainItemRef itemref = NULL;
-
-    SecKeychainFindGenericPassword(NULL, strlen(serv), serv, strlen(acc), acc,
-            NULL, NULL, &itemref);
+    if ([service length] == 0 || [account length] == 0) {
+        return;
+    }
     
-    return itemref;
+    NSDictionary *query = @{
+        (__bridge id)kSecClass: (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrService: service,
+        (__bridge id)kSecAttrAccount: account
+    };
+    
+    SecItemDelete((__bridge CFDictionaryRef)query);
 }
 
 @end

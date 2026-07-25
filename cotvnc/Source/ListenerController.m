@@ -410,7 +410,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
     if (![self isWindowLoaded]) return;
     
-    [portText setIntValue:
+    [portText setIntegerValue:
         [user integerForKey: kPrefs_ListenerPort_Key]];
     [localOnlyBtn setState:
      [user boolForKey: kPrefs_ListenerLocal_Key] ? NSControlStateValueOn : NSControlStateValueOff];

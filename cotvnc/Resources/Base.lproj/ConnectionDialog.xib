@@ -31,7 +31,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="544" height="370"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <box fixedFrame="YES" boxType="oldStyle" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                    <box fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="5">
                         <rect key="frame" x="196" y="20" width="328" height="335"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="fnY-pf-ppW">
@@ -60,7 +60,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="392" height="306"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <box fixedFrame="YES" boxType="oldStyle" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                    <box fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="13">
                         <rect key="frame" x="206" y="20" width="166" height="267"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="Ld9-6x-qzc">
@@ -140,7 +140,7 @@
                             </subviews>
                         </view>
                     </box>
-                    <box fixedFrame="YES" boxType="oldStyle" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                    <box fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="15">
                         <rect key="frame" x="20" y="20" width="166" height="267"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="l4T-pC-Wog">

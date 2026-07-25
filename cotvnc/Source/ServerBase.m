@@ -113,6 +113,16 @@
 	return _viewOnly;
 }
 
+- (bool)fullscreen
+{
+	return _fullscreen;
+}
+
+- (void)setFullscreen:(bool)fullscreen
+{
+	_fullscreen = fullscreen;
+}
+
 - (NSString *)sshHost
 {
     return _sshHost;
@@ -281,7 +291,7 @@
 
     sep = [str rangeOfString:@":"];
     if (sep.location != NSNotFound) {
-        _sshPort = [[str substringFromIndex: sep.location + 1] intValue];
+        _sshPort = (in_port_t)[[str substringFromIndex: sep.location + 1] intValue];
         str = [str substringToIndex:sep.location];
     } else
         _sshPort = 0;

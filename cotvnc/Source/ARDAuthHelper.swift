@@ -1,5 +1,6 @@
 import Foundation
 import CommonCrypto
+import CryptoKit
 
 @objc public class ARDAuthResult: NSObject {
     @objc public let clientPublicKey: Data
@@ -128,13 +129,7 @@ fileprivate struct DiffieHellmanKeyAgreement {
 // MARK: - RoyalVNCKit 1:1 AES Encryption & Data Extension
 fileprivate extension Data {
     func md5Hash() -> Data {
-        var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        self.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) in
-            if let baseAddress = buffer.baseAddress {
-                _ = CC_MD5(baseAddress, CC_LONG(self.count), &hash)
-            }
-        }
-        return Data(hash)
+        return Data(Insecure.MD5.hash(data: self))
     }
 
     func paddedToLength(_ length: Int) -> Data {

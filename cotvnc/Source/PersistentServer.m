@@ -46,7 +46,7 @@
         [_profile retain];
 
         _sshHost = [[dict objectForKey:@"sshHost"] retain];
-        _sshPort = [[dict objectForKey:@"sshPort"] intValue];
+        _sshPort = (in_port_t)[[dict objectForKey:@"sshPort"] intValue];
         _sshUser = [[dict objectForKey:@"sshUser"] retain];
     }
     return self;

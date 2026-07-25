@@ -39,7 +39,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="368" height="375"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <box fixedFrame="YES" boxType="oldStyle" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                    <box fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="23">
                         <rect key="frame" x="20" y="20" width="328" height="335"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="AAr-Jm-Feh">

@@ -72,7 +72,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 		case 1:
 			while(length--) {
 				TO_PIX(pix, rgb);
-				*v++ = pix;
+				*v++ = (unsigned char)pix;
 			}
 			break;
 		case 2:
@@ -420,7 +420,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
     float nsv[3];
 
     ns_pixel(pixValue, self, nsv);
-    return [NSColor colorWithDeviceRed:nsv[0] green:nsv[1] blue:nsv[2] alpha:0.0];
+    return [NSColor colorWithSRGBRed:nsv[0] green:nsv[1] blue:nsv[2] alpha:0.0];
 }
 
 /* --------------------------------------------------------------------------------- */

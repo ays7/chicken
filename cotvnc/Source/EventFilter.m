@@ -200,7 +200,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
         return;
 
 	[self sendAllPendingQueueEntriesNow];
-    NSPoint	p = [_view convertPoint: [[_view window] convertScreenToBase: [NSEvent mouseLocation]] 
+    NSPoint	p = [_view convertPoint: [[_view window] convertPointFromScreen: [NSEvent mouseLocation]] 
 						  fromView: nil];
 
     [_connection mouseClickedAt: p buttons: _pressedButtons | addMask];	// 'Mouse button down'
@@ -242,7 +242,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	[self _updateCapsLockStateIfNecessary];
 
 	NSString *characters = [theEvent characters];
-	unsigned int modifiers = [theEvent modifierFlags];
+	unsigned int modifiers = (unsigned int)[theEvent modifierFlags];
 	if ( [[KeyEquivalentManager defaultManager] performEquivalentWithCharacters: characters modifiers: modifiers] )
 	{
 		[self discardAllPendingQueueEntries];
@@ -417,9 +417,9 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)queueModifiers:(NSEventModifierFlags)newState
              timestamp:(NSTimeInterval)timestamp
 {
-    unsigned int pressed = newState & ~_queuedModifiers;
-    unsigned int released = ~newState & _queuedModifiers;
-    unsigned int masks[] = {NSEventModifierFlagShift, NSEventModifierFlagControl,
+    NSEventModifierFlags pressed = newState & ~_queuedModifiers;
+    NSEventModifierFlags released = ~newState & _queuedModifiers;
+    NSEventModifierFlags masks[] = {NSEventModifierFlagShift, NSEventModifierFlagControl,
         NSEventModifierFlagOption, NSEventModifierFlagCommand,
         NSEventModifierFlagCapsLock, NSEventModifierFlagNumericPad,
         NSEventModifierFlagHelp};
@@ -435,16 +435,16 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
     }
 }
 
-- (void)queueModifierPressed: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp
+- (void)queueModifierPressed: (NSEventModifierFlags)modifier timestamp: (NSTimeInterval)timestamp
 {
-	QueuedEvent *event = [QueuedEvent modifierDownEventWithCharacter: modifier
+	QueuedEvent *event = [QueuedEvent modifierDownEventWithCharacter: (unsigned int)modifier
 													  timestamp: timestamp];
 	[_pendingEvents addObject: event];
 	[self sendAnyValidEventsToServerNow];
 }
 
 
-- (void)queueModifierReleased: (unsigned int)modifier timestamp: (NSTimeInterval)timestamp
+- (void)queueModifierReleased: (NSEventModifierFlags)modifier timestamp: (NSTimeInterval)timestamp
 {
     if ( kClickWhileHoldingModifierEmulation == [_profile button2EmulationScenario]
 		 && _clickWhileHoldingModifierStillDown[0] 
@@ -459,7 +459,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		_clickWhileHoldingModifierStillDown[1] = NO;
 	}
 	
-	QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: modifier
+	QueuedEvent *event = [QueuedEvent modifierUpEventWithCharacter: (unsigned int)modifier
 													timestamp: timestamp];
 	[_pendingEvents addObject: event];
 	[self sendAnyValidEventsToServerNow];
@@ -469,7 +469,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)pasteString: (NSString *)string
 {
 	[self _updateCapsLockStateIfNecessary];
-	int index, strLength = [string length];
+	NSUInteger index, strLength = [string length];
 	NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     unsigned oldModifiers = _pressedModifiers;
 	BOOL shiftKeyDown = NO;
@@ -566,7 +566,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	unsigned int eventsToDelay = eventsToDelay3 > eventsToDelay2 ? eventsToDelay3 : eventsToDelay2;
 	if ( eventsToDelay )
 	{
-		unsigned int pendingEvents = [_pendingEvents count];
+		unsigned int pendingEvents = (unsigned int)[_pendingEvents count];
 		if ( eventsToDelay < pendingEvents )
 		{
 			NSRange range = NSMakeRange( 0, pendingEvents - eventsToDelay );
@@ -682,9 +682,9 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (void)sendPendingQueueEntriesInRange: (NSRange)range
 {
-	unsigned int i, last = NSMaxRange(range);
+	unsigned int i, last = (unsigned int)NSMaxRange(range);
 	
-	for ( i = range.location; i < last; ++i )
+	for ( i = (unsigned int)range.location; i < last; ++i )
 	{
 		QueuedEvent *event = [_pendingEvents objectAtIndex: i];
 		[self _sendEvent: event];
@@ -749,7 +749,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (unsigned int)handleClickWhileHoldingForButton: (unsigned int)button
 {
-	int eventCount = [_pendingEvents count];
+	int eventCount = (int)[_pendingEvents count];
     unsigned    cwhModifier = [_profile clickWhileHoldingModifierForButton:button];
 	if ( eventCount > 2 )
 		return 0;
@@ -831,7 +831,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
             if ( validEvents / 2 == [_profile multiTapCountForButton:button] )
 			{
 				[self discardAllPendingQueueEntries];
-				NSPoint	p = [_view convertPoint: [[_view window] convertScreenToBase: [NSEvent mouseLocation]] 
+				NSPoint	p = [_view convertPoint: [[_view window] convertPointFromScreen: [NSEvent mouseLocation]] 
 									  fromView: nil];
 				unsigned int rfbButton = ButtonNumberToRFBButtomMask( button );
 				[_connection mouseClickedAt: p buttons: _pressedButtons | rfbButton];	// 'Mouse button down'
@@ -853,7 +853,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 - (unsigned int)handleTapModifierAndClickForButton: (unsigned int)button
 {
-	int eventIndex, eventCount = [_pendingEvents count];
+	NSUInteger eventIndex, eventCount = [_pendingEvents count];
 	NSTimeInterval time1 = 0, time2;
     unsigned    emulModifier = [_profile tapAndClickModifierForButton:button];
 	
@@ -904,7 +904,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		}
 	}
 
-	return eventCount;
+	return (unsigned int)eventCount;
 }
 
 @end

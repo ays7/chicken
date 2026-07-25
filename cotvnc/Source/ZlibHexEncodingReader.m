@@ -80,7 +80,7 @@
         unsigned char *buffer = (unsigned char *)malloc(bufferSz);
         
 		encodedStream.next_in = (unsigned char*)[data bytes];
-		encodedStream.avail_in = [data length];
+		encodedStream.avail_in = (uInt)[data length];
 		encodedStream.next_out = buffer;
 		encodedStream.avail_out = bufferSz;
 		encodedStream.data_type = Z_BINARY;
@@ -108,7 +108,7 @@
             numOfSubRects = *ptr++;
             unsigned coloured = subEncodingMask & rfbHextileSubrectsColoured;
             unsigned length = (coloured ? bpp + 2 : 2) * numOfSubRects;
-            unsigned size = length + (ptr - buffer);
+            unsigned size = (unsigned)(length + (ptr - buffer));
 
             if (size > bufferSz) {
                 // buffer wasn't large enough

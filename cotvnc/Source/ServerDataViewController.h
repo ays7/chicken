@@ -30,7 +30,7 @@
 @class ServerBase;
 
 @interface ServerDataViewController : NSWindowController
-                                            <ConnectionWaiterDelegate>
+                                            <ConnectionWaiterDelegate, NSControlTextEditingDelegate>
 {
     IBOutlet NSTextField *display;
     IBOutlet NSTextField *displayDescription;
@@ -58,6 +58,7 @@
 
     ConnectionWaiter    *connectionWaiter;
     BOOL saveCheckboxWasVisible;
+    NSArray             *topLevelObjects;
     RFBConnectionManager *superController;
 }
 
@@ -79,7 +80,6 @@
 
 - (IBAction)showProfileManager:(id)sender;
 
-- (IBAction)connectToServer:(id)sender;
 - (IBAction)cancelConnect: (id)sender;
 
 - (void)connectionSucceeded: (RFBConnection *)theConnection;

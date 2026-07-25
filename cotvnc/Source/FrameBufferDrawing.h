@@ -88,16 +88,16 @@ static inline unsigned int cvt_pixel(const unsigned char* v, FrameBuffer *this)
 - (void)fillColor:(FrameBufferColor*)fbc
         fromPixel:(const unsigned char*)pixValue
 {
-    *((FBColor*)fbc) = cvt_pixel(pixValue, self);
+    *((FBColor*)fbc) = (FBColor)cvt_pixel(pixValue, self);
 }
 
 - (void)fillColor:(FrameBufferColor*)fbc
    fromTightPixel:(const unsigned char*)pixValue
 {
 	if(tightBytesPerPixel == 3) {
-		*((FBColor*)fbc) = cvt_pixel24(pixValue, self);
+		*((FBColor*)fbc) = (FBColor)cvt_pixel24(pixValue, self);
 	} else {
-		*((FBColor*)fbc) = cvt_pixel(pixValue, self);
+		*((FBColor*)fbc) = (FBColor)cvt_pixel(pixValue, self);
 	}
 }
 
@@ -300,7 +300,7 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
         stride = size.width - aRect.size.width;
 		while(lines--) {
 			for(i=aRect.size.width; i; i--) {
-				*start++ = cvt_pixel24(data, self);
+				*start++ = (FBColor)cvt_pixel24(data, self);
 				data += 3;
 			}
 			start += stride;
@@ -334,7 +334,7 @@ printf("copy x=%f y=%f w=%f h=%f -> x=%f y=%f\n", aRect.origin.x, aRect.origin.y
 			col = redClut[*rgb++ >> redShiftFromFull];
 			col |= greenClut[*rgb++ >> greenShiftFromFull];
 			col |= blueClut[*rgb++ >> blueShiftFromFull];
-			*start++ = col;
+			*start++ = (FBColor)col;
 		}
 		start += stride;
 	}
@@ -375,7 +375,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 				for(i=aRect.size.width; i; i--) {
 					pix = *data++;
 					CLUT(col, pix);
-					*start++ = col;
+					*start++ = (FBColor)col;
 				}
 				start += stride;
 			}
@@ -387,7 +387,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 						pix = PIX16BIG(data);
                         data += 2;
 						CLUT(col, pix);
-						*start++ = col;
+						*start++ = (FBColor)col;
 					}
 					start += stride;
 				}
@@ -397,7 +397,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
                         pix = PIX16LITTLE(data);
                         data += 2;
 						CLUT(col, pix);
-						*start++ = col;
+						*start++ = (FBColor)col;
 					}
 					start += stride;
 				}
@@ -410,7 +410,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
                         pix = PIX32BIG(data);
                         data += 4;
 						CLUT(col, pix);
-						*start++ = col;
+						*start++ = (FBColor)col;
 					}
 					start += stride;
 				}
@@ -420,7 +420,7 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
                         pix = PIX32LITTLE(data);
                         data += 4;
 						CLUT(col, pix);
-						*start++ = col;
+						*start++ = (FBColor)col;
 					}
 					start += stride;
 				}

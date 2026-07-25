@@ -115,7 +115,13 @@ NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
 {
 	if ( mWindow )
 		return;
-	[NSBundle loadNibNamed: @"Preferences" owner: self];
+	NSArray *tlo = nil;
+	[NSBundle.mainBundle loadNibNamed: @"Preferences" owner: self topLevelObjects: &tlo];
+	for (id obj in tlo) {
+		if ([obj isKindOfClass:[NSWindow class]])
+			[(NSWindow *)obj setReleasedWhenClosed:NO];
+	}
+	mTopLevelObjects = [tlo retain];
 	
 	// set our controls' default values
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

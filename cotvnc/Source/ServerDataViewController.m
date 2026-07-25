@@ -41,13 +41,19 @@
 {
 	if (self = [super init])
 	{
-		[NSBundle loadNibNamed:@"ServerDisplay.nib" owner:self];
+		NSArray *tlo = nil;
+		[NSBundle.mainBundle loadNibNamed:@"ServerDisplay" owner:self topLevelObjects:&tlo];
+		for (id obj in tlo) {
+			if ([obj isKindOfClass:[NSWindow class]])
+				[(NSWindow *)obj setReleasedWhenClosed:NO];
+		}
+		topLevelObjects = [tlo retain];
 		
 		selfTerminate = NO;
 		removedSaveCheckbox = NO;
 		
 		[connectIndicatorText setStringValue:@""];
-		[box setBorderType:NSNoBorder];
+		[box setTransparent:YES];
 
         connectionWaiter = nil;
 		
@@ -99,6 +105,7 @@
     [connectionWaiter release];
 		
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[topLevelObjects release];
     
     [super dealloc];
 }
@@ -322,6 +329,8 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
 	NSControl* sender = [aNotification object];
@@ -357,6 +366,7 @@
 		}
 	}
 }
+#pragma clang diagnostic pop
 
 - (IBAction)passwordChanged:(id)sender
 {

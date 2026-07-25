@@ -151,7 +151,7 @@ static ServerDataManager* gInstance = nil;
             NSData *data = [defaults objectForKey:RFB_SAVED_SERVERS];
             if ( data )
             {
-                gInstance = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                gInstance = [NSKeyedUnarchiver unarchivedObjectOfClass:[ServerDataManager class] fromData:data error:nil];
                 [gInstance retain];
             }
         }
@@ -159,9 +159,11 @@ static ServerDataManager* gInstance = nil;
 		if( nil == gInstance )
 		{
 			NSString *storePath = [NSHomeDirectory() stringByAppendingPathComponent:RFB_PREFS_LOCATION];
-			
-			gInstance = [NSKeyedUnarchiver unarchiveObjectWithFile:storePath];
-			[gInstance retain];
+			NSData *storeData = [NSData dataWithContentsOfFile:storePath];
+			if (storeData) {
+				gInstance = [NSKeyedUnarchiver unarchivedObjectOfClass:[ServerDataManager class] fromData:storeData error:nil];
+				[gInstance retain];
+			}
 			if( nil == gInstance )
 			{
 				// Didn't find any preferences under the new serialization system,
@@ -296,7 +298,7 @@ static ServerDataManager* gInstance = nil;
 
 - (unsigned) serverCount
 {
-	return [mServers count];
+	return (unsigned int)[mServers count];
 }
 
 /* Returns the number of saveable servers, i.e. excluding Rendezvous servers */
@@ -331,7 +333,7 @@ static ServerDataManager* gInstance = nil;
 
 - (unsigned) groupCount
 {
-	return [mGroups count];
+	return (unsigned int)[mGroups count];
 }
 
 - (NSEnumerator*) getGroupNameEnumerator

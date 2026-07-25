@@ -89,7 +89,7 @@
      * that the user wants to add the unauthenticated server key to the hosts
      * file. */
 
-    NSAlert     *alert = [[NSAlert alloc] init];
+    NSAlert     *alert = [[[NSAlert alloc] init] autorelease];
     NSString    *msg = NSLocalizedString(@"FirstTimeMessage", nil);
 
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
@@ -99,20 +99,14 @@
     [alert setInformativeText:[NSString stringWithFormat:msg, fingerprint]];
     [alert addButtonWithTitle:NSLocalizedString(@"Connect", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-    [alert beginSheetModalForWindow:window modalDelegate:self
-                     didEndSelector:@selector(firstTime:returnCode:contextInfo:)
-                        contextInfo:NULL];
-}
-
-- (void)firstTime:(NSAlert *)sheet returnCode:(int)retCode
-      contextInfo:(void *)info
-{
-    BOOL    accept = retCode == NSAlertFirstButtonReturn;
-    [tunnel acceptKey:accept];
-    if ([delegate respondsToSelector:@selector(connectionSheetOver)])
-        [delegate connectionSheetOver];
-    if (!accept)
-        [delegate connectionFailed];
+    [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+        BOOL accept = (returnCode == NSAlertFirstButtonReturn);
+        [tunnel acceptKey:accept];
+        if ([delegate respondsToSelector:@selector(connectionSheetOver)])
+            [delegate connectionSheetOver];
+        if (!accept)
+            [delegate connectionFailed];
+    }];
 }
 
 /* Message from ssh requesting a password. */

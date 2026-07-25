@@ -70,8 +70,7 @@ ConnectionWaiterDelegate>
     NSDate                          *_connectionStartDate;
     NSTimer                         *_reconnectSheetTimer;
     ConnectionWaiter                *_reconnectWaiter;
-
-
+    NSArray                         *_nibTopLevelObjects;
 }
 
 - (id)initWithConnection:(RFBConnection*)conn;

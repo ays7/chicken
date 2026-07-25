@@ -108,7 +108,7 @@
 
 - (int)count
 {
-	return [mProfiles count];
+	return (int)[mProfiles count];
 }
 
 /* Invoked when profile has changed, so that it can be saved to preferences. */

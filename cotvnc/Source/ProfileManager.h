@@ -35,7 +35,7 @@ typedef enum {
 } ModifierKeyIdentifier;
 
 	
-@interface ProfileManager : NSWindowController
+@interface ProfileManager : NSWindowController <NSTableViewDataSource, NSTableViewDelegate, NSControlTextEditingDelegate>
 {
     IBOutlet NSTableView *mProfileTable;
     IBOutlet NSTextField *mProfileNameField;

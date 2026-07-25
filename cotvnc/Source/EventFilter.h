@@ -106,7 +106,7 @@ typedef enum {
 	RFBView *_view;
 	
 	NSMutableArray *_pendingEvents;
-	unsigned int _queuedModifiers;
+	NSEventModifierFlags _queuedModifiers;
 	BOOL _watchEventForCapsLock;
 	BOOL _viewOnly;
 	

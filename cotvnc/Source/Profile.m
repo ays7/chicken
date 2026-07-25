@@ -86,7 +86,7 @@ static inline unsigned int
 ButtonNumberToArrayIndex( NSInteger buttonNumber )
 {
 	NSCParameterAssert( buttonNumber == 2 || buttonNumber == 3 );
-	return buttonNumber - 2;
+	return (unsigned int)(buttonNumber - 2);
 }
 
 
@@ -229,13 +229,13 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 
         obj = [info objectForKey: kProfile_TintBack_Key];
         if (obj)
-            tintBack = [[NSKeyedUnarchiver unarchiveObjectWithData:obj]
+            tintBack = [[NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil]
                                 retain];
         if (tintBack == nil)
             tintBack = [[NSColor clearColor] retain];
 
         if ((obj = [info objectForKey:kProfile_TintFront_Key]) != nil)
-            tintFront = [[NSKeyedUnarchiver unarchiveObjectWithData:obj]
+            tintFront = [[NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil]
                                 retain];
         if (tintFront == nil)
             tintFront = [tintBack retain];
@@ -406,11 +406,11 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
     [dict setObject:[NSNumber numberWithDouble:_tapAndClickTimeout[1]]
              forKey:kProfile_TapAndClickTimeoutForButton3_Key];
 
-    [dict setObject:[NSNumber numberWithInt:pixelFormatIndex]
+    [dict setObject:[NSNumber numberWithInteger:pixelFormatIndex]
              forKey:kProfile_PixelFormat_Key];
-    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintFront]
+    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintFront requiringSecureCoding:NO error:nil]
              forKey:kProfile_TintFront_Key];
-    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintBack]
+    [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintBack requiringSecureCoding:NO error:nil]
              forKey:kProfile_TintBack_Key];
 
     return [dict autorelease];
@@ -674,7 +674,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 }
 
 - (void)setEmulationScenario:(EventFilterEmulationScenario)scenario
-                   forButton:(NSInteger)button;
+                   forButton:(unsigned int)button;
 {
     unsigned    index = ButtonNumberToArrayIndex(button);
     _buttonEmulationScenario[index] = scenario;

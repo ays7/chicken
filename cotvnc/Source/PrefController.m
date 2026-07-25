@@ -64,6 +64,13 @@ static int const kPrefsVersion = 0x00000002;
 }
 
 
+- (void)dealloc
+{
+	[mTopLevelObjects release];
+	[super dealloc];
+}
+
+
 - (id)init
 {
 	if ( self = [super init] )

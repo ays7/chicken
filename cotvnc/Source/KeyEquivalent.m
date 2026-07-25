@@ -123,16 +123,8 @@ typedef unsigned int NSUInteger;
 			return [[[NSAttributedString alloc] initWithString: @""] autorelease];
 		else if (c >= NSF1FunctionKey && c <= NSF15FunctionKey)
 		{
-			unsigned int cid = 1173 + c - NSF1FunctionKey;
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: @" "] autorelease];
-			NSRange rangeOfStringToBeOverriden = {0, 1};
-			NSString *baseString = [[newAttrString string] substringWithRange: rangeOfStringToBeOverriden];
-			NSGlyphInfo *glyphInfo = [NSGlyphInfo glyphInfoWithCharacterIdentifier: cid
-																		collection: NSIdentityMappingCharacterCollection
-																		baseString: baseString];
-			[newAttrString addAttribute: NSGlyphInfoAttributeName
-								  value: glyphInfo
-								  range: rangeOfStringToBeOverriden];
+			NSString *fKeyStr = [NSString stringWithFormat:@"F%d", c - NSF1FunctionKey + 1];
+			newAttrString = [[[NSMutableAttributedString alloc] initWithString: fKeyStr] autorelease];
 		}
 		if (newAttrString == nil)
 		{

@@ -77,7 +77,7 @@
 - (void)serverResolvedWithHost: (NSString *)aHost port: (int)aPort
 {
     host = [aHost copy];
-    port = aPort;
+    port = (in_port_t)aPort;
     [NSThread detachNewThreadSelector: @selector(connect:) toTarget: self
                            withObject: nil];
 }
@@ -296,14 +296,21 @@
         theAction = errorStr;
 
 	NSString *ok = NSLocalizedString( @"Okay", nil );
-    if (window)
-        NSBeginAlertSheet(theAction, ok, nil, nil, window, self,
-                @selector(errorDidEnd:returnCode:contextInfo:), NULL, NULL,
-                @"%@", message);
-    else {
-        int ret;
-        ret = NSRunAlertPanel(theAction, message, ok, NULL, NULL, NULL);
-        [self errorDidEnd:nil returnCode:ret contextInfo:nil];
+    if (window) {
+        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        [alert setMessageText:theAction];
+        [alert setInformativeText:message ? message : @""];
+        [alert addButtonWithTitle:ok];
+        [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+            [self errorDidEnd:window returnCode:(int)returnCode contextInfo:nil];
+        }];
+    } else {
+        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        [alert setMessageText:theAction];
+        [alert setInformativeText:message ? message : @""];
+        [alert addButtonWithTitle:ok];
+        NSInteger ret = [alert runModal];
+        [self errorDidEnd:nil returnCode:(int)ret contextInfo:nil];
     }
 }
 

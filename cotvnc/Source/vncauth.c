@@ -112,7 +112,7 @@ vncDecryptPasswdFromFile(char *fname)
 	ch = getc(fp);
 	if (ch == EOF)
 	    break;
-	passwd[i] = ch;
+	passwd[i] = (unsigned char)ch;
     }
 
     if (fp != stdin)

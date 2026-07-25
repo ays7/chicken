@@ -34,6 +34,7 @@
 	bool      _shared;
 
 	bool      _viewOnly;	
+	bool      _fullscreen;
     Profile   *_profile;
 
     NSString  *_sshHost;
@@ -54,6 +55,7 @@
 - (bool)shared;
 
 - (bool)viewOnly;
+- (bool)fullscreen;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
 
@@ -70,6 +72,7 @@
 - (void)setPort: (int)port;
 
 - (void)setViewOnly: (bool)viewOnly;
+- (void)setFullscreen: (bool)fullscreen;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
 - (void)setSshHost:(NSString *)sshHost;

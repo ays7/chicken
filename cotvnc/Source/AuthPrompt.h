@@ -30,6 +30,7 @@
     IBOutlet NSPanel        *panel;
     IBOutlet NSTextField    *passwordField;
     id<AuthPromptDelegate>  delegate;
+    NSArray                 *topLevelObjects;
 }
 
 - (id)initWithDelegate:(id<AuthPromptDelegate>)aDelegate;

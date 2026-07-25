@@ -322,7 +322,7 @@
     [rfbProtocol release];
     rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Display size (%d x %d)", [info size].width, [info size].height);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Display size (%d x %d)", (int)[info size].width, (int)[info size].height);
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
     [session setSize:[info size]];
     [rfbView setFrameBuffer:frameBuffer];
@@ -433,7 +433,7 @@
         }
         
         while(length) {
-            consumed = [currentReader readBytes:bytes length:length];
+            consumed = (unsigned int)[currentReader readBytes:bytes length:(unsigned int)length];
 
             if (consumed == 0) {
                 DiagnosticLog(DiagnosticLogLevelBasic, @"Reader %@ consumed 0 bytes of %ld bytes remaining. Protocol error terminating connection.", NSStringFromClass([currentReader class]), (long)length);
@@ -565,7 +565,7 @@
 
     msg.type = rfbPointerEvent;
     DiagnosticLog(DiagnosticLogLevelVerbose, @"RFBConnection sendType: sent client message type %u (rfbPointerEvent)", rfbPointerEvent);
-    msg.buttonMask = mask;
+    msg.buttonMask = (unsigned char)mask;
     [self putPosition:thePoint inPointerMessage:&msg];
 
     if (msg.x == lastMouseX && msg.y == lastMouseY)
@@ -597,7 +597,7 @@
     rfbPointerEventMsg msg;
 	
     msg.type = rfbPointerEvent;
-    msg.buttonMask = mask;
+    msg.buttonMask = (unsigned char)mask;
     [self putPosition:thePoint inPointerMessage:&msg];
 
     [self writeBufferedBytes: (unsigned char *)&msg length:sizeof(msg)];
@@ -744,7 +744,7 @@
     id types, theType;
 	NSString *str;
 	
-    types = [NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil];
+    types = [NSArray arrayWithObjects:NSPasteboardTypeString, NSPasteboardTypeFileURL, nil];
     if((theType = [pb availableTypeFromArray:types]) == nil) {
         NSLog(@"No supported pasteboard type\n");
         return NO;
@@ -897,7 +897,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
         return;
     }
     
-    unsigned int msgSz = 12 + [compressed length];
+    unsigned int msgSz = (unsigned int)(12 + [compressed length]);
     unsigned char *buf = malloc(msgSz);
     if (!buf) {
         NSLog(@"Out of memory allocating clipboard send buffer");
@@ -947,7 +947,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 #else
     if (cStr != NULL)
 #endif
-        [self sendStringToServersClipboard:cStr length:strlen(cStr)];
+        [self sendStringToServersClipboard:cStr length:(unsigned int)strlen(cStr)];
 }
 
 - (void)sendStringToServersClipboard:(const char *)cStr length:(unsigned)len
@@ -974,10 +974,10 @@ static NSData *compressZlib(NSData *uncompressedData) {
 - (void)pasteConfirmation:(NSWindow *)sheet returnCode:(int)code
               contextInfo:(NSString *)str
 {
-    if (code == NSAlertDefaultReturn) {
+    if (code == NSAlertFirstButtonReturn) {
         NSData  *data = [str dataUsingEncoding:NSISOLatin1StringEncoding
                           allowLossyConversion:YES];
-        [self sendStringToServersClipboard:[data bytes] length:[data length]];
+        [self sendStringToServersClipboard:[data bytes] length:(unsigned int)[data length]];
     }
     [str release]; // balances retain in sendPasteboardToServer:
 }
@@ -1011,7 +1011,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
     }
 
     do {
-        result = write([socketHandler fileDescriptor], bytes + written, length);
+        result = (int)write([socketHandler fileDescriptor], bytes + written, length);
         if(result >= 0) {
             length -= result;
             written += result;

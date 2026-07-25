@@ -25,33 +25,44 @@
 {
     if (self = [super init]) {
         delegate = aDelegate;
-        [NSBundle loadNibNamed:@"AuthPrompt" owner:self];
+        NSArray *tlo = nil;
+        [NSBundle.mainBundle loadNibNamed:@"AuthPrompt" owner:self topLevelObjects:&tlo];
+        for (id obj in tlo) {
+            if ([obj isKindOfClass:[NSWindow class]])
+                [(NSWindow *)obj setReleasedWhenClosed:NO];
+        }
+        topLevelObjects = [tlo retain];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [topLevelObjects release];
+    [super dealloc];
+}
+
 - (void)runSheetOnWindow:(NSWindow *)window
 {
-    [NSApp beginSheet:panel modalForWindow:window modalDelegate:self
-        didEndSelector:@selector(passwordEnteredFor:returnCode:contextInfo:)
-        contextInfo:nil];
-    [self retain];
+    [window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
+        [panel orderOut:self];
+    }];
 }
 
 - (void)stopSheet
 {
-    [NSApp endSheet:panel];
+    [panel.sheetParent endSheet:panel returnCode:NSModalResponseCancel];
 }
 
 - (IBAction)enterPassword:(id)sender
 {
     [delegate authPasswordEntered:[passwordField stringValue]];
-    [NSApp endSheet:panel];
+    [panel.sheetParent endSheet:panel returnCode:NSModalResponseOK];
 }
 
 - (IBAction)cancel:(id)sender
 {
-    [NSApp endSheet:panel];
+    [panel.sheetParent endSheet:panel returnCode:NSModalResponseCancel];
     [delegate authCancelled];
 }
 
@@ -59,7 +70,6 @@
     contextInfo:(void *)info
 {
     [panel orderOut:self];
-    [self autorelease];
 }
 
 @end

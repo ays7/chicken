@@ -32,7 +32,7 @@ typedef unsigned int NSUInteger;
 
 - (NSString *)_currentProfileName
 {
-	int selectedRow = [mProfileTable selectedRow];
+	NSInteger selectedRow = [mProfileTable selectedRow];
 	if ( selectedRow < 0 )
 		return nil;
 	

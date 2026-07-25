@@ -15,6 +15,7 @@
 
 	IBOutlet NSSlider *mFrontInverseCPUSlider;
 	IBOutlet NSSlider *mOtherInverseCPUSlider;
+	NSArray *mTopLevelObjects;
 }
 
 	// Creation

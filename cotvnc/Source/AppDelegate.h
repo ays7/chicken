@@ -10,7 +10,7 @@
 
 @class DockConnection;
 
-@interface AppDelegate : NSObject {
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuItemValidation> {
 	IBOutlet NSMenuItem *mRendezvousMenuItem;
 	IBOutlet NSTextField *mInfoVersionNumber;
 

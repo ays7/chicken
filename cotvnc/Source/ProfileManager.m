@@ -152,38 +152,38 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     [profile setJpegEncodingEnabled:[mEnableJpegEncoding state]];
     
     tag = [[mEmulationPopup2 selectedItem] tag];
-    [profile setEmulationScenario:tag forButton:2];
+    [profile setEmulationScenario:(EventFilterEmulationScenario)tag forButton:2];
     [mEmulationTabView2 selectTabViewItemAtIndex: tag];
     tag = [[mClickWhileHoldingEmulationModifier2 selectedItem] tag];
-    [profile setClickWhileHoldingModifier:tag forButton:2];
+    [profile setClickWhileHoldingModifier:(unsigned int)tag forButton:2];
     tag = [[mMultiTapEmulationModifier2 selectedItem] tag];
-    [profile setMultiTapModifier:tag forButton:2];
+    [profile setMultiTapModifier:(unsigned int)tag forButton:2];
     value = [mMultiTapEmulationCountStepper2 intValue];
-    [profile setMultiTapCount:value forButton:2];
-    [mMultiTapEmulationCountText2 setIntValue: value];
+    [profile setMultiTapCount:(unsigned int)value forButton:2];
+    [mMultiTapEmulationCountText2 setIntegerValue: value];
     tag = [[mTapAndClickEmulationModifier2 selectedItem] tag];
-    [profile setTapAndClickModifier:tag forButton:2];
+    [profile setTapAndClickModifier:(unsigned int)tag forButton:2];
     [profile setTapAndClickTimeout:[mTapAndClickEmulationTimeout2 doubleValue]
                          forButton:2];
     
     tag = [[mEmulationPopup3 selectedItem] tag];
-    [profile setEmulationScenario:tag forButton:3];
+    [profile setEmulationScenario:(EventFilterEmulationScenario)tag forButton:3];
     [mEmulationTabView3 selectTabViewItemAtIndex: tag];
     tag = [[mClickWhileHoldingEmulationModifier3 selectedItem] tag];
-    [profile setClickWhileHoldingModifier:tag forButton:3];
+    [profile setClickWhileHoldingModifier:(unsigned int)tag forButton:3];
     tag = [[mMultiTapEmulationModifier3 selectedItem] tag];
-    [profile setMultiTapModifier:tag forButton:3];
+    [profile setMultiTapModifier:(unsigned int)tag forButton:3];
     value = [mMultiTapEmulationCountStepper3 intValue];
-    [profile setMultiTapCount:value forButton:3];
-    [mMultiTapEmulationCountText3 setIntValue: value];
+    [profile setMultiTapCount:(unsigned int)value forButton:3];
+    [mMultiTapEmulationCountText3 setIntegerValue: value];
     tag = [[mTapAndClickEmulationModifier3 selectedItem] tag];
-    [profile setTapAndClickModifier:tag forButton:3];
+    [profile setTapAndClickModifier:(unsigned int)tag forButton:3];
     [profile setTapAndClickTimeout:[mTapAndClickEmulationTimeout3 doubleValue]
                 forButton:3];
     
-    [profile setCommandKeyPreference:[mCommandKey indexOfSelectedItem]];
-    [profile setControlKeyPreference: [mControlKey indexOfSelectedItem]];
-    [profile setAltKeyPreference: [mAltKey indexOfSelectedItem]];
+    [profile setCommandKeyPreference:(int)[mCommandKey indexOfSelectedItem]];
+    [profile setControlKeyPreference:(int)[mControlKey indexOfSelectedItem]];
+    [profile setAltKeyPreference:(int)[mAltKey indexOfSelectedItem]];
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
 }
@@ -192,11 +192,11 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 - (IBAction)toggleSelectedEncodingEnabled: (id)sender
 {
     Profile *profile = [self _currentProfile];
-    int selectedIndex = [mEncodingTableView selectedRow];
+    NSInteger selectedIndex = [mEncodingTableView selectedRow];
     NSParameterAssert ( selectedIndex >= 0 && selectedIndex < NUMENCODINGS );
     
-    BOOL wasEnabled = [profile encodingEnabledAtIndex:selectedIndex];
-    [profile setEncodingEnabled:!wasEnabled atIndex:selectedIndex];
+    BOOL wasEnabled = [profile encodingEnabledAtIndex:(int)selectedIndex];
+    [profile setEncodingEnabled:!wasEnabled atIndex:(int)selectedIndex];
     
     [[ProfileDataManager sharedInstance] saveProfile:profile];
     [mEncodingTableView reloadData];
@@ -236,10 +236,10 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 
 #pragma mark -
-#pragma mark NSTableView Data Source
+#pragma mark Table View Data Source
 
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
 	if ( mEncodingTableView == aTableView )
 	{
@@ -251,7 +251,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn
-            row:(int)rowIndex
+            row:(NSInteger)rowIndex
 {
 	if ( mEncodingTableView == aTableView )
 	{
@@ -259,10 +259,10 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 		NSParameterAssert( rowIndex >= 0 && rowIndex< [profile numEncodings] );
 
 		if ( [[aTableColumn identifier] isEqualToString:@"Enabled"] ) {
-            BOOL enabled = [profile encodingEnabledAtIndex:rowIndex];
+            BOOL enabled = [profile encodingEnabledAtIndex:(int)rowIndex];
             return [NSNumber numberWithBool:enabled];
         } else
-            return [profile encodingNameAtIndex:rowIndex];
+            return [profile encodingNameAtIndex:(int)rowIndex];
 	} else {
         NSArray* profileNames = [self _sortedProfileNames];
         NSParameterAssert( rowIndex >= 0 && rowIndex< [profileNames count] );
@@ -276,7 +276,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 {
 	if ( mProfileTable == [aNotification object] )
 	{
-		int selectedRow = [mProfileTable selectedRow];
+		NSInteger selectedRow = [mProfileTable selectedRow];
 		NSString *profileName = [[self _sortedProfileNames] objectAtIndex: selectedRow];
 		
         [mProfileNameField setStringValue: profileName];
@@ -286,7 +286,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 }
 
 
-- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
 	if ( mEncodingTableView == tableView )
 	{
@@ -305,7 +305,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 }
 
 
-- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation
 {
 	if ( mEncodingTableView == tableView )
 	{
@@ -315,7 +315,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 			NSData *data = [pboard dataForType: kProfileDragEntry];
 			
 			Profile* profile = [self _currentProfile];
-            [profile moveEncodingFrom:*(int *)[data bytes] to:row];
+            [profile moveEncodingFrom:*(int *)[data bytes] to:(int)row];
 			
             [[ProfileDataManager sharedInstance] saveProfile:profile];
 			[mEncodingTableView reloadData];
@@ -326,24 +326,28 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 }
 
 
-- (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray *)rows toPasteboard:(NSPasteboard *)pboard
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+- (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
 	if ( mEncodingTableView == tableView )
 	{
-		NSParameterAssert( [rows count] == 1 );
-		int rowIndex = [[rows objectAtIndex: 0] intValue];
+		NSParameterAssert( [rowIndexes count] == 1 );
+		NSUInteger rowIndex = [rowIndexes firstIndex];
+		int rIdx = (int)rowIndex;
 		
-        NSData *data = [[NSData alloc] initWithBytes:&rowIndex
+        NSData *data = [[NSData alloc] initWithBytes:&rIdx
                                               length:sizeof(int)];
 		[pboard declareTypes: [NSArray arrayWithObject: kProfileDragEntry] owner: nil];
 		[pboard setData: data forType: kProfileDragEntry];
         [data release];
 		
-		mEncodingDragRow = rowIndex;
+		mEncodingDragRow = rIdx;
 		
 		return YES;
 	}
 	return NO;
 }
+#pragma clang diagnostic pop
 
 @end

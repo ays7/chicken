@@ -81,8 +81,14 @@ enum {
 
 
 
-    [NSBundle loadNibNamed:@"RFBConnection.nib" owner:self];
-    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSFilenamesPboardType, nil]];
+    NSArray *tlo = nil;
+    [NSBundle.mainBundle loadNibNamed:@"RFBConnection" owner:self topLevelObjects:&tlo];
+    for (id obj in tlo) {
+        if ([obj isKindOfClass:[NSWindow class]])
+            [(NSWindow *)obj setReleasedWhenClosed:NO];
+    }
+    _nibTopLevelObjects = [tlo retain];
+    [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSPasteboardTypeFileURL, nil]];
 
     password = [[connection password] retain];
 
@@ -142,6 +148,7 @@ enum {
 	[window close];
 
     [_connectionStartDate release];
+    [_nibTopLevelObjects release];
     [super dealloc];
 }
 
@@ -177,13 +184,23 @@ enum {
             userInfo:nil repeats:NO] retain];
 }
 
+static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
+{
+    return [NSScrollView frameSizeForContentSize:cSize
+                          horizontalScrollerClass:hasH ? [NSScroller class] : nil
+                            verticalScrollerClass:hasV ? [NSScroller class] : nil
+                                       borderType:NSNoBorder
+                                      controlSize:NSControlSizeRegular
+                                    scrollerStyle:NSScrollerStyleLegacy];
+}
+
 - (void)connectionTerminatedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	/* One might reasonably argue that this should be handled by the connection manager. */
 	switch (returnCode) {
-		case NSAlertDefaultReturn:
+		case NSAlertFirstButtonReturn:
 			break;
-		case NSAlertAlternateReturn:
+		case NSAlertSecondButtonReturn:
             [self beginReconnect];
             return;
 		default:
@@ -222,12 +239,16 @@ enum {
         } else {
             /* Server doesn't support reconnect, so we have to interrupt the
              * password sheet to show an error*/
-            [NSApp endSheet:passwordSheet];
+            [passwordSheet.sheetParent endSheet:passwordSheet];
 
-            NSBeginAlertSheet(NSLocalizedString(@"ConnectionTerminated", nil),
-                    NSLocalizedString(@"Okay", nil), nil, nil, window, self,
-                    @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:),
-                    nil, nil, @"%@", aReason);
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setMessageText:NSLocalizedString(@"ConnectionTerminated", nil)];
+            [alert setInformativeText:aReason ? aReason : @""];
+            [alert addButtonWithTitle:NSLocalizedString(@"Okay", nil)];
+            [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+                [self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
+                [alert release];
+            }];
         }
     } else {
         if(aReason) {
@@ -246,7 +267,17 @@ enum {
 				NSString *header = NSLocalizedString( @"ConnectionTerminated", nil );
 				NSString *okayButton = NSLocalizedString( @"Okay", nil );
 				NSString *reconnectButton =  NSLocalizedString( @"Reconnect", nil );
-				NSBeginAlertSheet(header, okayButton, supportReconnect ? reconnectButton : nil, nil, window, self, @selector(connectionTerminatedSheetDidEnd:returnCode:contextInfo:), nil, nil, @"%@", aReason);
+				NSAlert *alert = [[NSAlert alloc] init];
+				[alert setMessageText:header];
+				[alert setInformativeText:aReason];
+				[alert addButtonWithTitle:okayButton];
+				if (supportReconnect) {
+					[alert addButtonWithTitle:reconnectButton];
+				}
+				[alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+					[self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
+					[alert release];
+				}];
 			}
         } else {
             [[RFBConnectionManager sharedManager] removeConnection:self];
@@ -333,10 +364,9 @@ enum {
         [rememberNewPassword setState: [server_ rememberPassword]];
     else
         [rememberNewPassword setHidden:YES];
-    [NSApp beginSheet:passwordSheet modalForWindow:window
-           modalDelegate:self
-           didEndSelector:@selector(passwordEnteredFor:returnCode:contextInfo:)
-           contextInfo:nil];
+    [window beginSheet:passwordSheet completionHandler:^(NSModalResponse returnCode) {
+        [passwordSheet orderOut:self];
+    }];
 }
 
 /* User entered new password */
@@ -367,13 +397,13 @@ enum {
         [connection setPassword:password];
     else
         [self beginReconnect];
-    [NSApp endSheet:passwordSheet];
+    [passwordSheet.sheetParent endSheet:passwordSheet];
 }
 
 /* User cancelled chance to enter new password */
 - (IBAction)dontReconnect:(id)sender
 {
-    [NSApp endSheet:passwordSheet];
+    [passwordSheet.sheetParent endSheet:passwordSheet];
     [self connectionProblem];
     [self endSession];
 }
@@ -430,20 +460,14 @@ enum {
         return aSize;
     }
 
-    maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
-                                  hasHorizontalScroller:horizontalScroll
-                                    hasVerticalScroller:verticalScroll
-                                             borderType:NSNoBorder];
+    maxviewsize = FrameSizeForContentSize([rfbView frame].size, horizontalScroll, verticalScroll);
     if(aSize.width < maxviewsize.width) {
         horizontalScroll = YES;
     }
     if(aSize.height < maxviewsize.height) {
         verticalScroll = YES;
     }
-    maxviewsize = [NSScrollView frameSizeForContentSize:[rfbView frame].size
-                                  hasHorizontalScroller:horizontalScroll
-                                    hasVerticalScroller:verticalScroll
-                                             borderType:NSNoBorder];
+    maxviewsize = FrameSizeForContentSize([rfbView frame].size, horizontalScroll, verticalScroll);
     winframe = [window frame];
     winframe.size = maxviewsize;
     winframe = [NSWindow frameRectForContentRect:winframe styleMask:[window styleMask]];
@@ -460,7 +484,7 @@ enum {
 
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
-    wf.size = [NSScrollView frameSizeForContentSize:_maxSize hasHorizontalScroller:NO hasVerticalScroller:NO borderType:NSNoBorder];
+    wf.size = FrameSizeForContentSize(_maxSize, NO, NO);
     wf = [NSWindow frameRectForContentRect:wf styleMask:[window styleMask]];
 	if (NSWidth(wf) > NSWidth(screenRect)) {
 		horizontalScroll = YES;
@@ -492,8 +516,10 @@ enum {
 
 
 
-	contentView = [scrollView contentView];
-    [contentView scrollToPoint: [contentView constrainScrollPoint: NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height)]];
+	contentView = (NSClipView *)[scrollView contentView];
+    NSPoint scrollPt = NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height);
+    NSRect targetBounds = NSMakeRect(scrollPt.x, scrollPt.y, [contentView bounds].size.width, [contentView bounds].size.height);
+    [contentView scrollToPoint: [contentView constrainBoundsRect: targetBounds].origin];
     [scrollView reflectScrolledClipView: contentView];
 
     [window makeFirstResponder:rfbView];
@@ -745,6 +771,19 @@ enum {
     [rfbView setTint:[[connection profile] tintWhenFront:[window isKeyWindow]]];
 }
 
+- (void)setFrameBufferUpdateSeconds:(float)seconds
+{
+    [connection setFrameBufferUpdateSeconds:seconds];
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)aNotification
+{
+}
+
+- (void)windowDidDeminiaturize:(NSNotification *)aNotification
+{
+}
+
 - (void)openOptions:(id)sender
 {
     [infoField setStringValue: [connection infoString]];
@@ -759,10 +798,9 @@ enum {
 
 - (void)createReconnectSheet:(id)sender
 {
-    [NSApp beginSheet:_reconnectPanel modalForWindow:window
-           modalDelegate:self
-           didEndSelector:@selector(reconnectEnded:returnCode:contextInfo:)
-           contextInfo:nil];
+    [window beginSheet:_reconnectPanel completionHandler:^(NSModalResponse returnCode) {
+        [_reconnectPanel orderOut:self];
+    }];
     [_reconnectIndicator startAnimation:self];
 
     [_reconnectSheetTimer release];
@@ -774,7 +812,7 @@ enum {
     [_reconnectWaiter cancel];
     [_reconnectWaiter release];
     _reconnectWaiter = nil;
-    [NSApp endSheet:_reconnectPanel];
+    [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [self endSession];
 }
 
@@ -786,7 +824,7 @@ enum {
 
 - (void)connectionPrepareForSheet
 {
-    [NSApp endSheet:_reconnectPanel];
+    [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [_reconnectSheetTimer invalidate];
     [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
@@ -806,7 +844,7 @@ enum {
 /* Reconnect attempt has succeeded */
 - (void)connectionSucceeded:(RFBConnection *)newConnection
 {
-    [NSApp endSheet:_reconnectPanel];
+    [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [_reconnectSheetTimer invalidate];
     [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;

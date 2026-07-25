@@ -94,7 +94,7 @@
             colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
 
     unsigned char       *destData = [bitmap bitmapData];
-    int                 rowBytes = [bitmap bytesPerRow];
+    NSInteger           rowBytes = [bitmap bytesPerRow];
 
     /* Extract cursor image and mask from buff */
     for (i=0; i<height; i++) {
@@ -128,9 +128,9 @@
             }
 
             if (maskVal) {
-                dst[0] = ((pixel >> pixf->redShift) & pixf->redMax) * redMult;
-                dst[1] = ((pixel >> pixf->greenShift) & pixf->greenMax) * greenMult;
-                dst[2] = ((pixel >> pixf->blueShift) & pixf->blueMax) * blueMult;
+                dst[0] = (unsigned char)(((pixel >> pixf->redShift) & pixf->redMax) * redMult);
+                dst[1] = (unsigned char)(((pixel >> pixf->greenShift) & pixf->greenMax) * greenMult);
+                dst[2] = (unsigned char)(((pixel >> pixf->blueShift) & pixf->blueMax) * blueMult);
                 dst[3] = 255; // mask
             } else {
                 /* masked values */
