@@ -1226,7 +1226,6 @@
       }
     },
     "PasteAnyways" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1255,7 +1254,6 @@
       }
     },
     "PasteConversionBody" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1284,7 +1282,6 @@
       }
     },
     "PasteConversionHeader" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1675,6 +1672,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "接続が切断されました。"
+          }
+        }
+      }
+    },
+    "LearnMore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn More..."
+          }
+        }
+      }
+    },
+    "SshPassphraseHeader" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSH Key Passphrase Required"
+          }
+        }
+      }
+    },
+    "SshPassphraseMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your SSH private key is protected by a passphrase. Chicken cannot prompt for SSH private key passphrases.\n\nTo use this key, please add it to your SSH agent or macOS Keychain:\n\n1. Run ssh-add in Terminal:\n   ssh-add\n\n2. Or store the passphrase in macOS Keychain:\n   ssh-add --apple-use-keychain"
           }
         }
       }

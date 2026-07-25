@@ -119,6 +119,59 @@
     [auth runSheetOnWindow:window]; 
 }
 
+- (void)sshPassphraseRequired:(NSString *)prompt
+{
+    if (auth) {
+        [auth stopSheet];
+        [auth release];
+        auth = nil;
+    }
+
+    if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
+        [delegate connectionPrepareForSheet];
+
+    NSString *header = NSLocalizedString(@"SshPassphraseHeader", nil);
+    NSString *msg = NSLocalizedString(@"SshPassphraseMessage", nil);
+    NSString *ok = NSLocalizedString(@"Okay", nil);
+    NSString *learnMore = NSLocalizedString(@"LearnMore", nil);
+    NSString *urlStr = @"https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent";
+
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    [alert setMessageText:header];
+    [alert setInformativeText:msg];
+    [alert addButtonWithTitle:ok];
+    [alert addButtonWithTitle:learnMore];
+
+    NSTextView *accessory = [[[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 420, 22)] autorelease];
+    [accessory setEditable:NO];
+    [accessory setDrawsBackground:NO];
+
+    NSMutableAttributedString *attrStr = [[[NSMutableAttributedString alloc] initWithString:urlStr] autorelease];
+    NSRange range = NSMakeRange(0, [attrStr length]);
+    [attrStr addAttribute:NSLinkAttributeName value:urlStr range:range];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:[NSColor linkColor] range:range];
+    [attrStr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:range];
+    [[accessory textStorage] setAttributedString:attrStr];
+
+    [alert setAccessoryView:accessory];
+
+    void (^completionHandler)(NSModalResponse) = ^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertSecondButtonReturn) {
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:urlStr]];
+        }
+        if ([delegate respondsToSelector:@selector(connectionSheetOver)])
+            [delegate connectionSheetOver];
+        [delegate connectionFailed];
+    };
+
+    if (window) {
+        [alert beginSheetModalForWindow:window completionHandler:completionHandler];
+    } else {
+        NSModalResponse ret = [alert runModal];
+        completionHandler(ret);
+    }
+}
+
 /* The ssh program has connected to the remote server. Now we connect to the VNC
  * server via the tunneled port. */
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort

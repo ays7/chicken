@@ -49,6 +49,7 @@
 // messages from SshTunnel
 - (void)firstTimeConnecting:(NSString *)fingerprint;
 - (void)getPassword;
+- (void)sshPassphraseRequired:(NSString *)prompt;
 - (void)tunnelEstablishedAtPort:(in_port_t)aPort;
 - (void)sshFailedWithError:(NSString *)err;
 - (void)tunnelFailed:(NSString *)err;

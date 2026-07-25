@@ -352,8 +352,22 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
             if (state == SSH_STATE_OPENING) {
                 [self firstTimeConnecting:str];
             }
+        } else if ([str hasPrefix:@"Chicken ssh-helper: Enter passphrase for "]) {
+            if (state == SSH_STATE_OPENING || state == SSH_STATE_PROMPT) {
+                state = SSH_STATE_CLOSING;
+                [task terminate];
+                [delegate sshPassphraseRequired:str];
+            }
         } else
             NSLog(@"Unknown message from helper: %@", str);
+
+    // messages sent by ssh itself.
+    } else if ([str hasPrefix:@"Enter passphrase for "] || [str containsString:@"Enter passphrase for "]) {
+        if (state == SSH_STATE_OPENING || state == SSH_STATE_PROMPT) {
+            state = SSH_STATE_CLOSING;
+            [task terminate];
+            [delegate sshPassphraseRequired:str];
+        }
 
     // messages sent by ssh itself.
     } else if ([str hasPrefix:@"ssh: Could not resolve hostname"]) {
