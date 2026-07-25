@@ -39,7 +39,7 @@
 {
     if (self = [super init]) {
         connection = aConnection;
-        DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol: Initializing post-handshake RFB protocol handling...");
+        DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol: Initializing post-handshake RFB protocol handling...", connection, [connection fileDescriptor]);
        
         [self setPixelFormat:[info pixelFormatData]];
 
@@ -52,7 +52,7 @@
         msgTypeReader[rfbServerCutText] = [[ServerCutTextReader alloc]
                 initWithProtocol:self connection:connection];
 
-        DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol: Setting socket reader to typeReader (CARD8Reader)...");
+        DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol: Setting socket reader to typeReader (CARD8Reader)...", connection, [connection fileDescriptor]);
         [connection setReader: typeReader];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -88,8 +88,8 @@
 
     msg.type = rfbSetEncodings;
     msg.nEncodings = htons(l);
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol sendType: sent client message type %u (rfbSetEncodings)", rfbSetEncodings);
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol setEncodings: sending %d encodings...", l);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol sendType: sent client message type %u (rfbSetEncodings)", connection, [connection fileDescriptor], rfbSetEncodings);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol setEncodings: sending %d encodings...", connection, [connection fileDescriptor], l);
     [connection writeBufferedBytes:(unsigned char*)&msg length:sizeof(msg)];
 
     for(i=0; i<l; i++) {
@@ -116,7 +116,7 @@
     memset(&msg, 0, sizeof(msg));
 
     msg.type = rfbSetPixelFormat;
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol sendType: sent client message type %u (rfbSetPixelFormat)", rfbSetPixelFormat);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol sendType: sent client message type %u (rfbSetPixelFormat)", connection, [connection fileDescriptor], rfbSetPixelFormat);
     aFormat->trueColour = YES;
     if([profile useServerNativeFormat]) {
         if(!aFormat->redMax || !aFormat->bitsPerPixel) {
@@ -130,7 +130,8 @@
         aFormat->bigEndian = [FrameBuffer bigEndian];
     }
 
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBProtocol setPixelFormat: bpp=%d depth=%d bigEndian=%d trueColour=%d redMax=%d greenMax=%d blueMax=%d redShift=%d greenShift=%d blueShift=%d",
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBProtocol setPixelFormat: bpp=%d depth=%d bigEndian=%d trueColour=%d redMax=%d greenMax=%d blueMax=%d redShift=%d greenShift=%d blueShift=%d",
+           connection, [connection fileDescriptor],
            aFormat->bitsPerPixel, aFormat->depth, aFormat->bigEndian, aFormat->trueColour,
            aFormat->redMax, aFormat->greenMax, aFormat->blueMax,
            aFormat->redShift, aFormat->greenShift, aFormat->blueShift);
@@ -170,7 +171,7 @@
             case rfbBell:                typeName = @"rfbBell"; break;
             case rfbServerCutText:       typeName = @"rfbServerCutText"; break;
         }
-        DiagnosticLog(reqLevel, @"RFBProtocol receiveType: received server message type %u (%@)", t, typeName);
+        DiagnosticLog(reqLevel, @"[Conn %p fd=%d] RFBProtocol receiveType: received server message type %u (%@)", connection, [connection fileDescriptor], t, typeName);
     }
 
     if(t > MAX_MSGTYPE) {

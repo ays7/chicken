@@ -82,7 +82,7 @@
 - (void)sendClientInit
 {
     unsigned char shared = [connection connectShared] ? 1 : 0;
-    DiagnosticLog(DiagnosticLogLevelBasic, @"Sending ClientInit byte (shared=%d)...", shared);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Sending ClientInit byte (shared=%d)...", connection, [connection fileDescriptor], shared);
 
     [connection writeBytes:&shared length:1];
     [serverInitReader release];
@@ -111,15 +111,15 @@
 	unsigned char availableAuthType=0;
 	NSString *errorStr = nil;
 
-	DiagnosticLog(DiagnosticLogLevelBasic, @"Server offered %lu security type(s)", (unsigned long)[authTypeArray length]);
+	DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Server offered %lu security type(s)", connection, [connection fileDescriptor], (unsigned long)[authTypeArray length]);
 
 	while (index < [authTypeArray length]) {
 		availableAuthType = bytes[index++];
-		DiagnosticLog(DiagnosticLogLevelBasic, @"Server security type choice #%d: %u", index, availableAuthType);
+		DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Server security type choice #%d: %u", connection, [connection fileDescriptor], index, availableAuthType);
 		
 		switch (availableAuthType) {
 			case rfbNoAuth: {
-				DiagnosticLog(DiagnosticLogLevelBasic, @"Selected Security Type: NoAuth (1)");
+				DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Selected Security Type: NoAuth (1)", connection, [connection fileDescriptor]);
 				[connection writeBytes:&availableAuthType length:1];
 				
 				if ([connection protocolMinorVersion] >= 8) // For 3.8+ we need to get a result back from the server
@@ -130,13 +130,13 @@
 				return;
 			}
 			case rfbVncAuth: {
-				DiagnosticLog(DiagnosticLogLevelBasic, @"Selected Security Type: VNCAuth (2)");
+				DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Selected Security Type: VNCAuth (2)", connection, [connection fileDescriptor]);
 				[connection writeBytes:&availableAuthType length:1];
 				[connection setReader:challengeReader];
 				return;
 			}
 			case 30: {
-				DiagnosticLog(DiagnosticLogLevelBasic, @"Selected Security Type: ARD (30). Checking credentials...");
+				DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Selected Security Type: ARD (30). Checking credentials...", connection, [connection fileDescriptor]);
 				[connection setIsAppleServer:YES];
 				if ([connection username] == nil || [connection password] == nil) {
 					DiagnosticLog(DiagnosticLogLevelBasic, @"Missing credentials for ARD (user=%@, pass=%@). Prompting user before starting DH exchange...",

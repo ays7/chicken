@@ -158,8 +158,14 @@
     [super dealloc];
 }
 
+- (int)fileDescriptor
+{
+    return [socketHandler fileDescriptor];
+}
+
 - (void)closeConnection
 {
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection closeConnection called.", self, [self fileDescriptor]);
     [_frameUpdateTimer invalidate];
     [_frameUpdateTimer release];
     _frameUpdateTimer = nil;
@@ -283,6 +289,7 @@
 
 - (void)terminateConnection:(NSString *)reason
 {
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection terminateConnection: %@", self, [self fileDescriptor], reason);
     [self setReader:nil]; // causes readData to stop
     [session terminateConnection:reason];
 }
@@ -318,24 +325,24 @@
 /* Handshaking has been completed */
 - (void)start:(ServerInitMessage*)info
 {
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Starting RFB session post-handshake...");
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Starting RFB session post-handshake...", self, [self fileDescriptor]);
     [rfbProtocol release];
     rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Display size (%d x %d)", (int)[info size].width, (int)[info size].height);
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Display size (%d x %d)", self, [self fileDescriptor], (int)[info size].width, (int)[info size].height);
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
     [session setSize:[info size]];
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
     [session setupWindow];
     [session setDisplayName: [info name]];
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Requesting initial non-incremental update...");
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Requesting initial non-incremental update...", self, [self fileDescriptor]);
     [self requestUpdate:[rfbView bounds] incremental:NO];
     [rfbProtocol setFrameBuffer:frameBuffer];
 
     [handshaker release];
     handshaker = nil;
-    DiagnosticLog(DiagnosticLogLevelBasic, @"RFBConnection start: Handshaker released.");
+    DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Handshaker released.", self, [self fileDescriptor]);
 }
 
 - (NSString*)password
@@ -376,7 +383,7 @@
     isReceivingUpdate = NO;
 }
 
-/* End of a framebuffer update which included a resize. We enact the resize
+/* Server has requested a resize. We process the update, then resize
  * here. */
 - (void)frameBufferUpdateCompleteWithResize:(NSSize)newSize
 {
@@ -414,7 +421,7 @@
             break; // no data
 
         if(length <= 0) {	// server closed socket
-            DiagnosticLog(DiagnosticLogLevelBasic, @"Socket read returned %ld (errno %d: %s). Server closed socket during reader: %@", (long)length, errno, strerror(errno), NSStringFromClass([currentReader class]));
+            DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Socket read returned %ld (errno %d: %s). Server closed socket during reader: %@", self, [self fileDescriptor], (long)length, errno, strerror(errno), NSStringFromClass([currentReader class]));
             NSString *reason = NSLocalizedString( @"ServerClosed", nil );
             [self terminateConnection:reason];
             [pool release];
@@ -924,6 +931,10 @@ static NSData *compressZlib(NSData *uncompressedData) {
 
 - (void)sendPasteboardToServer:(NSPasteboard *)pb
 {
+    if (handshaker != nil) {
+        return;
+    }
+
     NSString    *str = [pb stringForType:NSPasteboardTypeString];
     
     if (serverSupportsExtendedClipboard) {

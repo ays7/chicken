@@ -99,6 +99,7 @@
 - (void)dealloc;
 
 - (void)closeConnection;
+- (int)fileDescriptor;
 - (id<IServerData>)server;
 
 - (void)setRfbView:(RFBView *)view;
