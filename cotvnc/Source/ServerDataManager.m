@@ -591,17 +591,22 @@ static ServerDataManager* gInstance = nil;
 {
 	ServerFromRendezvous* serverToRemove = [mRendezvousNameToServer objectForKey:[aNetService name]];
 	
-	NSParameterAssert( nil != serverToRemove );
-	
-	[serverToRemove retain];
-	
-    [mRendezvousNameToServer removeObjectForKey:[aNetService name]];
-	[[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
-    [mServers removeObjectForKey:[serverToRemove name]];
+	if (serverToRemove != nil)
+	{
+		[serverToRemove retain];
+		
+		[mRendezvousNameToServer removeObjectForKey:[aNetService name]];
+		[[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
+		[mServers removeObjectForKey:[serverToRemove name]];
 
-    [self saveRendezvousServer:serverToRemove];
-	
-	[serverToRemove release];
+		[self saveRendezvousServer:serverToRemove];
+		
+		[serverToRemove release];
+	}
+	else
+	{
+		[mRendezvousNameToServer removeObjectForKey:[aNetService name]];
+	}
     
     if(!moreComing)
     {		
