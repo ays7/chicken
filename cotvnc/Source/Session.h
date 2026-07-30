@@ -44,6 +44,7 @@ ConnectionWaiterDelegate>
     id      newTitleField;
     IBOutlet NSPanel *newTitlePanel;
     NSString    *titleString;
+    NSString    *mServerProfileName;
     id      statisticField;
 
     NSSize _maxSize;
@@ -81,6 +82,11 @@ ConnectionWaiterDelegate>
 - (void)setSize:(NSSize)size;
 - (void)setDisplayName:(NSString *)aName;
 - (void)setupWindow;
+- (NSWindow *)window;
+- (NSString *)titleString;
+- (id<IServerData>)server;
+- (NSString *)serverProfileName;
+- (void)setServerProfileName:(NSString *)name;
 - (void)frameBufferUpdateComplete;
 - (void)resize:(NSSize)size;
 
@@ -105,18 +111,9 @@ ConnectionWaiterDelegate>
 - (void)windowDidMiniaturize:(NSNotification *)aNotification;
 - (void)windowWillClose:(NSNotification *)aNotification;
 - (void)windowDidResize:(NSNotification *)aNotification;
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize;
 
-- (void)openOptions:(id)sender;
-
+- (RFBConnection *)connection;
 - (BOOL)hasKeyWindow;
-
-
-
-- (void)setFrameBufferUpdateSeconds: (float)seconds;
-
-// For reconnect
-- (void)createReconnectSheet:(id)sender;
-- (IBAction)reconnectCancelled:(id)sender; // returnCode:(int)retCode
+- (void)setFrameBufferUpdateSeconds:(float)seconds;
 
 @end

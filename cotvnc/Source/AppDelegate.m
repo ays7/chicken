@@ -15,6 +15,7 @@
 #import "ListenerController.h"
 #import "ServerDataManager.h"
 #import "DockConnection.h"
+#import "TouchBarController.h"
 
 @implementation AppDelegate
 
@@ -68,6 +69,11 @@
 	[KeyEquivalentManager defaultManager];
 }
 
+- (NSTouchBar *)makeTouchBar
+{
+    return [[TouchBarController sharedController] makeTouchBar];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	RFBConnectionManager *cm = [RFBConnectionManager sharedManager];
@@ -77,6 +83,9 @@
 	
     [mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
 	[mInfoVersionNumber setStringValue: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
+    if (@available(macOS 10.12.2, *)) {
+        [NSApp setTouchBar:[self makeTouchBar]];
+    }
 }
 
 

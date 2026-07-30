@@ -29,6 +29,7 @@
 #import "RFBConnectionManager.h"
 #import "RFBView.h"
 #import "SshWaiter.h"
+#import "TouchBarController.h"
 #define XK_MISCELLANY
 #include "keysymdef.h"
 
@@ -76,6 +77,7 @@ enum {
 
     connection = [aConnection retain];
     server_ = [[connection server] retain];
+    mServerProfileName = [[server_ name] retain];
     host = [[server_ host] retain];
     sshTunnel = [[connection sshTunnel] retain];
 
@@ -129,6 +131,7 @@ enum {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[titleString release];
+	[mServerProfileName release];
 	[(id)server_ release];
 	[host release];
     [username release];
@@ -155,6 +158,48 @@ enum {
 - (BOOL)viewOnly
 {
     return [server_ viewOnly];
+}
+
+- (NSWindow *)window
+{
+    return window;
+}
+
+- (RFBConnection *)connection
+{
+    return connection;
+}
+
+- (NSString *)titleString
+{
+    return titleString ? titleString : [window title];
+}
+
+- (id<IServerData>)server
+{
+    return server_;
+}
+
+- (NSString *)serverProfileName
+{
+    if (mServerProfileName && [mServerProfileName length] > 0) {
+        return mServerProfileName;
+    }
+    if (server_) {
+        NSString *sName = [server_ name];
+        if (sName && [sName length] > 0) {
+            return sName;
+        }
+    }
+    return titleString ? titleString : host;
+}
+
+- (void)setServerProfileName:(NSString *)name
+{
+    if (mServerProfileName != name) {
+        [mServerProfileName release];
+        mServerProfileName = [name copy];
+    }
 }
 
 /* Begin a reconnection attempt to the server. */
@@ -522,6 +567,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [contentView scrollToPoint: [contentView constrainBoundsRect: targetBounds].origin];
     [scrollView reflectScrolledClipView: contentView];
 
+    [window setTouchBar:[[TouchBarController sharedController] makeTouchBar]];
     [window makeFirstResponder:rfbView];
 	[self windowDidResize: nil];
     [window makeKeyAndOrderFront:self];

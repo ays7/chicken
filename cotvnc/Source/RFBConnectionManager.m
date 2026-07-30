@@ -34,6 +34,7 @@
 #import "ServerStandAlone.h"
 #import "ServerDataManager.h"
 #import "Session.h"
+#import "TouchBarController.h"
 
 static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
@@ -141,6 +142,8 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
     connectionWaiter = nil;
     lockedSelection = -1;
+    
+    [[self window] setTouchBar:[self makeTouchBar]];
 }
 
 - (BOOL)runFromCommandLine
@@ -428,6 +431,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     [aConnection retain];
     [sessions removeObject:aConnection];
     [aConnection autorelease];
+    [[NSNotificationCenter defaultCenter] postNotificationName:cotvncTouchBarNeedsUpdateNotification object:nil];
 	if ( 0 == [sessions count] ) {
         if ( mRunningFromCommandLine ) 
             [NSApp terminate:self];
@@ -455,11 +459,17 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 /* Registers a successful connection using an already-created RFBConnection
  * object. */
+static NSString *sConnectingServerName = nil;
+
 - (void)successfulConnection: (RFBConnection *)theConnection
 {
     Session *sess = [[Session alloc] initWithConnection:theConnection];
+    if (sConnectingServerName) {
+        [sess setServerProfileName:sConnectingServerName];
+    }
     [sessions addObject:sess];
     [sess release];
+    [[NSNotificationCenter defaultCenter] postNotificationName:cotvncTouchBarNeedsUpdateNotification object:nil];
 }
 
 - (IBAction)addServer:(id)sender
@@ -610,6 +620,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     if (![self selectServerByName:name])
         [self selectedHostChanged];
     [name release];
+    [[NSNotificationCenter defaultCenter] postNotificationName:cotvncTouchBarNeedsUpdateNotification object:nil];
 }
 
 - (void)useRendezvous:(BOOL)useRendezvous
@@ -671,6 +682,35 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 - (void)setLaunchedByURL:(bool)launchedByURL
 {
 	mLaunchedByURL = launchedByURL;
+}
+
+- (NSArray *)sessions
+{
+    return [NSArray arrayWithArray:sessions];
+}
+
+- (NSTouchBar *)makeTouchBar
+{
+    return [[TouchBarController sharedController] makeTouchBar];
+}
+
+- (void)connectToSavedServerByName:(NSString *)serverName
+{
+    [sConnectingServerName release];
+    sConnectingServerName = [serverName copy];
+
+    for (Session *sess in sessions) {
+        if ([[sess serverProfileName] isEqualToString:serverName] || [[sess titleString] isEqualToString:serverName] || [[[sess server] name] isEqualToString:serverName]) {
+            [[sess window] makeKeyAndOrderFront:nil];
+            [NSApp activateIgnoringOtherApps:YES];
+            return;
+        }
+    }
+    
+    if ([self selectServerByName:serverName]) {
+        [self selectedHostChanged];
+        [mServerCtrler connectToServer:nil];
+    }
 }
 
 @end

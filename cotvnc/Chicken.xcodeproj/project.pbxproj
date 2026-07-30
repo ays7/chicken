@@ -170,6 +170,7 @@
 		DAEB76F21232AE3500002E6A /* Keymap.m in Sources */ = {isa = PBXBuildFile; fileRef = DAEB76F11232AE3400002E6A /* Keymap.m */; };
 		DB708995F3A83FD65FF77D40 /* StringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */; };
 		DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */; };
+		FA0000000000000000000001 /* TouchBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000002 /* TouchBarController.m */; };
 		E21FE449062B79AB0059585C /* KeyEquivalentScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43D062B79AB0059585C /* KeyEquivalentScenario.m */; };
 		E21FE44A062B79AB0059585C /* KeyEquivalentEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = E21FE43E062B79AB0059585C /* KeyEquivalentEntry.h */; };
 		E21FE44B062B79AB0059585C /* KeyEquivalent.m in Sources */ = {isa = PBXBuildFile; fileRef = E21FE43F062B79AB0059585C /* KeyEquivalent.m */; };
@@ -226,6 +227,8 @@
 
 /* Begin PBXFileReference section */
 		08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARDAuthHelper.swift; sourceTree = "<group>"; };
+		FA0000000000000000000002 /* TouchBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchBarController.m; sourceTree = "<group>"; };
+		FA0000000000000000000003 /* TouchBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchBarController.h; sourceTree = "<group>"; };
 		0DE4C877DFDCF406ACD3BCC6 /* StringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StringConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/StringConversion.swift; sourceTree = "<group>"; };
 		0EEA41B03693EEDF47A85670 /* IntegerConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntegerConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/IntegerConversion.swift; sourceTree = "<group>"; };
 		0F2149C1B8288F348A035BA7 /* Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Addition.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Addition.swift; sourceTree = "<group>"; };
@@ -632,6 +635,8 @@
 			isa = PBXGroup;
 			children = (
 				08FCC87C3C375F339D2C3853 /* ARDAuthHelper.swift */,
+				FA0000000000000000000002 /* TouchBarController.m */,
+				FA0000000000000000000003 /* TouchBarController.h */,
 				0F2149C1B8288F348A035BA7 /* Addition.swift */,
 				5F81447C3F26F481900F1674 /* BigInt.swift */,
 				F0E2A364B41F949C9C5126B6 /* BigUInt.swift */,
@@ -965,6 +970,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFAFAAC6195AD8BED800FFDD /* ARDAuthHelper.swift in Sources */,
+				FA0000000000000000000001 /* TouchBarController.m in Sources */,
 				93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */,
 				B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */,
 				9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */,

@@ -90,4 +90,8 @@
 - (BOOL)launchedByURL;
 - (void)setLaunchedByURL:(bool)launchedByURL;
 
+- (NSArray *)sessions;
+- (void)connectToSavedServerByName:(NSString *)serverName;
+- (NSTouchBar *)makeTouchBar;
+
 @end
