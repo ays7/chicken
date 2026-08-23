@@ -40,6 +40,8 @@
 	<string>public.app-category.utilities</string>
 	<key>NSAppleScriptEnabled</key>
 	<string>YES</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Connect to VNC servers on the local network</string>
 	<key>NSMainNibFile</key>
 	<string>OSX_RFBViewer</string>
 	<key>NSPrincipalClass</key>

@@ -213,10 +213,10 @@
 
     pfd.fd = sock;
     pfd.events = POLLERR | POLLHUP | POLLIN;
-    poll(&pfd, 1, -1);
-    if (pfd.revents & (POLLERR | POLLHUP)) {
+    int ret = poll(&pfd, 1, 10000);
+    if (ret <= 0 || (pfd.revents & (POLLERR | POLLHUP))) {
         [self performSelectorOnMainThread:@selector(serverClosed)
-                   withObject:nil waitUntilDone:NO];
+                               withObject:nil waitUntilDone:NO];
         return;
     }
 

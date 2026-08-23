@@ -196,18 +196,22 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)close
 {
-    switch (state) {
-        case SSH_STATE_OPENING:
-        case SSH_STATE_PROMPT:
-            [task terminate];
-            // fall through
-        case SSH_STATE_OPEN:
-            /* Shut down the connection gently by closing the channel */
-            [[sshIn fileHandleForWriting] closeFile];
-    }
+    if (state == SSH_STATE_CLOSING)
+        return;
 
     state = SSH_STATE_CLOSING;
     delegate = nil;
+
+    /* Shut down the connection gently by closing the channel */
+    [[sshIn fileHandleForWriting] closeFile];
+    if (task && [task isRunning]) {
+        [task terminate];
+    }
+}
+
+- (BOOL)isAlive
+{
+    return (state == SSH_STATE_OPEN && task != nil && [task isRunning]);
 }
 
 - (void)applicationTerminating:(NSNotification *)notif
@@ -463,6 +467,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 - (void)sshTerminated:(NSNotification *)notif
 {
+    state = SSH_STATE_CLOSING;
     portUsed[localPort - TUNNEL_PORT_START] = NO;
     [self cleanupFifos];
 

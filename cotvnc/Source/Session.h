@@ -44,7 +44,6 @@ ConnectionWaiterDelegate>
     id      newTitleField;
     IBOutlet NSPanel *newTitlePanel;
     NSString    *titleString;
-    NSString    *mServerProfileName;
     id      statisticField;
 
     NSSize _maxSize;
@@ -78,6 +77,7 @@ ConnectionWaiterDelegate>
 - (void)dealloc;
 
 - (BOOL)viewOnly;
+- (BOOL)isConnected;
 
 - (void)setSize:(NSSize)size;
 - (void)setDisplayName:(NSString *)aName;
@@ -86,7 +86,6 @@ ConnectionWaiterDelegate>
 - (NSString *)titleString;
 - (id<IServerData>)server;
 - (NSString *)serverProfileName;
-- (void)setServerProfileName:(NSString *)name;
 - (void)frameBufferUpdateComplete;
 - (void)resize:(NSSize)size;
 
@@ -113,7 +112,5 @@ ConnectionWaiterDelegate>
 - (void)windowDidResize:(NSNotification *)aNotification;
 
 - (RFBConnection *)connection;
-- (BOOL)hasKeyWindow;
-- (void)setFrameBufferUpdateSeconds:(float)seconds;
 
 @end

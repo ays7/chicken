@@ -20,6 +20,8 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 {
     NSTouchBar *mCurrentTouchBar;
     NSScrubber *mScrubber;
+    NSInteger mLastActionIndex;
+    NSTimeInterval mLastActionTime;
 }
 @end
 
@@ -39,6 +41,8 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 {
     self = [super init];
     if (self) {
+        mLastActionIndex = -1;
+        mLastActionTime = 0;
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(updateTouchBar) name:NSWindowDidBecomeKeyNotification object:nil];
         [nc addObserver:self selector:@selector(updateTouchBar) name:NSWindowWillCloseNotification object:nil];
@@ -76,27 +80,7 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self->mScrubber) {
-            // Reload item titles (🟢 vs ⚡️)
             [self->mScrubber reloadData];
-            
-            // Determine which session currently has key window focus
-            NSArray *serverNames = [[ServerDataManager sharedInstance] sortedServerNames];
-            NSInteger targetIndex = NSNotFound;
-            
-            NSWindow *keyWindow = [NSApp keyWindow];
-            if (keyWindow) {
-                for (NSInteger i = 0; i < (NSInteger)[serverNames count]; i++) {
-                    NSString *name = [serverNames objectAtIndex:i];
-                    Session *sess = [self activeSessionForServerName:name];
-                    if (sess && [sess window] == keyWindow) {
-                        targetIndex = i;
-                        break;
-                    }
-                }
-            }
-            
-            // ALWAYS update selectedIndex (-1 to unselect when no key window session exists)
-            [self->mScrubber setSelectedIndex:(targetIndex == NSNotFound ? -1 : targetIndex)];
         }
         else if (self->mCurrentTouchBar) {
             NSArray *items = self->mCurrentTouchBar.defaultItemIdentifiers;
@@ -108,14 +92,14 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 
 - (Session *)activeSessionForServerName:(NSString *)serverName
 {
+    if (!serverName || [serverName length] == 0) {
+        return nil;
+    }
     NSArray *sessions = [[RFBConnectionManager sharedManager] sessions];
     for (Session *sess in sessions) {
-        if ([sess window] != nil) {
-            id<IServerData> sData = [sess server];
-            NSString *sName = sData ? [sData name] : nil;
-            if ([sName isEqualToString:serverName] ||
-                [[sess serverProfileName] isEqualToString:serverName] ||
-                [[sess titleString] isEqualToString:serverName]) {
+        if ([sess isConnected]) {
+            NSString *pName = [sess serverProfileName];
+            if (pName && [pName isEqualToString:serverName]) {
                 return sess;
             }
         }
@@ -153,7 +137,8 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
         scrubber.delegate = self;
         scrubber.mode = NSScrubberModeFree;
         scrubber.showsAdditionalContentIndicators = YES;
-        scrubber.selectionBackgroundStyle = [NSScrubberSelectionStyle roundedBackgroundStyle];
+        scrubber.selectionBackgroundStyle = nil;
+        scrubber.selectionOverlayStyle = nil;
         
         NSScrubberFlowLayout *layout = [[[NSScrubberFlowLayout alloc] init] autorelease];
         layout.itemSpacing = 6.0;
@@ -226,19 +211,23 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 
 - (void)scrubber:(NSScrubber *)scrubber didSelectItemAtIndex:(NSInteger)index
 {
-    [self handleScrubberSelectionAtIndex:index];
+    [self handleScrubberActionAtIndex:index];
 }
 
 - (void)scrubber:(NSScrubber *)scrubber didHighlightItemAtIndex:(NSInteger)index
 {
-    // Handle tap even if NSScrubber bypassed didSelectItemAtIndex because selectedIndex == index
-    if (scrubber.selectedIndex == index) {
-        [self handleScrubberSelectionAtIndex:index];
-    }
+    [self handleScrubberActionAtIndex:index];
 }
 
-- (void)handleScrubberSelectionAtIndex:(NSInteger)index
+- (void)handleScrubberActionAtIndex:(NSInteger)index
 {
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if (index == mLastActionIndex && (now - mLastActionTime) < 0.3) {
+        return;
+    }
+    mLastActionIndex = index;
+    mLastActionTime = now;
+    
     NSArray *serverNames = [[ServerDataManager sharedInstance] sortedServerNames];
     if (index >= 0 && index < (NSInteger)[serverNames count]) {
         NSString *serverName = [serverNames objectAtIndex:index];

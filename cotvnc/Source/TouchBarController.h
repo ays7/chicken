@@ -7,6 +7,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class Session;
+
 extern NSString * const cotvncTouchBarNeedsUpdateNotification;
 
 @interface TouchBarController : NSObject <NSTouchBarDelegate, NSScrubberDataSource, NSScrubberDelegate, NSScrubberFlowLayoutDelegate>
@@ -15,6 +17,7 @@ extern NSString * const cotvncTouchBarNeedsUpdateNotification;
 
 - (NSTouchBar *)makeTouchBar;
 - (void)updateTouchBar;
+- (nullable Session *)activeSessionForServerName:(NSString *)serverName;
 
 @end
 

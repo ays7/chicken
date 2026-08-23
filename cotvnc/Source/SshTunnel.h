@@ -45,6 +45,7 @@
 
 - (void)sshTunnelConnected;
 - (void)close;
+- (BOOL)isAlive;
 
 - (in_port_t)localPort;
 

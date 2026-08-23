@@ -459,14 +459,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 /* Registers a successful connection using an already-created RFBConnection
  * object. */
-static NSString *sConnectingServerName = nil;
-
 - (void)successfulConnection: (RFBConnection *)theConnection
 {
     Session *sess = [[Session alloc] initWithConnection:theConnection];
-    if (sConnectingServerName) {
-        [sess setServerProfileName:sConnectingServerName];
-    }
     [sessions addObject:sess];
     [sess release];
     [[NSNotificationCenter defaultCenter] postNotificationName:cotvncTouchBarNeedsUpdateNotification object:nil];
@@ -696,15 +691,11 @@ static NSString *sConnectingServerName = nil;
 
 - (void)connectToSavedServerByName:(NSString *)serverName
 {
-    [sConnectingServerName release];
-    sConnectingServerName = [serverName copy];
-
-    for (Session *sess in sessions) {
-        if ([[sess serverProfileName] isEqualToString:serverName] || [[sess titleString] isEqualToString:serverName] || [[[sess server] name] isEqualToString:serverName]) {
-            [[sess window] makeKeyAndOrderFront:nil];
-            [NSApp activateIgnoringOtherApps:YES];
-            return;
-        }
+    Session *activeSession = [[TouchBarController sharedController] activeSessionForServerName:serverName];
+    if (activeSession && [activeSession window]) {
+        [[activeSession window] makeKeyAndOrderFront:nil];
+        [NSApp activateIgnoringOtherApps:YES];
+        return;
     }
     
     if ([self selectServerByName:serverName]) {

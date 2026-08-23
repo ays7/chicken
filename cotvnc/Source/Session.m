@@ -77,7 +77,6 @@ enum {
 
     connection = [aConnection retain];
     server_ = [[connection server] retain];
-    mServerProfileName = [[server_ name] retain];
     host = [[server_ host] retain];
     sshTunnel = [[connection sshTunnel] retain];
 
@@ -131,7 +130,6 @@ enum {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[titleString release];
-	[mServerProfileName release];
 	[(id)server_ release];
 	[host release];
     [username release];
@@ -160,6 +158,11 @@ enum {
     return [server_ viewOnly];
 }
 
+- (BOOL)isConnected
+{
+    return (connection != nil && window != nil);
+}
+
 - (NSWindow *)window
 {
     return window;
@@ -182,36 +185,28 @@ enum {
 
 - (NSString *)serverProfileName
 {
-    if (mServerProfileName && [mServerProfileName length] > 0) {
-        return mServerProfileName;
-    }
     if (server_) {
         NSString *sName = [server_ name];
         if (sName && [sName length] > 0) {
             return sName;
         }
     }
-    return titleString ? titleString : host;
-}
-
-- (void)setServerProfileName:(NSString *)name
-{
-    if (mServerProfileName != name) {
-        [mServerProfileName release];
-        mServerProfileName = [name copy];
-    }
+    return nil;
 }
 
 /* Begin a reconnection attempt to the server. */
 - (void)beginReconnect
 {
-    if (sshTunnel) {
-        /* Reuse the same SSH tunnel if we have one. */
+    if (sshTunnel && [sshTunnel isAlive]) {
+        /* Reuse the same SSH tunnel if we have one and it is still alive. */
         _reconnectWaiter = [[SshWaiter alloc] initWithServer:server_
                                                     delegate:self
                                                       window:window
                                                    sshTunnel:sshTunnel];
     } else {
+        [sshTunnel close];
+        [sshTunnel release];
+        sshTunnel = nil;
         _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
                                                      delegate:self
                                                        window:window] retain];
@@ -265,6 +260,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 - (void)endSession
 {
     [sshTunnel close];
+    [sshTunnel release];
+    sshTunnel = nil;
     [[RFBConnectionManager sharedManager] removeConnection:self];
 }
 
@@ -884,6 +881,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 /* Reconnect attempt has failed */
 - (void)connectionFailed
 {
+    [sshTunnel close];
+    [sshTunnel release];
+    sshTunnel = nil;
     [self endSession];
 }
 
@@ -904,8 +904,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [connection setUsername:username];
     [connection setPassword:password];
     [connection installMouseMovedTrackingRect];
-    if (sshTunnel == nil)
-        sshTunnel = [[connection sshTunnel] retain];
+    [sshTunnel release];
+    sshTunnel = [[connection sshTunnel] retain];
 
     [_connectionStartDate release];
     _connectionStartDate = [[NSDate alloc] init];
