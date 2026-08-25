@@ -83,6 +83,9 @@
 	
     [mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
 	[mInfoVersionNumber setStringValue: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
+    if ([NSWindow respondsToSelector:@selector(setAllowsAutomaticWindowTabbing:)]) {
+        [NSWindow setAllowsAutomaticWindowTabbing:NO];
+    }
     if (@available(macOS 10.12.2, *)) {
         [NSApp setTouchBar:[self makeTouchBar]];
     }

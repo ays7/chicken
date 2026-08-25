@@ -85,8 +85,13 @@ enum {
     NSArray *tlo = nil;
     [NSBundle.mainBundle loadNibNamed:@"RFBConnection" owner:self topLevelObjects:&tlo];
     for (id obj in tlo) {
-        if ([obj isKindOfClass:[NSWindow class]])
-            [(NSWindow *)obj setReleasedWhenClosed:NO];
+        if ([obj isKindOfClass:[NSWindow class]]) {
+            NSWindow *win = (NSWindow *)obj;
+            [win setReleasedWhenClosed:NO];
+            if ([win respondsToSelector:@selector(setTabbingMode:)]) {
+                [win setTabbingMode:NSWindowTabbingModeDisallowed];
+            }
+        }
     }
     _nibTopLevelObjects = [tlo retain];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSPasteboardTypeFileURL, nil]];
@@ -564,11 +569,38 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [contentView scrollToPoint: [contentView constrainBoundsRect: targetBounds].origin];
     [scrollView reflectScrolledClipView: contentView];
 
+    // If currently viewing a fullscreen space, switch to the default desktop workspace
+    BOOL isAnyFullScreen = NO;
+    for (Session *s in [[RFBConnectionManager sharedManager] sessions]) {
+        if (s != self && [s isConnected] && (([[s window] styleMask] & NSWindowStyleMaskFullScreen) != 0)) {
+            isAnyFullScreen = YES;
+            break;
+        }
+    }
+    if (!isAnyFullScreen && [NSApp keyWindow] && (([[NSApp keyWindow] styleMask] & NSWindowStyleMaskFullScreen) != 0)) {
+        isAnyFullScreen = YES;
+    }
+
+    if (isAnyFullScreen) {
+        NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
+        if (cmWin) {
+            [cmWin makeKeyAndOrderFront:nil];
+        }
+    }
+
     [window setTouchBar:[[TouchBarController sharedController] makeTouchBar]];
     [window makeFirstResponder:rfbView];
 	[self windowDidResize: nil];
     [window makeKeyAndOrderFront:self];
+    [NSApp activateIgnoringOtherApps:YES];
     [window display];
+
+    if (isAnyFullScreen) {
+        NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
+        if (cmWin) {
+            [cmWin orderOut:nil];
+        }
+    }
 }
 
 - (void)setNewTitle:(id)sender
