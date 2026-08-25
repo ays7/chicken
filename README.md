@@ -38,6 +38,12 @@ FotCotVNC has undergone significant modernization to enhance stability, display 
 
 ---
 
+## 📝 Release Notes
+
+* [Version 2026.9](release-notes/2026.9.md) — Touch Bar support, Apple Remote Desktop (ARD) authentication, SSH passphrase guidance, and fullscreen space management fixes.
+
+---
+
 ## 🛠️ Building FotCotVNC
 
 ### Prerequisites
