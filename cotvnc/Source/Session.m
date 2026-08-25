@@ -569,6 +569,11 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [contentView scrollToPoint: [contentView constrainBoundsRect: targetBounds].origin];
     [scrollView reflectScrolledClipView: contentView];
 
+    if ([window respondsToSelector:@selector(setTabbingMode:)]) {
+        [window setTabbingMode:NSWindowTabbingModeDisallowed];
+    }
+    [window setCollectionBehavior:[window collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
+
     // If currently viewing a fullscreen space, switch to the default desktop workspace
     BOOL isAnyFullScreen = NO;
     for (Session *s in [[RFBConnectionManager sharedManager] sessions]) {
