@@ -1,0 +1,136 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Publish Release DMG
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Build ForkOfTheChicken App
+        run: |
+          xcodebuild \
+            -project cotvnc/Chicken.xcodeproj \
+            -scheme ForkOfTheChicken \
+            -configuration Deployment \
+            -derivedDataPath ./DerivedData \
+            ONLY_ACTIVE_ARCH=NO \
+            ARCHS="x86_64 arm64" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            clean build
+
+      - name: Package and Verify DMG
+        id: package
+        run: |
+          mkdir -p dist
+
+          # Locate built ForkOfTheChicken.app bundle
+          APP_PATH=$(find ./DerivedData -name "ForkOfTheChicken.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: ForkOfTheChicken.app not found in DerivedData!"
+            exit 1
+          fi
+          echo "Found ForkOfTheChicken.app at: $APP_PATH"
+
+          # Apply ad-hoc code signature to the app bundle and its contents
+          echo "=== Applying Ad-Hoc Code Signature to App Bundle ==="
+          codesign --force --deep -s - "$APP_PATH"
+          codesign -dv "$APP_PATH"
+          codesign --verify --deep --strict "$APP_PATH"
+          echo "====================================================="
+
+          # Extract version from Info.plist
+          VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.9")
+          DMG_NAME="ForkOfTheChicken-${VERSION}.dmg"
+          DMG_PATH="dist/${DMG_NAME}"
+
+          # Create a clean staging directory for the DMG
+          STAGING_DIR="dmg_staging"
+          rm -rf "$STAGING_DIR"
+          mkdir -p "$STAGING_DIR"
+
+          # Copy ForkOfTheChicken.app and create Applications symlink for drag-and-drop install
+          cp -R "$APP_PATH" "$STAGING_DIR/"
+          ln -s /Applications "$STAGING_DIR/Applications"
+
+          echo "Creating compressed UDZO DMG at $DMG_PATH..."
+          hdiutil create \
+            -volname "ForkOfTheChicken" \
+            -srcfolder "$STAGING_DIR" \
+            -ov \
+            -format UDZO \
+            "$DMG_PATH"
+
+          sync
+
+          # Apply ad-hoc code signature to the DMG image
+          echo "=== Applying Ad-Hoc Code Signature to DMG ==="
+          codesign --force -s - "$DMG_PATH"
+          codesign -dv "$DMG_PATH"
+          codesign --verify "$DMG_PATH"
+          echo "============================================="
+
+          # Verify DMG mountability on runner
+          echo "=== Testing DMG mountability ==="
+          MOUNT_DIR="/tmp/forkofthechicken_test_mount"
+          mkdir -p "$MOUNT_DIR"
+          hdiutil attach "$DMG_PATH" -mountpoint "$MOUNT_DIR" -nobrowse -readonly
+          ls -la "$MOUNT_DIR"
+          hdiutil detach "$MOUNT_DIR"
+          rm -rf "$MOUNT_DIR" "$STAGING_DIR"
+          echo "=== DMG mount test passed ==="
+
+          echo "=== Artifact Details ==="
+          ls -lh dist/
+          shasum -a 256 dist/*.dmg
+          echo "========================"
+
+          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
+          echo "dmg_name=$DMG_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+          DMG_PATH: ${{ steps.package.outputs.dmg_path }}
+        run: |
+          CLEAN_VERSION="${TAG_NAME#v}"
+          NOTES_FILE=""
+          if [ -f "release-notes/${CLEAN_VERSION}.md" ]; then
+            NOTES_FILE="release-notes/${CLEAN_VERSION}.md"
+          elif [ -f "release-notes/${TAG_NAME}.md" ]; then
+            NOTES_FILE="release-notes/${TAG_NAME}.md"
+          fi
+
+          echo "Publishing release for tag: $TAG_NAME"
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Release for $TAG_NAME already exists, uploading asset..."
+            gh release upload "$TAG_NAME" "$DMG_PATH" --clobber
+          else
+            if [ -n "$NOTES_FILE" ]; then
+              echo "Using release notes file: $NOTES_FILE"
+              gh release create "$TAG_NAME" "$DMG_PATH" \
+                --title "ForkOfTheChicken ${TAG_NAME}" \
+                --notes-file "$NOTES_FILE"
+            else
+              echo "Generating release notes automatically"
+              gh release create "$TAG_NAME" "$DMG_PATH" \
+                --title "ForkOfTheChicken ${TAG_NAME}" \
+                --generate-notes
+            fi
+          fi
