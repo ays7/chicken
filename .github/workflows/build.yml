@@ -17,11 +17,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build Chicken App
+      - name: Build ForkOfTheChicken App
         run: |
           xcodebuild \
             -project cotvnc/Chicken.xcodeproj \
-            -scheme Chicken \
+            -scheme ForkOfTheChicken \
             -configuration Deployment \
             -derivedDataPath ./DerivedData \
             ONLY_ACTIVE_ARCH=NO \
@@ -36,13 +36,13 @@ jobs:
         run: |
           mkdir -p dist
 
-          # Locate built Chicken.app bundle
-          APP_PATH=$(find ./DerivedData -name "Chicken.app" -type d | head -n 1)
+          # Locate built ForkOfTheChicken.app bundle
+          APP_PATH=$(find ./DerivedData -name "ForkOfTheChicken.app" -type d | head -n 1)
           if [ -z "$APP_PATH" ]; then
-            echo "Error: Chicken.app not found in DerivedData!"
+            echo "Error: ForkOfTheChicken.app not found in DerivedData!"
             exit 1
           fi
-          echo "Found Chicken.app at: $APP_PATH"
+          echo "Found ForkOfTheChicken.app at: $APP_PATH"
 
           # Verify signature status of the application bundle
           echo "=== Code Signature Verification ==="
@@ -51,7 +51,7 @@ jobs:
 
           # Extract version from Info.plist
           VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.9")
-          DMG_NAME="Chicken-${VERSION}.dmg"
+          DMG_NAME="ForkOfTheChicken-${VERSION}.dmg"
           DMG_PATH="dist/${DMG_NAME}"
 
           # Create a clean staging directory for the DMG
@@ -59,13 +59,13 @@ jobs:
           rm -rf "$STAGING_DIR"
           mkdir -p "$STAGING_DIR"
 
-          # Copy Chicken.app and create Applications symlink for drag-and-drop install
+          # Copy ForkOfTheChicken.app and create Applications symlink for drag-and-drop install
           cp -R "$APP_PATH" "$STAGING_DIR/"
           ln -s /Applications "$STAGING_DIR/Applications"
 
           echo "Creating compressed UDZO DMG at $DMG_PATH..."
           hdiutil create \
-            -volname "Chicken" \
+            -volname "ForkOfTheChicken" \
             -srcfolder "$STAGING_DIR" \
             -ov \
             -format UDZO \
@@ -75,7 +75,7 @@ jobs:
 
           # Verify DMG mountability on runner
           echo "=== Testing DMG mountability ==="
-          MOUNT_DIR="/tmp/chicken_test_mount"
+          MOUNT_DIR="/tmp/forkofthechicken_test_mount"
           mkdir -p "$MOUNT_DIR"
           hdiutil attach "$DMG_PATH" -mountpoint "$MOUNT_DIR" -nobrowse -readonly
           ls -la "$MOUNT_DIR"
