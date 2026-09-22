@@ -44,10 +44,12 @@ jobs:
           fi
           echo "Found ForkOfTheChicken.app at: $APP_PATH"
 
-          # Verify signature status of the application bundle
-          echo "=== Code Signature Verification ==="
-          codesign -dv "$APP_PATH" 2>&1 || true
-          echo "==================================="
+          # Apply ad-hoc code signature to the app bundle and its contents
+          echo "=== Applying Ad-Hoc Code Signature to App Bundle ==="
+          codesign --force --deep -s - "$APP_PATH"
+          codesign -dv "$APP_PATH"
+          codesign --verify --deep --strict "$APP_PATH"
+          echo "====================================================="
 
           # Extract version from Info.plist
           VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.9")
@@ -72,6 +74,13 @@ jobs:
             "$DMG_PATH"
 
           sync
+
+          # Apply ad-hoc code signature to the DMG image
+          echo "=== Applying Ad-Hoc Code Signature to DMG ==="
+          codesign --force -s - "$DMG_PATH"
+          codesign -dv "$DMG_PATH"
+          codesign --verify "$DMG_PATH"
+          echo "============================================="
 
           # Verify DMG mountability on runner
           echo "=== Testing DMG mountability ==="
