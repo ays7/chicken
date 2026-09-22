@@ -9,7 +9,7 @@ echo "DerivedData: $DERIVED_DATA"
 
 xcodebuild \
     -project Chicken.xcodeproj \
-    -scheme Chicken \
+    -scheme ForkOfTheChicken \
     -configuration Deployment \
     -derivedDataPath "$DERIVED_DATA" \
     ONLY_ACTIVE_ARCH=NO \

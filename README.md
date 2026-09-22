@@ -1,20 +1,20 @@
 <p align="center">
-  <img src="cotvnc/ChickenFork.png" alt="ForkOfTheChickenOfTheVNC (FotCotVNC) Logo" width="200" />
+  <img src="cotvnc/ChickenFork.png" alt="ForkOfTheChicken Logo" width="200" />
 </p>
 
-# ForkOfTheChickenOfTheVNC (FotCotVNC)
+# ForkOfTheChicken
 
 [![Platform](https://img.shields.io/badge/macOS-11.0%2B-lightgray)](#)
 [![Architecture](https://img.shields.io/badge/architecture-Universal%20(Apple%20Silicon%20%2F%20Intel)-blue.svg)](#)
 [![License](https://img.shields.io/badge/license-GPL--2.0-green.svg)](LICENSE.md)
 
-**ForkOfTheChickenOfTheVNC (FotCotVNC)** is a modernized, high-performance, native VNC client for macOS. Based on the classic *Chicken of the VNC* codebase, this fork updates the application to run natively and smoothly on modern macOS architectures (including Apple Silicon and Intel) and modern display configurations.
+**ForkOfTheChicken** (short for *ForkOfTheChickenOfTheVNC*) is a modernized, high-performance, native VNC client for macOS. Based on the classic *Chicken of the VNC* codebase, this fork updates the application to run natively and smoothly on modern macOS architectures (including Apple Silicon and Intel) and modern display configurations.
 
 ---
 
 ## 🚀 Major Updates & Modernizations (Since last Chicken release in 2011)
 
-FotCotVNC has undergone significant modernization to enhance stability, display performance, OS integration, and compatibility:
+ForkOfTheChicken has undergone significant modernization to enhance stability, display performance, OS integration, and compatibility:
 
 * **Dynamic Desktop Resizing**: Added support for resizable session windows when connected to VNC servers that support dynamic desktop resizing.
 * **Retina Display & High-DPI Stability**: Fixed an off-by-one boundary checking bug in framebuffer drawing that caused out-of-bounds memory access and crashes on Retina screens.
@@ -41,11 +41,11 @@ FotCotVNC has undergone significant modernization to enhance stability, display 
 ## 📝 Release Notes
 
 * [Version 2026.9](release-notes/2026.9.md) — Touch Bar support, Apple Remote Desktop (ARD) authentication, SSH passphrase guidance, and fullscreen space management fixes.
-* [Version 2026.6](release-notes/2026.6.md) — Universal binary (Apple Silicon + Intel), dynamic desktop resizing, UTF-8 extended-clipboard, Retina display fixes, and FotCotVNC branding.
+* [Version 2026.6](release-notes/2026.6.md) — Universal binary (Apple Silicon + Intel), dynamic desktop resizing, UTF-8 extended-clipboard, Retina display fixes, and ForkOfTheChicken branding.
 
 ---
 
-## 🛠️ Building FotCotVNC
+## 🛠️ Building ForkOfTheChicken
 
 ### Prerequisites
 * macOS 11.0 or later
@@ -61,10 +61,10 @@ FotCotVNC has undergone significant modernization to enhance stability, display 
    ```bash
    open cotvnc/Chicken.xcodeproj
    ```
-3. Select the target (e.g., **Chicken**) and build/run (`Cmd + R`) or archive it to build the Universal release application.
+3. Select the scheme (e.g., **ForkOfTheChicken**) and build/run (`Cmd + R`) or archive it to build the Universal release application.
 
 ---
 
 ## 📄 License
 
-ForkOfTheChickenOfTheVNC is distributed under the GNU General Public License v2.0. See the [LICENSE.md](LICENSE.md) file for details.
+ForkOfTheChicken is distributed under the GNU General Public License v2.0. See the [LICENSE.md](LICENSE.md) file for details.

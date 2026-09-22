@@ -285,7 +285,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)cmdlineUsage
 {
-    fprintf(stderr, "\nUsage: Chicken [options] [host:port]\n\n");
+    fprintf(stderr, "\nUsage: ForkOfTheChicken [options] [host:port]\n\n");
     fprintf(stderr, "options:\n\n");
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");

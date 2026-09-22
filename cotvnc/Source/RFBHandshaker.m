@@ -25,7 +25,7 @@
 #import "CARD32Reader.h"
 #import "ByteBlockReader.h"
 #import "RFBStringReader.h"
-#import "Chicken-Swift.h"
+#import "ForkOfTheChicken-Swift.h"
 #import "debug.h"
 
 /* This handles the handshaking messages from the server. */

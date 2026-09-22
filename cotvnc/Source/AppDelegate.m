@@ -150,7 +150,7 @@
     } else if (level == DiagnosticLogLevelVerbose) {
         levelName = @"Verbose";
     }
-    NSLog(@"[Chicken] Diagnostic logging level set to %@", levelName);
+    NSLog(@"[ForkOfTheChicken] Diagnostic logging level set to %@", levelName);
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem

@@ -15,10 +15,10 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="OSX_RFBViewer" systemMenu="main" id="29" userLabel="MainMenu">
             <items>
-                <menuItem title="Chicken" id="612">
-                    <menu key="submenu" title="Chicken" systemMenu="apple" id="614">
+                <menuItem title="ForkOfTheChicken" id="612">
+                    <menu key="submenu" title="ForkOfTheChicken" systemMenu="apple" id="614">
                         <items>
-                            <menuItem title="About Chicken…" id="615">
+                            <menuItem title="About ForkOfTheChicken…" id="615">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="makeKeyAndOrderFront:" target="232" id="628"/>
@@ -46,7 +46,7 @@
                             <menuItem isSeparatorItem="YES" id="618">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide Chicken" keyEquivalent="h" id="611">
+                            <menuItem title="Hide ForkOfTheChicken" keyEquivalent="h" id="611">
                                 <connections>
                                     <action selector="hide:" target="-1" id="623"/>
                                 </connections>
@@ -65,7 +65,7 @@
                             <menuItem isSeparatorItem="YES" id="609">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit Chicken" keyEquivalent="q" id="619">
+                            <menuItem title="Quit ForkOfTheChicken" keyEquivalent="q" id="619">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="622"/>
                                 </connections>
@@ -277,7 +277,7 @@
                 <menuItem title="Help" id="1402">
                     <menu key="submenu" title="Help" id="1410">
                         <items>
-                            <menuItem title="Chicken Help" keyEquivalent="?" id="1452">
+                            <menuItem title="ForkOfTheChicken Help" keyEquivalent="?" id="1452">
                                 <connections>
                                     <action selector="showHelp:" target="1367" id="1453"/>
                                 </connections>
@@ -310,7 +310,7 @@
             </items>
             <point key="canvasLocation" x="140" y="189"/>
         </menu>
-        <window title="About Fork of the Chicken of the VNC" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="about" animationBehavior="default" id="232" userLabel="Info" customClass="NSPanel">
+        <window title="About ForkOfTheChicken" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="about" animationBehavior="default" id="232" userLabel="Info" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="358" y="593" width="565" height="196"/>
@@ -320,10 +320,10 @@
                 <rect key="frame" x="0.0" y="0.0" width="565" height="196"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="261" translatesAutoresizingMaskIntoConstraints="NO" id="225">
-                        <rect key="frame" x="124" y="137" width="265" height="39"/>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="420" translatesAutoresizingMaskIntoConstraints="NO" id="225">
+                        <rect key="frame" x="124" y="137" width="420" height="39"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" alignment="left" title="FotCotVNC" id="1481">
+                        <textFieldCell key="cell" alignment="left" title="ForkOfTheChicken" id="1481">
                             <font key="font" size="28" name="Helvetica-Bold"/>
                             <color key="textColor" red="0.70980399999999999" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
