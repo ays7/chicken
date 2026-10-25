@@ -136,13 +136,7 @@
 
 - (IBAction)showHelp: (id)sender
 {
-	NSURL *url = [[NSBundle mainBundle] URLForResource: @"index" withExtension: @"html" subdirectory: @"help"];
-	if (!url) {
-		NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
-		if (path) {
-			url = [NSURL fileURLWithPath: path];
-		}
-	}
+	NSURL *url = [NSURL URLWithString: @"https://ays7.github.io/chicken/"];
 	if (url) {
 		[[NSWorkspace sharedWorkspace] openURL: url];
 	}

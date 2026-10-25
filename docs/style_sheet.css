@@ -300,6 +300,50 @@ strong {
   margin-top: 0.25rem;
 }
 
+/* Call to Action Button */
+.hero-cta {
+  margin-top: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 980px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 102, 204, 0.35);
+}
+
+.cta-subtext {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-left: 4px;
+}
+
 /* Cards & Grid */
 .grid {
   display: grid;
