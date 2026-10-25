@@ -129,57 +129,114 @@
 	[self updateView:nil];
 }
 	
+- (void)layoutForProtocol:(RemoteProtocol)proto
+{
+    BOOL isRDP = (proto == RemoteProtocolRDP);
+    [display setHidden:isRDP];
+    [displayLabel setHidden:isRDP];
+    [displayDescription setHidden:isRDP];
+    [shared setHidden:isRDP];
+
+    CGFloat dy = isRDP ? 32.0 : 0.0;
+    NSRect f;
+#define SET_Y(v, origY) do { if (v) { f = [v frame]; f.origin.y = (origY) + dy; [v setFrame:f]; } } while(0)
+    SET_Y(username, 275);
+    SET_Y(usernameLabel, 277);
+    SET_Y(password, 245);
+    SET_Y(passwordLabel, 248);
+    SET_Y(rememberPwd, 221);
+    SET_Y(profilePopup, 191);
+    SET_Y(profileLabel, 198);
+    SET_Y(viewOnly, 159);
+    SET_Y(useSshTunnel, 104);
+    SET_Y(sshHost, 76);
+    SET_Y(sshHostLabel, 81);
+#undef SET_Y
+
+    [hostName setNextKeyView: isRDP ? username : display];
+    [display setNextKeyView: username];
+    [username setNextKeyView: password];
+    [password setNextKeyView: rememberPwd];
+    [rememberPwd setNextKeyView: profilePopup];
+    [profilePopup setNextKeyView: viewOnly];
+    [viewOnly setNextKeyView: isRDP ? useSshTunnel : shared];
+    [shared setNextKeyView: useSshTunnel];
+    [useSshTunnel setNextKeyView: [useSshTunnel state] ? sshHost : connectBtn];
+    [sshHost setNextKeyView: connectBtn];
+}
+
 - (void)updateView:(id)notification
 {	
 	// Set properties in dialog box
     if (mServer != nil)
 	{
-        NSString    *str;
-        int         port = [mServer port];
+        RemoteProtocol proto = [mServer remoteProtocol];
+        [protocolControl setSelectedSegment:(NSInteger)proto];
+        [self layoutForProtocol:proto];
+
+        [protocolControl setEnabled: YES];
+        [username setEnabled: YES];
+		[hostName setEnabled: YES];
+		[password setEnabled: YES];
+		[shared setEnabled: (proto == RemoteProtocolVNC)];
+		[profilePopup setEnabled: YES];
+
+        int port = [mServer port];
+        NSString *str = nil;
 
         if( NO == removedSaveCheckbox && NO == [mServer respondsToSelector:@selector(setAddToServerListOnConnect:)] )
 		{
             [self setSaveCheckboxIsVisible: NO];
 		}
 		
-		[hostName setEnabled: YES];
-		[password setEnabled: YES];
-		[shared setEnabled: YES];
-		[profilePopup setEnabled: YES];
-		
-        if (port >= 0 && port < DISPLAY_MAX) {
-            // Low port numbers have to be encoded as host:port so they won't be
-            // interpreted as display numbers
-            NSString *host = [mServer host];
-            NSRange  colon = [host rangeOfString:@":"];
-            NSString *fmt;
-            NSString *hostAndPort;
-
-            fmt = colon.location == NSNotFound ? @"%@:%d" : @"[%@]:%d";
-            hostAndPort = [NSString stringWithFormat:fmt, host, port];
-            [hostName setStringValue:hostAndPort];
-            [display setStringValue:@" "];
-            [display setEnabled:NO];
-            str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
-                    port];
-        } else {
-            [hostName setStringValue:[mServer host]];
-            if (port < 0) { // port is not yet known for Rendezvous servers
-                [display setStringValue:@" "];
-                str = @"";
-            } else if (port >= PORT_BASE && port < PORT_BASE + DISPLAY_MAX) {
-                NSString    *fmt = NSLocalizedString(@"DisplayIsPort", nil);
-
-                [display setIntValue:port - PORT_BASE];
-                str = [NSString stringWithFormat:fmt, port - PORT_BASE, port];
+        if (proto == RemoteProtocolRDP) {
+            if (port > 0 && port != 3389) {
+                NSString *host = [mServer host] ? [mServer host] : @"";
+                NSRange colon = [host rangeOfString:@":"];
+                NSString *fmt = colon.location == NSNotFound ? @"%@:%d" : @"[%@]:%d";
+                [hostName setStringValue:[NSString stringWithFormat:fmt, host, port]];
             } else {
-                [display setIntValue:port];
+                [hostName setStringValue:[mServer host] ? [mServer host] : @""];
+            }
+            [display setStringValue:@""];
+            [displayDescription setStringValue:@""];
+        } else {
+            if (port >= 0 && port < DISPLAY_MAX) {
+                // Low port numbers have to be encoded as host:port so they won't be
+                // interpreted as display numbers
+                NSString *host = [mServer host];
+                NSRange  colon = [host rangeOfString:@":"];
+                NSString *fmt;
+                NSString *hostAndPort;
+
+                fmt = colon.location == NSNotFound ? @"%@:%d" : @"[%@]:%d";
+                hostAndPort = [NSString stringWithFormat:fmt, host, port];
+                [hostName setStringValue:hostAndPort];
+                [display setStringValue:@" "];
+                [display setEnabled:NO];
                 str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
                         port];
+            } else {
+                [hostName setStringValue:[mServer host] ? [mServer host] : @""];
+                if (port < 0) { // port is not yet known for Rendezvous servers
+                    [display setStringValue:@" "];
+                    str = @"";
+                } else if (port >= PORT_BASE && port < PORT_BASE + DISPLAY_MAX) {
+                    NSString    *fmt = NSLocalizedString(@"DisplayIsPort", nil);
+
+                    [display setIntValue:port - PORT_BASE];
+                    str = [NSString stringWithFormat:fmt, port - PORT_BASE, port];
+                } else {
+                    [display setIntValue:port];
+                    str = [NSString stringWithFormat:NSLocalizedString(@"PortNum", nil),
+                            port];
+                }
+                [display setEnabled:[mServer doYouSupport:EDIT_PORT]];
             }
-            [display setEnabled:[mServer doYouSupport:EDIT_PORT]];
+            [displayDescription setStringValue:str];
         }
-        [displayDescription setStringValue:str];
+
+        [username setStringValue:[mServer username] ? [mServer username] : @""];
 
             /* It's important to do password before rememberPwd so that
              * the latter will reflect a failure to retrieve the
@@ -210,6 +267,8 @@
     }
 	else
 	{
+        [protocolControl setEnabled: NO];
+        [username setEnabled: NO];
 		[hostName setEnabled: NO];
 		[password setEnabled: NO];
 		[rememberPwd setEnabled: NO];
@@ -220,6 +279,7 @@
         [useSshTunnel setEnabled: NO];
         [sshHost setEnabled: NO];
 
+        [username setStringValue:@""];
 		[hostName setStringValue:@""];
 		[password setStringValue:@""];
 		[rememberPwd setIntValue:0];
@@ -329,6 +389,38 @@
     }
 }
 
+- (IBAction)protocolChanged:(id)sender
+{
+    if (nil != mServer)
+    {
+        RemoteProtocol newProto = (RemoteProtocol)[sender selectedSegment];
+        [mServer setRemoteProtocol:newProto];
+        if (newProto == RemoteProtocolRDP)
+        {
+            if (![mServer profile] || [[[mServer profile] profileName] isEqualToString:@"default"])
+            {
+                [mServer setProfileName:@"Windows"];
+            }
+        }
+        else
+        {
+            if ([[[mServer profile] profileName] isEqualToString:@"Windows"])
+            {
+                [mServer setProfileName:@"default"];
+            }
+        }
+        [self updateView:nil];
+    }
+}
+
+- (IBAction)usernameChanged:(id)sender
+{
+    if (nil != mServer)
+    {
+        [mServer setUsername:[sender stringValue]];
+    }
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)controlTextDidChange:(NSNotification *)aNotification
@@ -342,6 +434,13 @@
             [self takePortFromDisplay];
 		}
 	}
+    else if( username == sender )
+    {
+        if( nil != mServer )
+        {
+            [mServer setUsername:[sender stringValue]];
+        }
+    }
 	else if( hostName == sender )
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_ADDRESS] )
@@ -349,15 +448,22 @@
             BOOL setSsh = [[mServer sshString] isEqualToString:[mServer host]];
 			BOOL portSpec = [mServer setHostAndPort:[sender stringValue]];
 
-            if (portSpec) {
-                [self descriptionFromPort];
-                [display setStringValue:@" "];
-            } else {
-                if (![display isEnabled])
-                    [display setStringValue:@"0"];
-                [self takePortFromDisplay];
+            if ([mServer remoteProtocol] == RemoteProtocolRDP)
+            {
+                // RDP does not have display numbers; host:port already handled
             }
-            [display setEnabled:!portSpec];
+            else
+            {
+                if (portSpec) {
+                    [self descriptionFromPort];
+                    [display setStringValue:@" "];
+                } else {
+                    if (![display isEnabled])
+                        [display setStringValue:@"0"];
+                    [self takePortFromDisplay];
+                }
+                [display setEnabled:!portSpec];
+            }
 
             if (setSsh) {
                 [mServer setSshHost:[mServer host]];
@@ -507,7 +613,7 @@
     [self connectionAttemptEnded];
 }
 
-- (void)connectionSucceeded: (RFBConnection *)theConnection
+- (void)connectionSucceeded: (id<RemoteConnection>)theConnection
 {
     if (![mServer rememberPassword])
         [mServer setPassword: nil];
@@ -550,6 +656,8 @@
 /* Disables or enables controls as part of connection attempt */
 - (void)disableControls
 {
+    [protocolControl setEnabled: NO];
+    [username setEnabled: NO];
     [display setEnabled: NO];
     [hostName setEnabled: NO];
     [password setEnabled: NO];

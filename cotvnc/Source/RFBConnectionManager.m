@@ -191,10 +191,26 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 				free(decrypted_password);
 			}
 		}
-		else if ([arg hasPrefix:@"--FullScreen"])
+		else if ([arg isEqualToString:@"--FullScreen"])
 			[cmdlineServer setFullscreen: YES];
-		else if ([arg hasPrefix:@"--ViewOnly"])
+		else if ([arg isEqualToString:@"--ViewOnly"])
 			[cmdlineServer setViewOnly: YES];
+		else if ([arg isEqualToString:@"--RDP"])
+		{
+			[cmdlineServer setRemoteProtocol:RemoteProtocolRDP];
+			[cmdlineServer setPort:3389];
+		}
+		else if ([arg isEqualToString:@"--VNC"])
+		{
+			[cmdlineServer setRemoteProtocol:RemoteProtocolVNC];
+			[cmdlineServer setPort:5900];
+		}
+		else if ([arg isEqualToString:@"--Username"])
+		{
+			if (i + 1 >= argCount) [self cmdlineUsage];
+			NSString *user = [args objectAtIndex:++i];
+			[cmdlineServer setUsername:user];
+		}
 		else if ([arg hasPrefix:@"--Display"])
 		{
 			if (i + 1 >= argCount) [self cmdlineUsage];
@@ -228,7 +244,49 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
             savedServ = [[ServerDataManager sharedInstance] getServerWithName:arg];
 
             if (savedServ == nil)
-                [cmdlineServer setHostAndPort: arg];
+            {
+                if ([arg hasPrefix:@"rdp://"])
+                {
+                    NSURL *url = [NSURL URLWithString:arg];
+                    if (url)
+                    {
+                        [cmdlineServer setRemoteProtocol:RemoteProtocolRDP];
+                        [cmdlineServer setHost:[url host]];
+                        [cmdlineServer setPort:[url port] ? [[url port] intValue] : 3389];
+                        if ([url user])
+                            [cmdlineServer setUsername:[[url user] stringByRemovingPercentEncoding]];
+                        if ([url password])
+                            [cmdlineServer setPassword:[url password]];
+                    }
+                    else
+                    {
+                        [cmdlineServer setHostAndPort:arg];
+                    }
+                }
+                else if ([arg hasPrefix:@"vnc://"] || [arg hasPrefix:@"rfb://"])
+                {
+                    NSURL *url = [NSURL URLWithString:arg];
+                    if (url)
+                    {
+                        [cmdlineServer setRemoteProtocol:RemoteProtocolVNC];
+                        [cmdlineServer setHost:[url host]];
+                        if ([url port])
+                            [cmdlineServer setPort:[[url port] intValue]];
+                        if ([url user])
+                            [cmdlineServer setUsername:[[url user] stringByRemovingPercentEncoding]];
+                        if ([url password])
+                            [cmdlineServer setPassword:[url password]];
+                    }
+                    else
+                    {
+                        [cmdlineServer setHostAndPort:arg];
+                    }
+                }
+                else
+                {
+                    [cmdlineServer setHostAndPort: arg];
+                }
+            }
 			
 			mRunningFromCommandLine = YES;
 		} 
@@ -285,8 +343,11 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)cmdlineUsage
 {
-    fprintf(stderr, "\nUsage: ForkOfTheChicken [options] [host:port]\n\n");
+    fprintf(stderr, "\nUsage: ForkOfTheChicken [options] [host:port | rdp://... | vnc://...]\n\n");
     fprintf(stderr, "options:\n\n");
+    fprintf(stderr, "--RDP\n");
+    fprintf(stderr, "--VNC\n");
+    fprintf(stderr, "--Username <username>\n");
     fprintf(stderr, "--PasswordFile <password-file>\n");
     fprintf(stderr, "--Profile <profile-name>\n");
     fprintf(stderr, "--Display <display-number>\n");
@@ -457,9 +518,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     }
 }
 
-/* Registers a successful connection using an already-created RFBConnection
+/* Registers a successful connection using an already-created connection
  * object. */
-- (void)successfulConnection: (RFBConnection *)theConnection
+- (void)successfulConnection: (id<RemoteConnection>)theConnection
 {
     Session *sess = [[Session alloc] initWithConnection:theConnection];
     [sessions addObject:sess];

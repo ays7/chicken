@@ -18,6 +18,7 @@
 
 #import <AppKit/AppKit.h>
 #import "ConnectionWaiter.h"
+#import "RemoteConnection.h"
 #import "rfbproto.h"
 
 @class ByteBlockReader;
@@ -49,7 +50,7 @@
 #define kTrackingRectThickness		10.0
 #define kAutoscrollInterval			0.05
 
-@interface RFBConnection : NSObject
+@interface RFBConnection : NSObject <RemoteConnection>
 {
     Session     *session;
     IBOutlet RFBView *rfbView;

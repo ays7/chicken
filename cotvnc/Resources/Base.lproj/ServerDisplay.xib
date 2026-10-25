@@ -14,15 +14,22 @@
                 <outlet property="connectIndicatorText" destination="9" id="56"/>
                 <outlet property="display" destination="18" id="80"/>
                 <outlet property="displayDescription" destination="127" id="130"/>
-
+                <outlet property="displayLabel" destination="15" id="164"/>
                 <outlet property="hostName" destination="11" id="39"/>
                 <outlet property="password" destination="7" id="81"/>
+                <outlet property="passwordLabel" destination="10" id="165"/>
+                <outlet property="profileLabel" destination="25" id="166"/>
                 <outlet property="profilePopup" destination="17" id="44"/>
+                <outlet property="protocolControl" destination="150" id="160"/>
+                <outlet property="protocolLabel" destination="151" id="161"/>
                 <outlet property="rememberPwd" destination="20" id="42"/>
                 <outlet property="save" destination="95" id="96"/>
                 <outlet property="shared" destination="26" id="43"/>
                 <outlet property="sshHost" destination="133" id="139"/>
+                <outlet property="sshHostLabel" destination="135" id="167"/>
                 <outlet property="useSshTunnel" destination="131" id="140"/>
+                <outlet property="username" destination="152" id="162"/>
+                <outlet property="usernameLabel" destination="153" id="163"/>
                 <outlet property="viewOnly" destination="98" id="109"/>
                 <outlet property="window" destination="6" id="54"/>
             </connections>
@@ -32,31 +39,45 @@
         <window title="Connect" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="6" userLabel="Connect" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="472" y="412" width="368" height="375"/>
+            <rect key="contentRect" x="472" y="412" width="368" height="447"/>
             <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="5">
-                <rect key="frame" x="0.0" y="0.0" width="368" height="375"/>
+                <rect key="frame" x="0.0" y="0.0" width="368" height="447"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box fixedFrame="YES" boxType="custom" borderType="line" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                        <rect key="frame" x="20" y="20" width="328" height="335"/>
+                        <rect key="frame" x="20" y="20" width="328" height="407"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <view key="contentView" id="AAr-Jm-Feh">
-                            <rect key="frame" x="1" y="1" width="326" height="333"/>
+                            <rect key="frame" x="1" y="1" width="326" height="405"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="65" translatesAutoresizingMaskIntoConstraints="NO" id="9">
-                                    <rect key="frame" x="26" y="17" width="69" height="13"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Connecting..." id="114">
-                                        <font key="font" metaFont="label"/>
-                                        <color key="textColor" red="0.42934781309999998" green="0.42934781309999998" blue="0.42934781309999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="150">
+                                    <rect key="frame" x="105" y="371" width="130" height="24"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="154">
+                                        <font key="font" metaFont="system"/>
+                                        <segments>
+                                            <segment label="VNC" width="60" selected="YES"/>
+                                            <segment label="RDP" width="60"/>
+                                        </segments>
+                                    </segmentedCell>
+                                    <connections>
+                                        <action selector="protocolChanged:" target="-2" id="155"/>
+                                    </connections>
+                                </segmentedControl>
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="68" translatesAutoresizingMaskIntoConstraints="NO" id="151">
+                                    <rect key="frame" x="32" y="375" width="68" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" alignment="right" title="Protocol:" id="156">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
                                 <textField toolTip="The host name or IP address of the server to which you wish to connect.  You can optionally append a port number with a colon." focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                                    <rect key="frame" x="105" y="311" width="218" height="22"/>
+                                    <rect key="frame" x="105" y="341" width="218" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="server address" drawsBackground="YES" id="116">
                                         <font key="font" metaFont="system"/>
@@ -68,26 +89,8 @@
                                         <outlet property="nextKeyView" destination="18" id="82"/>
                                     </connections>
                                 </textField>
-                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="64" translatesAutoresizingMaskIntoConstraints="NO" id="10">
-                                    <rect key="frame" x="32" y="250" width="68" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" alignment="right" title="Password:" id="115">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="44" translatesAutoresizingMaskIntoConstraints="NO" id="25">
-                                    <rect key="frame" x="52" y="200" width="48" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" alignment="right" title="Profile:" id="122">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="34" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                                    <rect key="frame" x="64" y="313" width="38" height="17"/>
+                                    <rect key="frame" x="64" y="343" width="38" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" alignment="right" title="Host:" id="113">
                                         <font key="font" metaFont="system"/>
@@ -96,7 +99,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField toolTip="The display number of the server to which you wish to connect" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="18">
-                                    <rect key="frame" x="105" y="277" width="60" height="22"/>
+                                    <rect key="frame" x="105" y="307" width="60" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" title="0" placeholderString="0" drawsBackground="YES" id="120">
                                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="49">
@@ -116,11 +119,11 @@
                                     </textFieldCell>
                                     <connections>
                                         <outlet property="delegate" destination="-2" id="90"/>
-                                        <outlet property="nextKeyView" destination="26" id="83"/>
+                                        <outlet property="nextKeyView" destination="152" id="83"/>
                                     </connections>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="101" translatesAutoresizingMaskIntoConstraints="NO" id="15">
-                                    <rect key="frame" x="-3" y="273" width="105" height="24"/>
+                                    <rect key="frame" x="-3" y="303" width="105" height="24"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" alignment="right" title="Display or port:" id="118">
                                         <font key="font" metaFont="system"/>
@@ -128,8 +131,83 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="127">
+                                    <rect key="frame" x="173" y="310" width="153" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Display 10 is port 5910" id="128">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" red="0.32065218690000002" green="0.32065218690000002" blue="0.32065218690000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField toolTip="The user name for the server (optional for VNC, standard for RDP)" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="152">
+                                    <rect key="frame" x="105" y="275" width="218" height="22"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="user name" drawsBackground="YES" id="157">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <action selector="usernameChanged:" target="-2" id="158"/>
+                                        <outlet property="delegate" destination="-2" id="159"/>
+                                        <outlet property="nextKeyView" destination="7" id="168"/>
+                                    </connections>
+                                </textField>
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="68" translatesAutoresizingMaskIntoConstraints="NO" id="153">
+                                    <rect key="frame" x="32" y="277" width="68" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" alignment="right" title="Username:" id="169">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="64" translatesAutoresizingMaskIntoConstraints="NO" id="10">
+                                    <rect key="frame" x="32" y="248" width="68" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" alignment="right" title="Password:" id="115">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField toolTip="The password for the server to which you wish to connect" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7" customClass="NSSecureTextField">
+                                    <rect key="frame" x="105" y="245" width="218" height="22"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="112">
+                                        <font key="font" metaFont="cellTitle"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <action selector="passwordChanged:" target="-2" id="141"/>
+                                        <outlet property="nextKeyView" destination="20" id="85"/>
+                                    </connections>
+                                </textField>
+                                <button toolTip="Store this password in your Keychain for automatic retrieval next time." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="20">
+                                    <rect key="frame" x="103" y="221" width="222" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Remember Password" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="121">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="rememberPwdChanged:" target="-2" id="77"/>
+                                        <outlet property="nextKeyView" destination="17" id="86"/>
+                                    </connections>
+                                </button>
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="44" translatesAutoresizingMaskIntoConstraints="NO" id="25">
+                                    <rect key="frame" x="52" y="198" width="48" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" alignment="right" title="Profile:" id="122">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
                                 <popUpButton toolTip="Select your desired connection profile." imageHugsTitle="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="17">
-                                    <rect key="frame" x="102" y="193" width="224" height="26"/>
+                                    <rect key="frame" x="102" y="191" width="224" height="26"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <popUpButtonCell key="cell" type="push" title="default" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="border" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="13" id="119">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -142,19 +220,90 @@
                                     </popUpButtonCell>
                                     <connections>
                                         <action selector="profileSelectionChanged:" target="-2" id="78"/>
-                                        <outlet property="nextKeyView" destination="14" id="87"/>
+                                        <outlet property="nextKeyView" destination="98" id="87"/>
                                     </connections>
                                 </popUpButton>
-                                <button toolTip="Store this password in your Keychain for automatic retrieval next time." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="20">
-                                    <rect key="frame" x="103" y="223" width="222" height="18"/>
+                                <button toolTip="Keyboard and mouse events will not be sent to the server, you will only be observing." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98">
+                                    <rect key="frame" x="103" y="159" width="222" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="check" title="Remember Password" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="121">
+                                    <buttonCell key="cell" type="check" title="View only" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="126">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
-                                        <action selector="rememberPwdChanged:" target="-2" id="77"/>
-                                        <outlet property="nextKeyView" destination="17" id="86"/>
+                                        <action selector="viewOnlyChanged:" target="-2" id="110"/>
+                                    </connections>
+                                </button>
+                                <button toolTip="Other clients can connect to the server at the same time as you." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26">
+                                    <rect key="frame" x="103" y="139" width="222" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Allow other clients to connect" imagePosition="leading" alignment="left" inset="2" id="123">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="sharedChanged:" target="-2" id="75"/>
+                                        <outlet property="nextKeyView" destination="131" id="84"/>
+                                    </connections>
+                                </button>
+                                <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="131">
+                                    <rect key="frame" x="103" y="104" width="222" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Tunnel over SSH" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="132">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="useSshTunnelChanged:" target="-2" id="137"/>
+                                    </connections>
+                                </button>
+                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="135">
+                                    <rect key="frame" x="38" y="81" width="64" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SSH host:" id="136">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="133">
+                                    <rect key="frame" x="105" y="76" width="218" height="22"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="134">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <action selector="sshHostChanged:" target="-2" id="138"/>
+                                    </connections>
+                                </textField>
+                                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="19">
+                                    <rect key="frame" x="-1" y="43" width="327" height="5"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                </box>
+                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" preferredMaxLayoutWidth="65" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                                    <rect key="frame" x="26" y="17" width="69" height="13"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Connecting..." id="114">
+                                        <font key="font" metaFont="label"/>
+                                        <color key="textColor" red="0.42934781309999998" green="0.42934781309999998" blue="0.42934781309999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="27">
+                                    <rect key="frame" x="6" y="15" width="16" height="16"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                </progressIndicator>
+                                <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="95">
+                                    <rect key="frame" x="3" y="16" width="83" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <buttonCell key="cell" type="check" title="Save Server" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" inset="2" id="125">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="smallSystem"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="addServerChanged:" target="-2" id="97"/>
                                     </connections>
                                 </button>
                                 <button toolTip="Connect to the server now" imageHugsTitle="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14">
@@ -172,103 +321,6 @@ DQ
                                         <outlet property="nextKeyView" destination="11" id="88"/>
                                     </connections>
                                 </button>
-                                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                                    <rect key="frame" x="-1" y="43" width="327" height="5"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                </box>
-                                <textField toolTip="The password for the server to which you wish to connect" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7" customClass="NSSecureTextField">
-                                    <rect key="frame" x="105" y="247" width="218" height="22"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="112">
-                                        <font key="font" metaFont="cellTitle"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                    <connections>
-                                        <action selector="passwordChanged:" target="-2" id="141"/>
-                                        <outlet property="nextKeyView" destination="20" id="85"/>
-                                    </connections>
-                                </textField>
-                                <button toolTip="Other clients can connect to the server at the same time as you." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26">
-                                    <rect key="frame" x="103" y="141" width="222" height="18"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="check" title="Allow other clients to connect" imagePosition="leading" alignment="left" inset="2" id="123">
-                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="sharedChanged:" target="-2" id="75"/>
-                                        <outlet property="nextKeyView" destination="7" id="84"/>
-                                    </connections>
-                                </button>
-                                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="27">
-                                    <rect key="frame" x="6" y="15" width="16" height="16"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                </progressIndicator>
-
-                                <button toolTip="Keyboard and mouse events will not be sent to the server, you will only be observing." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98">
-                                    <rect key="frame" x="103" y="161" width="222" height="18"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="check" title="View only" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="126">
-                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="viewOnlyChanged:" target="-2" id="110"/>
-                                    </connections>
-                                </button>
-                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="127">
-                                    <rect key="frame" x="173" y="280" width="153" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Display 10 is port 5910" id="128">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" red="0.32065218690000002" green="0.32065218690000002" blue="0.32065218690000002" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="95">
-                                    <rect key="frame" x="3" y="16" width="83" height="16"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <buttonCell key="cell" type="check" title="Save Server" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" inset="2" id="125">
-                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="smallSystem"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="addServerChanged:" target="-2" id="97"/>
-                                    </connections>
-                                </button>
-                                <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="131">
-                                    <rect key="frame" x="103" y="106" width="222" height="18"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="check" title="Tunnel over SSH" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="132">
-                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="useSshTunnelChanged:" target="-2" id="137"/>
-                                    </connections>
-                                </button>
-                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="133">
-                                    <rect key="frame" x="105" y="78" width="218" height="22"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="134">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                    <connections>
-                                        <action selector="sshHostChanged:" target="-2" id="138"/>
-                                    </connections>
-                                </textField>
-                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="135">
-                                    <rect key="frame" x="38" y="83" width="64" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SSH host:" id="136">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
                             </subviews>
                         </view>
                     </box>

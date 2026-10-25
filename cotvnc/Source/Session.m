@@ -70,7 +70,7 @@ enum {
 
 @implementation Session
 
-- (id)initWithConnection:(RFBConnection *)aConnection
+- (id)initWithConnection:(id<RemoteConnection>)aConnection
 {
     if ((self = [super init]) == nil)
         return nil;
@@ -128,10 +128,11 @@ enum {
 
 - (void)dealloc
 {
-
-
+    [rfbView setDelegate:nil];
+    [rfbView setFrameBuffer:nil];
     [connection closeConnection];
     [connection release];
+    connection = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[titleString release];
@@ -173,7 +174,7 @@ enum {
     return window;
 }
 
-- (RFBConnection *)connection
+- (id<RemoteConnection>)connection
 {
     return connection;
 }
@@ -257,6 +258,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)connectionProblem
 {
+    [rfbView setDelegate:nil];
+    [rfbView setFrameBuffer:nil];
     [connection closeConnection];
     [connection release];
     connection = nil;
@@ -321,10 +324,16 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 				if (supportReconnect) {
 					[alert addButtonWithTitle:reconnectButton];
 				}
-				[alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+				if ([window isVisible]) {
+					[alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+						[self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
+						[alert release];
+					}];
+				} else {
+					NSModalResponse returnCode = [alert runModal];
 					[self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
 					[alert release];
-				}];
+				}
 			}
         } else {
             [[RFBConnectionManager sharedManager] removeConnection:self];
@@ -436,6 +445,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         username = [enteredUsername copy];
         if (connection) {
             [connection setUsername:username];
+        }
+        if ([rememberNewPassword state] && [server_ respondsToSelector:@selector(setUsername:)]) {
+            [server_ setUsername:username];
         }
     }
 
@@ -635,6 +647,14 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)resize:(NSSize)size
 {
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+        _maxSize = size;
+        [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setHasVerticalScroller:NO];
+        return;
+    }
+
     NSSize  maxSize;
     NSRect  frame;
 
@@ -803,14 +823,24 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
-    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
-        // update the server with the new desktop size
-        [connection writeSetDesktopSize:[[window contentView] frame].size];
+    if (aNotification != nil && [connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+        // If not dragging live (e.g. zoom/maximize button), update the server immediately
+        if (![window inLiveResize]) {
+            [connection writeSetDesktopSize:[[window contentView] frame].size];
+        }
         return;
     }
 
 	[scrollView setHasHorizontalScroller:horizontalScroll];
 	[scrollView setHasVerticalScroller:verticalScroll];
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)aNotification
+{
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+        // User finished dragging the window; send final size to server
+        [connection writeSetDesktopSize:[[window contentView] frame].size];
+    }
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
@@ -925,7 +955,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 }
 
 /* Reconnect attempt has succeeded */
-- (void)connectionSucceeded:(RFBConnection *)newConnection
+- (void)connectionSucceeded:(id<RemoteConnection>)newConnection
 {
     [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [_reconnectSheetTimer invalidate];

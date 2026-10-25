@@ -17,12 +17,14 @@
  */
 
 #import "FrameBuffer.h"
-@class EventFilter, RFBConnection, Profile;
+#import "RemoteConnection.h"
+
+@class EventFilter, Profile;
 
 
 @interface RFBView : NSView
 {
-    RFBConnection   *_delegate;
+    id<RemoteConnection> _delegate;
     EventFilter     *_eventFilter;
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
@@ -32,8 +34,8 @@
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
-- (void)setDelegate:(RFBConnection *)delegate;
-- (RFBConnection *)delegate;
+- (void)setDelegate:(id<RemoteConnection>)delegate;
+- (id<RemoteConnection>)delegate;
 - (void)drawRect:(NSRect)aRect;
 
 - (void)setCursorTo: (NSString *)name;

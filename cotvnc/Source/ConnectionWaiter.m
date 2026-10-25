@@ -20,6 +20,7 @@
 #import "ConnectionWaiter.h"
 #import "IServerData.h"
 #import "RFBConnection.h"
+#import "RDPConnection.h"
 #import "RFBConnectionManager.h"
 #import "SshWaiter.h"
 
@@ -165,7 +166,14 @@
 
         if (connect(sock, res->ai_addr, res->ai_addrlen) == 0) {
             freeaddrinfo(res0);
-            [self waitForDataOn:sock];
+            if ([server remoteProtocol] == RemoteProtocolRDP) {
+                close(sock);
+                currentSock = -1;
+                [self performSelectorOnMainThread:@selector(finishConnection)
+                                       withObject:nil waitUntilDone:NO];
+            } else {
+                [self waitForDataOn:sock];
+            }
             return; 
         } else {
             [lock lock];
@@ -228,16 +236,21 @@
 {
     if (delegate) {
         // only if we haven't been canceled
-        NSFileHandle    *fh;
-        RFBConnection   *theConnection;
+        NSFileHandle    *fh = nil;
+        id<RemoteConnection> theConnection;
 
-        fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
-                                           closeOnDealloc: YES];
-        theConnection = [[RFBConnection alloc] initWithFileHandle:fh
-                server:server];
+        if ([server remoteProtocol] == RemoteProtocolRDP) {
+            theConnection = [[RDPConnection alloc] initWithFileHandle:nil
+                    server:server];
+        } else {
+            fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
+                                               closeOnDealloc: YES];
+            theConnection = [[RFBConnection alloc] initWithFileHandle:fh
+                    server:server];
+        }
         [delegate connectionSucceeded: theConnection];
         [fh release];
-        [theConnection release];
+        [(id)theConnection release];
         currentSock = -1;
     }
 }

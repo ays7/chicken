@@ -89,9 +89,20 @@ typedef int NSInteger;
 
 - (void)dealloc
 {
+    if (_delegate)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:_delegate name:NSViewFrameDidChangeNotification object:self];
+        _delegate = nil;
+    }
+    _eventFilter = nil;
     [fbuf release];
+    fbuf = nil;
     [_serverCursor release];
+    _serverCursor = nil;
     [_modifierCursor release];
+    _modifierCursor = nil;
+    [tint release];
+    tint = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
@@ -110,8 +121,13 @@ typedef int NSInteger;
 {
     [_serverCursor release];
     _serverCursor = [aCursor retain];
-    if (!_modifierCursor)
+    if (!_modifierCursor) {
         [[self window] invalidateCursorRectsForView: self];
+        if (aCursor)
+            [aCursor set];
+        else
+            [[NSCursor arrowCursor] set];
+    }
 }
 
 - (void)setTint: (NSColor *)aTint
@@ -124,25 +140,39 @@ typedef int NSInteger;
     }
 }
 
-- (void)setDelegate:(RFBConnection *)delegate
+- (void)setDelegate:(id<RemoteConnection>)delegate
 {
+    if (_delegate)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:_delegate name:NSViewFrameDidChangeNotification object:self];
+    }
     _delegate = delegate;
-	_eventFilter = [_delegate eventFilter];
-	[self setCursorTo: nil];
-	[self setPostsFrameChangedNotifications: YES];
-	[[NSNotificationCenter defaultCenter] addObserver: _delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
+    if (_delegate)
+    {
+        _eventFilter = [_delegate eventFilter];
+        [self setCursorTo: nil];
+        [self setPostsFrameChangedNotifications: YES];
+        [[NSNotificationCenter defaultCenter] addObserver: _delegate selector: @selector(viewFrameDidChange:) name: NSViewFrameDidChangeNotification object: self];
+    }
+    else
+    {
+        _eventFilter = nil;
+    }
 }
 
-- (RFBConnection *)delegate
+- (id<RemoteConnection>)delegate
 {
 	return _delegate;
 }
 
 - (void)drawRect:(NSRect)destRect
 {
+    if (!fbuf)
+        return;
+
     NSRect          b = [self bounds];
-    const NSRect    *rects;
-    NSInteger       numRects;
+    const NSRect    *rects = NULL;
+    NSInteger       numRects = 0;
     NSInteger       i;
 
     /* We always draw the framebuffer at scale. However, on a "Retina" display,
@@ -155,23 +185,33 @@ typedef int NSInteger;
         [tint setFill];
 
     [self getRectsBeingDrawn:&rects count:&numRects];
-    for (i = 0; i < numRects; i++) {
-        NSRect      r = rects[i];
+    if (rects && numRects > 0) {
+        for (i = 0; i < numRects; i++) {
+            NSRect      r = rects[i];
+            r.origin.y = b.size.height - NSMaxY(r);
+            [fbuf drawRect:r at:rects[i].origin];
+            if (drawTint)
+                NSRectFillUsingOperation(rects[i], NSCompositingOperationSourceOver);
+        }
+    } else {
+        NSRect r = destRect;
         r.origin.y = b.size.height - NSMaxY(r);
-        [fbuf drawRect:r at:rects[i].origin];
+        [fbuf drawRect:r at:destRect.origin];
         if (drawTint)
-            NSRectFillUsingOperation(rects[i], NSCompositingOperationSourceOver);
+            NSRectFillUsingOperation(destRect, NSCompositingOperationSourceOver);
     }
 }
 
 /* Called by system to set-up cursors for this view */
 - (void)resetCursorRects
 {
-    if ([_delegate viewOnly])
+    if (!_delegate || [_delegate viewOnly])
         return;
 
-    NSRect cursorRect;
-    cursorRect = [self visibleRect];
+    NSRect cursorRect = [self visibleRect];
+    if (NSIsEmptyRect(cursorRect))
+        return;
+
     if (_modifierCursor)
         [self addCursorRect: cursorRect cursor: _modifierCursor];
     else if (_serverCursor)

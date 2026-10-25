@@ -28,7 +28,7 @@
 
 - (id)initWithServer:(id<IServerData>)server;
 
-- (void)connectionSucceeded:(RFBConnection *)conn;
+- (void)connectionSucceeded:(id<RemoteConnection>)conn;
 - (void)connectionFailed;
 
 - (void)addMenuItems:(NSMenu *)dockMenu;

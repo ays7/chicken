@@ -1,0 +1,308 @@
+/**
+ * FreeRDP: A Remote Desktop Protocol Implementation
+ * FreeRDP Proxy Server
+ *
+ * Copyright 2021-2023 Armin Novak <armin.novak@thincast.com>
+ * Copyright 2021-2023 Thincast Technologies GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#ifndef FREERDP_SERVER_PROXY_CONFIG_H
+#define FREERDP_SERVER_PROXY_CONFIG_H
+
+#include <winpr/wtypes.h>
+#include <winpr/ini.h>
+
+#include <freerdp/api.h>
+#include <freerdp/server/proxy/proxy_modules_api.h>
+
+/** @defgroup proxy_config Proxy Configuration
+ * @ingroup proxy
+ * @{
+ */
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+	/**
+	 * @brief An enum representing the allowed proxy target certificate policy settings
+	 * @since version 3.32.0
+	 */
+	typedef enum WINPR_C23_ENUM_TYPE(uint32_t)
+	{
+		FREERDP_PROXY_CERT_POLICY_DENY = 0,
+		FREERDP_PROXY_CERT_POLICY_ALLOW,
+		FREERDP_PROXY_CERT_POLICY_PINNED
+	} FreeRDP_ProxyCertPolicy;
+
+	typedef struct proxy_config proxyConfig;
+
+	struct proxy_config
+	{
+		/* server */
+		char* Host;
+		UINT16 Port;
+
+		/* target */
+		BOOL FixedTarget;
+		char* TargetHost;
+		UINT16 TargetPort;
+		char* TargetUser;
+		char* TargetDomain;
+		char* TargetPassword;
+
+		/* input */
+		BOOL Keyboard;
+		BOOL Mouse;
+		BOOL Multitouch;
+
+		/* server security */
+		BOOL ServerTlsSecurity;
+		BOOL ServerRdpSecurity;
+		BOOL ServerNlaSecurity;
+
+		/* client security */
+		BOOL ClientNlaSecurity;
+		BOOL ClientTlsSecurity;
+		BOOL ClientRdpSecurity;
+		BOOL ClientAllowFallbackToTls;
+
+		/* channels */
+		BOOL GFX;
+		BOOL DisplayControl;
+		BOOL Clipboard;
+		BOOL AudioOutput;
+		BOOL AudioInput;
+		BOOL RemoteApp;
+		BOOL DeviceRedirection;
+		BOOL VideoRedirection;
+		BOOL CameraRedirection;
+
+		BOOL PassthroughIsBlacklist;
+		char** Passthrough;
+		size_t PassthroughCount;
+		char** Intercept;
+		size_t InterceptCount;
+
+		/* clipboard specific settings */
+#if !defined(WITHOUT_FREERDP_3x_DEPRECATED)
+		WINPR_DEPRECATED_VAR("[since 3.6.0] Unused, ignore", BOOL TextOnly);
+		WINPR_DEPRECATED_VAR("[since 3.6.0] Unused, ignore", UINT32 MaxTextLength);
+
+		/* gfx settings */
+		WINPR_DEPRECATED_VAR("[since 3.6.0] Unused, ignore", BOOL DecodeGFX);
+#endif
+
+		/* modules */
+		char** Modules; /* module file names to load */
+		size_t ModulesCount;
+
+		char** RequiredPlugins; /* required plugin names */
+		size_t RequiredPluginsCount;
+
+		char* CertificateFile;
+		char* CertificateContent;
+
+		char* PrivateKeyFile;
+		char* PrivateKeyContent;
+
+		/* Data extracted from CertificateContent or CertificateFile  (evaluation in this order) */
+		char* CertificatePEM;
+		size_t CertificatePEMLength;
+
+		/* Data extracted from PrivateKeyContent or PrivateKeyFile  (evaluation in this order) */
+		char* PrivateKeyPEM;
+		size_t PrivateKeyPEMLength;
+
+		wIniFile* ini;
+
+		/* target continued */
+		UINT32 TargetTlsSecLevel; /** @since version 3.2.0 */
+
+		/* codecs */
+		BOOL RFX; /** @since version 3.24.0 */
+		BOOL NSC; /** @since version 3.24.0 */
+
+		/* server SamFile */
+		char* SamFile; /** @since version 3.25.0 */
+
+		/* target smartcard */
+		BOOL TargetSmartcardAuth;  /** @since version 3.25.0 */
+		char* TargetSmartcardCert; /** @since version 3.25.0 */
+		size_t TargetSmartcardCertLength; /** @since version 3.25.0 */
+		char* TargetSmartcardKey;  /** @since version 3.25.0 */
+		size_t TargetSmartcardKeyLength; /** @since version 3.25.0 */
+
+		BOOL ServerExtSecurity; /** @since version 3.32.0 */
+		BOOL ClientExtSecurity; /** @since version 3.32.0 */
+
+		FreeRDP_ProxyCertPolicy TargetCertPolicy; /** @since version 3.32.0 */
+		char* TargetCertPEM;                      /** @since version 3.32.0 */
+		size_t TargetCertPEMLength;               /** @since version 3.32.0 */
+		char* TargetCertHash;                     /** @since version 3.32.0 */
+	};
+
+	/**
+	 * @brief pf_server_config_dump Dumps a default INI configuration file
+	 * @param file The file to write to. Existing files are truncated.
+	 * @return TRUE for success, FALSE if the file could not be written.
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API BOOL pf_server_config_dump(const char* file);
+
+	/**
+	 * @brief pf_server_config_free Releases all resources associated with proxyConfig
+	 *
+	 * @param config A pointer to the proxyConfig to clean up. Might be nullptr.
+	 */
+	FREERDP_API void pf_server_config_free(proxyConfig* config);
+
+	/**
+	 * @brief server_config_load_ini Create a proxyConfig from a already loaded
+	 * INI file.
+	 *
+	 * @param ini A pointer to the parsed INI file. Must NOT be nullptr.
+	 *
+	 * @return A proxyConfig or nullptr in case of failure.
+	 */
+	WINPR_ATTR_MALLOC(pf_server_config_free, 1)
+	FREERDP_API proxyConfig* server_config_load_ini(wIniFile* ini);
+	/**
+	 * @brief pf_server_config_load_file Create a proxyConfig from a INI file found at path.
+	 *
+	 * @param path The path of the INI file
+	 *
+	 * @return A proxyConfig or nullptr in case of failure.
+	 */
+	WINPR_ATTR_MALLOC(pf_server_config_free, 1)
+	FREERDP_API proxyConfig* pf_server_config_load_file(const char* path);
+
+	/**
+	 * @brief pf_server_config_load_buffer Create a proxyConfig from a memory string buffer in INI
+	 * file format
+	 *
+	 * @param buffer A pointer to the '\0' terminated INI string.
+	 *
+	 * @return A proxyConfig or nullptr in case of failure.
+	 */
+	WINPR_ATTR_MALLOC(pf_server_config_free, 1)
+	FREERDP_API proxyConfig* pf_server_config_load_buffer(const char* buffer);
+
+	/**
+	 * @brief pf_server_config_print Print the configuration to stdout
+	 *
+	 * @param config A pointer to the configuration to print. Must NOT be nullptr.
+	 */
+	FREERDP_API void pf_server_config_print(const proxyConfig* config);
+
+	/**
+	 * @brief pf_config_required_plugins_count
+	 *
+	 * @param config A pointer to the proxyConfig. Must NOT be nullptr.
+	 *
+	 * @return The number of required plugins configured.
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API size_t pf_config_required_plugins_count(const proxyConfig* config);
+
+	/**
+	 * @brief pf_config_required_plugin
+	 * @param config A pointer to the proxyConfig. Must NOT be nullptr.
+	 * @param index The index of the plugin to return
+	 *
+	 * @return The name of the plugin or nullptr.
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API const char* pf_config_required_plugin(const proxyConfig* config, size_t index);
+
+	/**
+	 * @brief pf_config_modules_count
+	 *
+	 * @param config A pointer to the proxyConfig. Must NOT be nullptr.
+	 *
+	 * @return The number of proxy modules configured.
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API size_t pf_config_modules_count(const proxyConfig* config);
+
+	/**
+	 * @brief pf_config_modules
+	 * @param config A pointer to the proxyConfig. Must NOT be nullptr.
+	 *
+	 * @return An array of strings of size pf_config_modules_count with the module names.
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API const char** pf_config_modules(const proxyConfig* config);
+
+	/**
+	 * @brief pf_config_clone Create a copy of the configuration
+	 * @param dst A pointer that receives the newly allocated copy
+	 * @param config The source configuration to copy
+	 *
+	 * @return TRUE for success, FALSE otherwise
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API BOOL pf_config_clone(proxyConfig** dst, const proxyConfig* config);
+
+	/**
+	 * @brief pf_config_plugin Register a proxy plugin handling event filtering
+	 * defined in the configuration.
+	 *
+	 * @param plugins_manager The plugin manager
+	 * @param userdata A proxyConfig* to use as reference
+	 *
+	 * @return  TRUE for success, FALSE for failure
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API BOOL pf_config_plugin(proxyPluginsManager* plugins_manager, void* userdata);
+
+	/**
+	 * @brief pf_config_get get a value for a section/key
+	 * @param config A pointer to the proxyConfig. Must NOT be nullptr.
+	 * @param section The name of the section the key is in, must not be \b nullptr
+	 * @param key The name of the key to look for. Must not be \b nullptr
+	 *
+	 * @return A pointer to the value for \b section/key or \b nullptr if not found
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API const char* pf_config_get(const proxyConfig* config, const char* section,
+	                                      const char* key);
+
+	/**
+	 * @brief Convert a \ref FreeRDP_ProxyCertPolicy value to a string
+	 * @param policy The value to convert
+	 * @return A string representation of the enum value
+	 * @since version 3.32.0
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API const char* pf_config_policy_to_str(FreeRDP_ProxyCertPolicy policy);
+
+	/**
+	 * @brief Convert a string to a \ref FreeRDP_ProxyCertPolicy value
+	 * @param val The string to try to convert
+	 * @return A \ref FreeRDP_ProxyCertPolicy value matching \ref val. \ref
+	 * FREERDP_PROXY_CERT_POLICY_DENY if not mappable.
+	 * @since version 3.32.0
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API FreeRDP_ProxyCertPolicy pf_config_policy_from_str(const char* val);
+
+#ifdef __cplusplus
+}
+#endif
+
+/** @} */
+
+#endif /* FREERDP_SERVER_PROXY_CONFIG_H */

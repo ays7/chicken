@@ -80,6 +80,8 @@
 
         server_ = [(id)server retain];
         password = [[server password] retain];
+        if ([server respondsToSelector:@selector(username)] && [[server username] length] > 0)
+            username = [[server username] retain];
         
         _eventFilter = [[EventFilter alloc] init];
         [_eventFilter setConnection: self];

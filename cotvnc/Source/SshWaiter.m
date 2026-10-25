@@ -20,6 +20,7 @@
 #import "SshWaiter.h"
 #import "IServerData.h"
 #import "RFBConnection.h"
+#import "RDPConnection.h"
 #import "SshTunnel.h"
 
 #import <sys/socket.h>
@@ -210,22 +211,35 @@
 
 - (void)waitForData
 {
-    [self waitForDataOn:currentSock];
+    if ([server remoteProtocol] == RemoteProtocolRDP) {
+        if (currentSock >= 0) {
+            close(currentSock);
+            currentSock = -1;
+        }
+        [self performSelectorOnMainThread:@selector(finishConnection)
+                               withObject:nil waitUntilDone:NO];
+    } else {
+        [self waitForDataOn:currentSock];
+    }
 }
 
 /* The connection's been established and we have data waiting for us. Here, we
- * set up RFBConnection and related objects. This runs in the main thread. */
+ * set up connection and related objects. This runs in the main thread. */
 - (void)finishConnection
 {
-    NSFileHandle    *fh;
-    RFBConnection   *conn;
+    NSFileHandle    *fh = nil;
+    id<RemoteConnection> conn;
     
     if (delegate == nil)
         return;
 
-    fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
-                                       closeOnDealloc: YES];
-    conn = [[RFBConnection alloc] initWithFileHandle:fh server:server];
+    if ([server remoteProtocol] == RemoteProtocolRDP) {
+        conn = [[RDPConnection alloc] initWithFileHandle:nil server:server];
+    } else {
+        fh = [[NSFileHandle alloc] initWithFileDescriptor: currentSock
+                                           closeOnDealloc: YES];
+        conn = [[RFBConnection alloc] initWithFileHandle:fh server:server];
+    }
     [conn setSshTunnel:tunnel];
     [delegate connectionSucceeded:conn];
     [tunnel sshTunnelConnected];
@@ -233,7 +247,7 @@
     [fh release];
     [tunnel release];
     tunnel = nil;
-    [conn release];
+    [(id)conn release];
     currentSock = -1;
 }
 

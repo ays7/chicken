@@ -19,10 +19,10 @@
 
 #import <AppKit/AppKit.h>
 #import "ConnectionWaiter.h"
+#import "RemoteConnection.h"
 
 @protocol IServerData;
 
-@class RFBConnection;
 @class RFBView;
 @class SshTunnel;
 
@@ -32,7 +32,7 @@ NSNetServiceDelegate,NSWindowDelegate,
 #endif
 ConnectionWaiterDelegate>
 {
-    RFBConnection   *connection;
+    id<RemoteConnection> connection;
     IBOutlet RFBView *rfbView;
     IBOutlet NSWindow    *window;
     id<IServerData> server_;
@@ -73,7 +73,7 @@ ConnectionWaiterDelegate>
     NSArray                         *_nibTopLevelObjects;
 }
 
-- (id)initWithConnection:(RFBConnection*)conn;
+- (id)initWithConnection:(id<RemoteConnection>)conn;
 - (void)dealloc;
 
 - (BOOL)viewOnly;
@@ -111,6 +111,6 @@ ConnectionWaiterDelegate>
 - (void)windowWillClose:(NSNotification *)aNotification;
 - (void)windowDidResize:(NSNotification *)aNotification;
 
-- (RFBConnection *)connection;
+- (id<RemoteConnection>)connection;
 
 @end

@@ -6,9 +6,9 @@
 
 [![Platform](https://img.shields.io/badge/macOS-11.0%2B-lightgray)](#)
 [![Architecture](https://img.shields.io/badge/architecture-Universal%20(Apple%20Silicon%20%2F%20Intel)-blue.svg)](#)
-[![License](https://img.shields.io/badge/license-GPL--2.0-green.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](LICENSE.md)
 
-**ForkOfTheChicken** (short for *ForkOfTheChickenOfTheVNC*) is a modernized, high-performance, native VNC client for macOS. Based on the classic *Chicken of the VNC* codebase, this fork updates the application to run natively and smoothly on modern macOS architectures (including Apple Silicon and Intel) and modern display configurations.
+**ForkOfTheChicken** (short for *ForkOfTheChickenOfTheVNC*) is a modernized, high-performance, native VNC and RDP remote desktop client for macOS. Based on the classic *Chicken of the VNC* codebase, this fork updates the application to run natively and smoothly on modern macOS architectures (including Apple Silicon and Intel) and modern display configurations.
 
 ---
 
@@ -67,4 +67,6 @@ ForkOfTheChicken has undergone significant modernization to enhance stability, d
 
 ## 📄 License
 
-ForkOfTheChicken is distributed under the GNU General Public License v2.0. See the [LICENSE.md](LICENSE.md) file for details.
+ForkOfTheChicken is distributed under the **GNU General Public License v2.0 or later** (GPL-2.0+). See [LICENSE.md](LICENSE.md) for details.
+
+Precompiled release binaries bundling FreeRDP and OpenSSL (Apache 2.0) are distributed under **GNU General Public License v3.0** in accordance with Section 9 of the GPL-2.0 ("or later") clause.

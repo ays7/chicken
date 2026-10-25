@@ -66,9 +66,11 @@
 - (NSString*)translateDisplayName:(NSString*)aName forHost:(NSString*)aHost;
 - (void)setDisplayNameTranslation:(NSString*)translation forName:(NSString*)aName forHost:(NSString*)aHost;
 
+#import "RemoteConnection.h"
+
 - (BOOL)createConnectionWithFileHandle:(NSFileHandle*)file 
     server:(id<IServerData>) server;
-- (void)successfulConnection: (RFBConnection *)theConnection;
+- (void)successfulConnection: (id<RemoteConnection>)theConnection;
 
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;

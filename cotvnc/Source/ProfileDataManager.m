@@ -31,6 +31,18 @@
             [mProfiles setObject:p forKey:key];
             [p release];
 		}
+
+        if (![mProfiles objectForKey:@"Windows"]) {
+            Profile *winProfile = [[Profile alloc] initWithProfile:[self defaultProfile] andName:@"Windows"];
+            [winProfile setCommandKeyPreference:kRemoteWindowsModifier];
+            [winProfile setAltKeyPreference:kRemoteAltModifier];
+            [winProfile setControlKeyPreference:kRemoteControlModifier];
+            [winProfile setShiftKeyPreference:kRemoteShiftModifier];
+            [mProfiles setObject:winProfile forKey:@"Windows"];
+            [mProfileDicts setObject:[winProfile dictionary] forKey:@"Windows"];
+            [[PrefController sharedController] setProfileDict:mProfileDicts];
+            [winProfile release];
+        }
 	}
 	
 	return self;

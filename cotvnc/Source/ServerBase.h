@@ -37,6 +37,9 @@
 	bool      _fullscreen;
     Profile   *_profile;
 
+    RemoteProtocol _remoteProtocol;
+    NSString  *_username;
+
     NSString  *_sshHost;
     in_port_t _sshPort; // 0 means use default port
     NSString  *_sshUser;
@@ -50,6 +53,9 @@
 - (NSString*)name;
 - (NSString*)host;
 - (NSString*)password;
+- (RemoteProtocol)remoteProtocol;
+- (NSString*)username;
+- (void)getParsedDomain:(NSString **)outDomain username:(NSString **)outUser;
 - (BOOL)rememberPassword;
 - (int)port;
 - (bool)shared;
@@ -67,6 +73,8 @@
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;
 - (void)setPassword: (NSString*)password;
+- (void)setRemoteProtocol: (RemoteProtocol)protocol;
+- (void)setUsername: (NSString*)username;
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setPort: (int)port;

@@ -111,6 +111,15 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	return self;
 }
 
+- (id)initWithConnection: (id<RemoteConnection>)connection
+{
+    if ((self = [self init]))
+    {
+        [self setConnection:connection];
+    }
+    return self;
+}
+
 
 - (void)dealloc
 {
@@ -130,10 +139,10 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 #pragma mark Talking to the server
 
 
-- (RFBConnection *)connection
+- (id<RemoteConnection>)connection
 {  return _connection;  }
 
-- (void)setConnection: (RFBConnection *)connection
+- (void)setConnection: (id<RemoteConnection>)connection
 {
 	_connection = connection;
     _profile = [connection profile];

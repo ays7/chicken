@@ -43,7 +43,7 @@
     [super dealloc];
 }
 
-- (void)connectionSucceeded:(RFBConnection *)conn
+- (void)connectionSucceeded:(id<RemoteConnection>)conn
 {
 	[[RFBConnectionManager sharedManager] successfulConnection:conn];
     [(AppDelegate *)[NSApp delegate] removeDockConnection:self];

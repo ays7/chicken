@@ -32,11 +32,18 @@
 @interface ServerDataViewController : NSWindowController
                                             <ConnectionWaiterDelegate, NSControlTextEditingDelegate>
 {
+    IBOutlet NSSegmentedControl *protocolControl;
+    IBOutlet NSTextField *protocolLabel;
+    IBOutlet NSTextField *displayLabel;
     IBOutlet NSTextField *display;
     IBOutlet NSTextField *displayDescription;
     IBOutlet NSTextField *hostName;
+    IBOutlet NSTextField *username;
+    IBOutlet NSTextField *usernameLabel;
     IBOutlet NSTextField *password;
+    IBOutlet NSTextField *passwordLabel;
     IBOutlet NSPopUpButton *profilePopup;
+    IBOutlet NSTextField *profileLabel;
     IBOutlet NSButton *rememberPwd;
 
     IBOutlet NSButton *shared;
@@ -44,6 +51,7 @@
 	IBOutlet NSButton *save;
     IBOutlet NSButton *useSshTunnel;
     IBOutlet NSTextField *sshHost;
+    IBOutlet NSTextField *sshHostLabel;
 
 	IBOutlet NSBox *box;
 	IBOutlet NSButton *connectBtn;
@@ -67,6 +75,8 @@
 - (void)setServer:(id<IServerData>)server;
 - (id<IServerData>)server;
 
+- (IBAction)protocolChanged:(id)sender;
+- (IBAction)usernameChanged:(id)sender;
 - (IBAction)passwordChanged:(id)sender;
 - (IBAction)rememberPwdChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;
@@ -82,7 +92,7 @@
 
 - (IBAction)cancelConnect: (id)sender;
 
-- (void)connectionSucceeded: (RFBConnection *)theConnection;
+- (void)connectionSucceeded: (id<RemoteConnection>)theConnection;
 - (void)connectionFailed;
 - (void)connectionAttemptEnded;
 

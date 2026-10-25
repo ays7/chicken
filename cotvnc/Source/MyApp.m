@@ -61,7 +61,7 @@
 				if ( [keyManager performEquivalentWithCharacters: characters modifiers: modifiers] )
 				{
 					lastCharacters = [characters retain];
-					RFBConnection *delegate = [rfbView delegate];
+					id<RemoteConnection> delegate = [rfbView delegate];
 					[[delegate eventFilter] clearAllEmulationStates];
 				}
 				else

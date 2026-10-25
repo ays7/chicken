@@ -39,6 +39,11 @@
 		7F7A93FC05E71B5C00E20416 /* RawEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */; };
 		7F7A93FE05E71B5C00E20416 /* RFBConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DD033DB4A801A8010C /* RFBConnection.h */; };
 		7F7A93FF05E71B5C00E20416 /* RFBConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */; };
+		C07000010000000000000002 /* RemoteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000010000000000000001 /* RemoteConnection.h */; };
+		C07000020000000000000002 /* RDPFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000020000000000000001 /* RDPFrameBuffer.h */; };
+		C07000020000000000000004 /* RDPFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000020000000000000003 /* RDPFrameBuffer.m */; };
+		C07000030000000000000002 /* RDPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000030000000000000001 /* RDPConnection.h */; };
+		C07000030000000000000004 /* RDPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000030000000000000003 /* RDPConnection.m */; };
 		7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */; };
 		7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E3033DB4A801A8010C /* rfbproto.h */; };
 		7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E4033DB4A801A8010C /* RFBProtocol.h */; };
@@ -130,6 +135,11 @@
 		8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */; };
 		8A5828462FAA24D700A4E226 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8A5828452FAA24D700A4E226 /* Localizable.xcstrings */; };
 		8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */; };
+		8AF000022FAA000100000001 /* libfreerdp3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000012FAA000100000001 /* libfreerdp3.a */; };
+		8AF000042FAA000100000001 /* libfreerdp-client3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000032FAA000100000001 /* libfreerdp-client3.a */; };
+		8AF000062FAA000100000001 /* libwinpr3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000052FAA000100000001 /* libwinpr3.a */; };
+		8AF000082FAA000100000001 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000072FAA000100000001 /* libssl.a */; };
+		8AF0000A2FAA000100000001 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000092FAA000100000001 /* libcrypto.a */; };
 		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
 		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
 		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
@@ -263,6 +273,11 @@
 		85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SquareRoot.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/SquareRoot.swift; sourceTree = "<group>"; };
 		8A5828452FAA24D700A4E226 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = "<group>"; };
 		8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = "libjpeg-turbo/lib/libturbojpeg.a"; sourceTree = "<group>"; };
+		8AF000012FAA000100000001 /* libfreerdp3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreerdp3.a; path = "freerdp/lib/libfreerdp3.a"; sourceTree = "<group>"; };
+		8AF000032FAA000100000001 /* libfreerdp-client3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreerdp-client3.a; path = "freerdp/lib/libfreerdp-client3.a"; sourceTree = "<group>"; };
+		8AF000052FAA000100000001 /* libwinpr3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwinpr3.a; path = "freerdp/lib/libwinpr3.a"; sourceTree = "<group>"; };
+		8AF000072FAA000100000001 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "freerdp/lib/libssl.a"; sourceTree = "<group>"; };
+		8AF000092FAA000100000001 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "freerdp/lib/libcrypto.a"; sourceTree = "<group>"; };
 		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8AC541EB2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/AuthPrompt.xib; sourceTree = "<group>"; };
 		8AC541EC2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ConnectionDialog.xib; sourceTree = "<group>"; };
@@ -402,6 +417,11 @@
 		F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RawEncodingReader.m; sourceTree = "<group>"; };
 		F5DC71DD033DB4A801A8010C /* RFBConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnection.h; sourceTree = "<group>"; };
 		F5DC71DE033DB4A801A8010C /* RFBConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnection.m; sourceTree = "<group>"; };
+		C07000010000000000000001 /* RemoteConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RemoteConnection.h; sourceTree = "<group>"; };
+		C07000020000000000000001 /* RDPFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPFrameBuffer.h; sourceTree = "<group>"; };
+		C07000020000000000000003 /* RDPFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPFrameBuffer.m; sourceTree = "<group>"; };
+		C07000030000000000000001 /* RDPConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPConnection.h; sourceTree = "<group>"; };
+		C07000030000000000000003 /* RDPConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPConnection.m; sourceTree = "<group>"; };
 		F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnectionManager.h; sourceTree = "<group>"; };
 		F5DC71E0033DB4A801A8010C /* RFBConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnectionManager.m; sourceTree = "<group>"; };
 		F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBHandshaker.h; sourceTree = "<group>"; };
@@ -443,6 +463,11 @@
 			files = (
 				8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */,
 				8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */,
+				8AF000022FAA000100000001 /* libfreerdp3.a in Frameworks */,
+				8AF000042FAA000100000001 /* libfreerdp-client3.a in Frameworks */,
+				8AF000062FAA000100000001 /* libwinpr3.a in Frameworks */,
+				8AF000082FAA000100000001 /* libssl.a in Frameworks */,
+				8AF0000A2FAA000100000001 /* libcrypto.a in Frameworks */,
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
@@ -511,6 +536,11 @@
 			children = (
 				8A84A09A2D5BC78E00277CAC /* libz.tbd */,
 				8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */,
+				8AF000012FAA000100000001 /* libfreerdp3.a */,
+				8AF000032FAA000100000001 /* libfreerdp-client3.a */,
+				8AF000052FAA000100000001 /* libwinpr3.a */,
+				8AF000072FAA000100000001 /* libssl.a */,
+				8AF000092FAA000100000001 /* libcrypto.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 			);
 			name = Frameworks;
@@ -741,6 +771,11 @@
 				F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */,
 				F5DC71DD033DB4A801A8010C /* RFBConnection.h */,
 				F5DC71DE033DB4A801A8010C /* RFBConnection.m */,
+				C07000010000000000000001 /* RemoteConnection.h */,
+				C07000020000000000000001 /* RDPFrameBuffer.h */,
+				C07000020000000000000003 /* RDPFrameBuffer.m */,
+				C07000030000000000000001 /* RDPConnection.h */,
+				C07000030000000000000003 /* RDPConnection.m */,
 				F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */,
 				F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */,
 				F5DC71E3033DB4A801A8010C /* rfbproto.h */,
@@ -810,6 +845,9 @@
 				7F7A93FC05E71B5C00E20416 /* RawEncodingReader.h in Headers */,
 				7F7A93FE05E71B5C00E20416 /* RFBConnection.h in Headers */,
 				7F7A93FF05E71B5C00E20416 /* RFBConnectionManager.h in Headers */,
+				C07000010000000000000002 /* RemoteConnection.h in Headers */,
+				C07000020000000000000002 /* RDPFrameBuffer.h in Headers */,
+				C07000030000000000000002 /* RDPConnection.h in Headers */,
 				7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */,
 				7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */,
 				7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */,
@@ -1019,6 +1057,8 @@
 				7F7A943D05E71B5C00E20416 /* RawEncodingReader.m in Sources */,
 				7F7A943F05E71B5C00E20416 /* RFBConnection.m in Sources */,
 				7F7A944005E71B5C00E20416 /* RFBConnectionManager.m in Sources */,
+				C07000020000000000000004 /* RDPFrameBuffer.m in Sources */,
+				C07000030000000000000004 /* RDPConnection.m in Sources */,
 				7F7A944105E71B5C00E20416 /* RFBHandshaker.m in Sources */,
 				7F7A944205E71B5C00E20416 /* RFBProtocol.m in Sources */,
 				7F7A944305E71B5C00E20416 /* RFBServerInitReader.m in Sources */,
@@ -1162,10 +1202,17 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/freerdp/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libjpeg-turbo/lib",
+					"$(PROJECT_DIR)/freerdp/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -1204,10 +1251,17 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/freerdp/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libjpeg-turbo/lib",
+					"$(PROJECT_DIR)/freerdp/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -1244,10 +1298,17 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/freerdp/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libjpeg-turbo/lib",
+					"$(PROJECT_DIR)/freerdp/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -1422,10 +1483,17 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/freerdp/include",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libjpeg-turbo/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libjpeg-turbo/lib",
+					"$(PROJECT_DIR)/freerdp/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";

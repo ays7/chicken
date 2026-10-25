@@ -63,9 +63,18 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	ServerStandAlone* server = [[ServerStandAlone alloc] init];
 	NSNumber *portNumber = [url port];
 
+    if ([[url scheme] caseInsensitiveCompare:@"rdp"] == NSOrderedSame) {
+        [server setRemoteProtocol:RemoteProtocolRDP];
+        [server setPort: portNumber ? [portNumber intValue] : 3389];
+    } else {
+        [server setRemoteProtocol:RemoteProtocolVNC];
+        if (portNumber)
+            [server setPort: [portNumber intValue]];
+    }
+
     [server setHost:[url host]];
-	if (portNumber)
-        [server setPort: [portNumber intValue]];
+    if ([url user])
+        [server setUsername:[[url user] stringByRemovingPercentEncoding]];
 	[server setPassword:[url password]];
 	
 	[viewCtrlr setServer:server];

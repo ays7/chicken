@@ -39,6 +39,14 @@
         _rememberPassword = [[dict objectForKey:@"rememberPassword"] boolValue];
         _shared = [[dict objectForKey:@"shared"] boolValue];
 
+        NSNumber *protoNum = [dict objectForKey:@"remoteProtocol"];
+        if (protoNum) {
+            _remoteProtocol = (RemoteProtocol)[protoNum integerValue];
+        } else {
+            _remoteProtocol = RemoteProtocolVNC;
+        }
+        _username = [[dict objectForKey:@"username"] copy];
+
         _viewOnly = [[dict objectForKey:@"viewOnly"] boolValue];
         [_profile autorelease];
         _profile = [[ProfileDataManager sharedInstance]
@@ -75,6 +83,11 @@
     if (_sshHost && _sshPort)
         [propertyDict setObject:[NSNumber numberWithInt:_sshPort]
                          forKey:@"sshPort"];
+
+    [propertyDict setObject:[NSNumber numberWithInteger:_remoteProtocol] forKey:@"remoteProtocol"];
+    if (_username) {
+        [propertyDict setObject:_username forKey:@"username"];
+    }
 
     return propertyDict;
 }
@@ -177,6 +190,9 @@
 
 - (NSString *)keychainServiceName
 {
+    if (_remoteProtocol == RemoteProtocolRDP) {
+        return @"Chicken-RDP";
+    }
     return @"Chicken";
 }
 

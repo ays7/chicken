@@ -44,6 +44,9 @@
         _port = 5900;
         _shared = NO;
 
+        _remoteProtocol = RemoteProtocolVNC;
+        _username = nil;
+
         _viewOnly = NO;
         _profile = [[[ProfileDataManager sharedInstance] defaultProfile]retain];
 
@@ -60,6 +63,7 @@
 {
 	[_host release];
 	[_password release];
+    [_username release];
     [_profile release];
     [_sshHost release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -84,6 +88,56 @@
 - (NSString*)password
 {
     return _password;
+}
+
+- (RemoteProtocol)remoteProtocol
+{
+    return _remoteProtocol;
+}
+
+- (void)setRemoteProtocol:(RemoteProtocol)protocol
+{
+    if (_remoteProtocol != protocol) {
+        _remoteProtocol = protocol;
+        if (protocol == RemoteProtocolRDP && _port == PORT_BASE) {
+            _port = 3389;
+        } else if (protocol == RemoteProtocolVNC && _port == 3389) {
+            _port = PORT_BASE;
+        }
+    }
+}
+
+- (NSString*)username
+{
+    return _username;
+}
+
+- (void)setUsername:(NSString*)username
+{
+    [_username autorelease];
+    _username = [username copy];
+}
+
+- (void)getParsedDomain:(NSString **)outDomain username:(NSString **)outUser
+{
+    NSString *dom = nil;
+    NSString *usr = _username ? [_username stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"";
+
+    if ([usr length] > 0) {
+        NSRange backslash = [usr rangeOfString:@"\\"];
+        if (backslash.location != NSNotFound) {
+            dom = [usr substringToIndex:backslash.location];
+            usr = [usr substringFromIndex:backslash.location + 1];
+        } else {
+            NSRange atSign = [usr rangeOfString:@"@"];
+            if (atSign.location != NSNotFound) {
+                dom = [usr substringFromIndex:atSign.location + 1];
+                usr = [usr substringToIndex:atSign.location];
+            }
+        }
+    }
+    if (outDomain) *outDomain = dom;
+    if (outUser) *outUser = usr;
 }
 
 - (BOOL)rememberPassword
@@ -209,6 +263,9 @@
             } else {
                 // Either no colons or IPv6 notation
                 [self setHost: strippedHost];
+                if (_remoteProtocol == RemoteProtocolRDP) {
+                    _port = 3389;
+                }
                 return NO;
             }
         }
@@ -330,6 +387,8 @@
     [self setHost:[server host]];
     [self setPort:[server port]];
 	[self setPassword:[server password]];
+    [self setRemoteProtocol:[server remoteProtocol]];
+    [self setUsername:[server username]];
     _shared = [server shared];
 
     _viewOnly = [server viewOnly];

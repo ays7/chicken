@@ -1,0 +1,166 @@
+/**
+ * FreeRDP: A Remote Desktop Protocol Implementation
+ * Remote Applications Integrated Locally (RAIL)
+ *
+ * Copyright 2013 Marc-Andre Moreau <marcandre.moreau@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef FREERDP_CHANNEL_RAIL_CLIENT_RAIL_H
+#define FREERDP_CHANNEL_RAIL_CLIENT_RAIL_H
+
+#include <freerdp/api.h>
+#include <freerdp/types.h>
+
+#include <freerdp/rail.h>
+#include <freerdp/message.h>
+#include <freerdp/channels/rail.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+	/**
+	 * Client Interface
+	 */
+
+	typedef struct s_rail_client_context RailClientContext;
+
+	typedef UINT (*pcRailOnOpen)(RailClientContext* context, BOOL* sendHandshake);
+
+	typedef UINT (*pcRailClientExecute)(RailClientContext* context, const RAIL_EXEC_ORDER* exec);
+	typedef UINT (*pcRailClientActivate)(RailClientContext* context,
+	                                     const RAIL_ACTIVATE_ORDER* activate);
+	typedef UINT (*pcRailClientSystemParam)(RailClientContext* context,
+	                                        const RAIL_SYSPARAM_ORDER* sysparam);
+	typedef UINT (*pcRailServerSystemParam)(RailClientContext* context,
+	                                        const RAIL_SYSPARAM_ORDER* sysparam);
+	typedef UINT (*pcRailClientSystemCommand)(RailClientContext* context,
+	                                          const RAIL_SYSCOMMAND_ORDER* syscommand);
+	typedef UINT (*pcRailClientHandshake)(RailClientContext* context,
+	                                      const RAIL_HANDSHAKE_ORDER* handshake);
+	typedef UINT (*pcRailServerHandshake)(RailClientContext* context,
+	                                      const RAIL_HANDSHAKE_ORDER* handshake);
+	typedef UINT (*pcRailServerHandshakeEx)(RailClientContext* context,
+	                                        const RAIL_HANDSHAKE_EX_ORDER* handshakeEx);
+	typedef UINT (*pcRailClientNotifyEvent)(RailClientContext* context,
+	                                        const RAIL_NOTIFY_EVENT_ORDER* notifyEvent);
+	typedef UINT (*pcRailClientWindowMove)(RailClientContext* context,
+	                                       const RAIL_WINDOW_MOVE_ORDER* windowMove);
+	typedef UINT (*pcRailServerLocalMoveSize)(RailClientContext* context,
+	                                          const RAIL_LOCALMOVESIZE_ORDER* localMoveSize);
+	typedef UINT (*pcRailServerMinMaxInfo)(RailClientContext* context,
+	                                       const RAIL_MINMAXINFO_ORDER* minMaxInfo);
+	typedef UINT (*pcRailClientInformation)(RailClientContext* context,
+	                                        const RAIL_CLIENT_STATUS_ORDER* clientStatus);
+	typedef UINT (*pcRailClientSystemMenu)(RailClientContext* context,
+	                                       const RAIL_SYSMENU_ORDER* sysmenu);
+	typedef UINT (*pcRailServerTaskBarInfo)(RailClientContext* context,
+	                                        const RAIL_TASKBAR_INFO_ORDER* taskBarInfo);
+	typedef UINT (*pcRailClientLanguageBarInfo)(RailClientContext* context,
+	                                            const RAIL_LANGBAR_INFO_ORDER* langBarInfo);
+	typedef UINT (*pcRailServerLanguageBarInfo)(RailClientContext* context,
+	                                            const RAIL_LANGBAR_INFO_ORDER* langBarInfo);
+	typedef UINT (*pcRailClientLanguageIMEInfo)(RailClientContext* context,
+	                                            const RAIL_LANGUAGEIME_INFO_ORDER* langImeInfo);
+	typedef UINT (*pcRailServerExecuteResult)(RailClientContext* context,
+	                                          const RAIL_EXEC_RESULT_ORDER* execResult);
+	typedef UINT (*pcRailClientGetAppIdRequest)(RailClientContext* context,
+	                                            const RAIL_GET_APPID_REQ_ORDER* getAppIdReq);
+	typedef UINT (*pcRailServerGetAppIdResponse)(RailClientContext* context,
+	                                             const RAIL_GET_APPID_RESP_ORDER* getAppIdResp);
+	typedef UINT (*pcRailServerZOrderSync)(RailClientContext* context,
+	                                       const RAIL_ZORDER_SYNC* zorder);
+	typedef UINT (*pcRailServerCloak)(RailClientContext* context, const RAIL_CLOAK* cloak);
+	typedef UINT (*pcRailClientCloak)(RailClientContext* context, const RAIL_CLOAK* cloak);
+	typedef UINT (*pcRailServerPowerDisplayRequest)(RailClientContext* context,
+	                                                const RAIL_POWER_DISPLAY_REQUEST* power);
+	typedef UINT (*pcRailClientSnapArrange)(RailClientContext* context,
+	                                        const RAIL_SNAP_ARRANGE* snap);
+	typedef UINT (*pcRailServerGetAppidResponseExtended)(RailClientContext* context,
+	                                                     const RAIL_GET_APPID_RESP_EX* id);
+	typedef UINT (*pcRailClientCompartmentInfo)(RailClientContext* context,
+	                                            const RAIL_COMPARTMENT_INFO_ORDER* compartmentInfo);
+	typedef UINT (*pcRailClientTextScale)(RailClientContext* context, UINT32 TextScale);
+	typedef UINT (*pcRailClientCaretBlinkRate)(RailClientContext* context, UINT32 CaretBlinkRate);
+
+	struct s_rail_client_context
+	{
+		void* handle;
+		void* custom;
+
+		WINPR_ATTR_NODISCARD pcRailClientExecute ClientExecute;
+		WINPR_ATTR_NODISCARD pcRailClientActivate ClientActivate;
+		WINPR_ATTR_NODISCARD pcRailClientSystemParam ClientSystemParam;
+		WINPR_ATTR_NODISCARD pcRailServerSystemParam ServerSystemParam;
+		WINPR_ATTR_NODISCARD pcRailClientSystemCommand ClientSystemCommand;
+		WINPR_ATTR_NODISCARD pcRailClientHandshake ClientHandshake;
+
+		/** @brief (optional) callback when a [MS-RDPERP] 2.2.2.2.1 Handshake PDU
+		 * (TS_RAIL_ORDER_HANDSHAKE) is received. A default implementation exists and responds with
+		 * the current \ref FreeRDP_ClientBuild
+		 *
+		 *  @bug before 3.27.0 the response was sent before this callback was invoked. Now the
+		 * default implementation provides this and if overridden by client implementations they
+		 * must handle the response themselves.
+		 */
+		WINPR_ATTR_NODISCARD pcRailServerHandshake ServerHandshake;
+
+		/** @brief (optional) callback when a [MS-RDPERP] 2.2.2.2.3 HandshakeEx PDU
+		 * (TS_RAIL_ORDER_HANDSHAKE_EX) is received. A default implementation exists and responds
+		 * with the current \ref FreeRDP_ClientBuild
+		 *
+		 *  @bug before 3.27.0 the response was sent before this callback was invoked. Now the
+		 * default implementation provides this and if overridden by client implementations they
+		 * must handle the response themselves.
+		 */
+		WINPR_ATTR_NODISCARD pcRailServerHandshakeEx ServerHandshakeEx;
+		WINPR_ATTR_NODISCARD pcRailClientNotifyEvent ClientNotifyEvent;
+		WINPR_ATTR_NODISCARD pcRailClientWindowMove ClientWindowMove;
+		WINPR_ATTR_NODISCARD pcRailServerLocalMoveSize ServerLocalMoveSize;
+		WINPR_ATTR_NODISCARD pcRailServerMinMaxInfo ServerMinMaxInfo;
+		WINPR_ATTR_NODISCARD pcRailClientInformation ClientInformation;
+		WINPR_ATTR_NODISCARD pcRailClientSystemMenu ClientSystemMenu;
+		WINPR_ATTR_NODISCARD pcRailServerTaskBarInfo ServerTaskBarInfo;
+		WINPR_ATTR_NODISCARD pcRailClientLanguageBarInfo ClientLanguageBarInfo;
+		WINPR_ATTR_NODISCARD pcRailServerLanguageBarInfo ServerLanguageBarInfo;
+		WINPR_ATTR_NODISCARD pcRailClientLanguageIMEInfo ClientLanguageIMEInfo;
+		WINPR_ATTR_NODISCARD pcRailServerExecuteResult ServerExecuteResult;
+		WINPR_ATTR_NODISCARD pcRailClientGetAppIdRequest ClientGetAppIdRequest;
+		WINPR_ATTR_NODISCARD pcRailServerGetAppIdResponse ServerGetAppIdResponse;
+		WINPR_ATTR_NODISCARD pcRailServerZOrderSync ServerZOrderSync;
+		WINPR_ATTR_NODISCARD pcRailClientCloak ClientCloak;
+		WINPR_ATTR_NODISCARD pcRailServerCloak ServerCloak;
+		WINPR_ATTR_NODISCARD pcRailServerPowerDisplayRequest ServerPowerDisplayRequest;
+		WINPR_ATTR_NODISCARD pcRailClientSnapArrange ClientSnapArrange;
+		WINPR_ATTR_NODISCARD pcRailServerGetAppidResponseExtended ServerGetAppidResponseExtended;
+		WINPR_ATTR_NODISCARD pcRailClientCompartmentInfo ClientCompartmentInfo;
+#if !defined(WITHOUT_FREERDP_3x_DEPRECATED)
+		WINPR_DEPRECATED_VAR("[since 3.27.0] unused", WINPR_ATTR_NODISCARD pcRailOnOpen OnOpen);
+#else
+	    void* reserved;
+#endif
+		WINPR_ATTR_NODISCARD pcRailClientTextScale ClientTextScale;
+		WINPR_ATTR_NODISCARD pcRailClientCaretBlinkRate ClientCaretBlinkRate;
+	};
+
+	WINPR_ATTR_NODISCARD
+	FREERDP_API UINT client_rail_server_start_cmd(RailClientContext* context);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FREERDP_CHANNEL_RAIL_CLIENT_RAIL_H */

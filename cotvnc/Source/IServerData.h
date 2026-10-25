@@ -33,6 +33,11 @@ typedef enum
 	CONNECT,
 } SUPPORT_TYPE;
 
+typedef NS_ENUM(NSInteger, RemoteProtocol) {
+	RemoteProtocolVNC = 0,
+	RemoteProtocolRDP = 1,
+};
+
 @class Profile;
 
 @protocol ServerDelegate
@@ -54,6 +59,8 @@ typedef enum
 - (bool)shared;
 
 - (bool)viewOnly;
+- (RemoteProtocol)remoteProtocol;
+- (NSString*)username;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
 - (NSString *)sshHost;
@@ -64,6 +71,8 @@ typedef enum
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;
 - (void)setPassword: (NSString*)password;
+- (void)setRemoteProtocol: (RemoteProtocol)protocol;
+- (void)setUsername: (NSString*)username;
 - (void)setDisplay: (int)display;
 - (void)setPort: (int)port;
 - (void)setShared: (bool)shared;

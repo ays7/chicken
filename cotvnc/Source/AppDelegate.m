@@ -16,6 +16,9 @@
 #import "ServerDataManager.h"
 #import "DockConnection.h"
 #import "TouchBarController.h"
+#import "ServerDataViewController.h"
+#import "ServerStandAlone.h"
+#import "IServerData.h"
 
 @implementation AppDelegate
 
@@ -219,6 +222,87 @@
      * from our array. */
     [[conn retain] autorelease];
     [dockConnections removeObject:conn];
+}
+
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename
+{
+    if ([[filename pathExtension] caseInsensitiveCompare:@"rdp"] == NSOrderedSame)
+    {
+        NSStringEncoding encoding = 0;
+        NSError *error = nil;
+        NSString *content = [NSString stringWithContentsOfFile:filename usedEncoding:&encoding error:&error];
+        if (!content && error)
+        {
+            // Fallback to UTF-8 or ASCII if usedEncoding could not detect
+            content = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:nil];
+        }
+
+        NSString *host = nil;
+        int port = 3389;
+        NSString *user = nil;
+        NSString *domain = nil;
+
+        if (content)
+        {
+            NSArray *lines = [content componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            for (NSString *rawLine in lines)
+            {
+                NSString *line = [rawLine stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                if ([line length] == 0 || [line hasPrefix:@"#"])
+                    continue;
+
+                if ([line hasPrefix:@"full address:s:"])
+                {
+                    host = [line substringFromIndex:[@"full address:s:" length]];
+                }
+                else if ([line hasPrefix:@"server port:i:"])
+                {
+                    NSString *portStr = [line substringFromIndex:[@"server port:i:" length]];
+                    port = [portStr intValue];
+                }
+                else if ([line hasPrefix:@"username:s:"])
+                {
+                    user = [line substringFromIndex:[@"username:s:" length]];
+                }
+                else if ([line hasPrefix:@"domain:s:"])
+                {
+                    domain = [line substringFromIndex:[@"domain:s:" length]];
+                }
+            }
+        }
+
+        ServerStandAlone *server = [[ServerStandAlone alloc] init];
+        [server setRemoteProtocol:RemoteProtocolRDP];
+        if (host)
+        {
+            [server setHostAndPort:host];
+            if ([server port] == 0 || [server port] == 5900)
+                [server setPort:port];
+        }
+        else
+        {
+            [server setPort:port];
+        }
+
+        if (domain && [domain length] > 0 && user && [user length] > 0 && [user rangeOfString:@"\\"].location == NSNotFound)
+        {
+            [server setUsername:[NSString stringWithFormat:@"%@\\%@", domain, user]];
+        }
+        else if (user)
+        {
+            [server setUsername:user];
+        }
+
+        [server setProfileName:@"Windows"];
+
+        ServerDataViewController *viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
+        [viewCtrlr setServer:server];
+        [[viewCtrlr window] makeKeyAndOrderFront:self];
+        [server release];
+        [viewCtrlr release];
+        return YES;
+    }
+    return NO;
 }
 
 @end

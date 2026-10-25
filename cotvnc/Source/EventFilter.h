@@ -7,8 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "RemoteConnection.h"
+
 @class Profile;
-@class RFBConnection, RFBView;
+@class RFBView;
 
 /*
  * Philosophy:  The EventFilter sits between an NSResponder and an object that sends
@@ -101,7 +103,7 @@ typedef enum {
 
 
 @interface EventFilter : NSObject {
-	RFBConnection *_connection;
+	id<RemoteConnection> _connection;
 	Profile *_profile;
 	RFBView *_view;
 	
@@ -121,9 +123,11 @@ typedef enum {
 	NSTimer *_tapAndClickTimer;
 }
 
+- (id)initWithConnection: (id<RemoteConnection>)connection;
+
 // Talking to the server
-- (RFBConnection *)connection;
-- (void)setConnection: (RFBConnection *)connection;
+- (id<RemoteConnection>)connection;
+- (void)setConnection: (id<RemoteConnection>)connection;
 - (RFBView *)view;
 - (void)setView: (RFBView *)view;
 

@@ -26,14 +26,14 @@
 #import <Cocoa/Cocoa.h>
 #import "IServerData.h"
 #import "SshTunnel.h"
+#import "RemoteConnection.h"
 
 @class Profile;
-@class RFBConnection;
 @class ConnectionWaiter;
 
 @protocol ConnectionWaiterDelegate <NSObject>
 
-- (void)connectionSucceeded: (RFBConnection *)conn;
+- (void)connectionSucceeded: (id<RemoteConnection>)conn;
 - (void)connectionFailed;
 
 @optional
