@@ -7,6 +7,11 @@
   <link rel="canonical" href="https://ays7.github.io/chicken/rdp.html" />
   <meta property="og:title" content="Chicken Fork &mdash; Rdp" />
   <meta property="og:url" content="https://ays7.github.io/chicken/rdp.html" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="stylesheet" href="style_sheet.css" type="text/css" />
   <title>Microsoft Remote Desktop (RDP) &mdash; Chicken Fork</title>
 </head>
@@ -16,7 +21,7 @@
   <!-- Sidebar Navigation -->
   <aside class="sidebar">
     <a href="index.html" class="brand">
-      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <img src="ChickenFork.png" alt="Chicken Fork Logo" class="brand-icon" />
       <div class="brand-text">
         <span class="brand-title">Chicken Fork</span>
         <span class="brand-subtitle">Documentation</span>
@@ -55,23 +60,27 @@
   <!-- Main Content Area -->
   <main class="content">
     <div class="hero">
-      <img src="icon.png" alt="Chicken Fork Logo" class="hero-logo" />
+      <img src="ChickenFork.png" alt="Chicken Fork Logo" class="hero-logo" />
       <div class="hero-text">
         <h1>Microsoft Remote Desktop (RDP) <span class="badge badge-rdp">New in 2026.11</span></h1>
-        <p class="hero-tagline">High-performance native RDP client powered by FreeRDP 3.32.2 and OpenSSL 3.x.</p>
-        <p class="tagline-fun">Connecting to Windows without breaking a sweat &mdash; brawwwK!</p>
+        <p class="hero-tagline">High-performance native RDP client powered by FreeRDP 3.32.2 and OpenSSL 3.x for Windows and Linux.</p>
+        <p class="tagline-fun">Connecting to Windows and Linux without breaking a sweat &mdash; brawwwK!</p>
       </div>
     </div>
 
     <h2>Overview</h2>
-    <p>Starting with version <strong>2026.11</strong>, Chicken Fork includes full native support for the <strong>Microsoft Remote Desktop Protocol (RDP)</strong>. Powered by statically linked <strong>FreeRDP 3.32.2</strong> and <strong>OpenSSL 3.x</strong>, Chicken Fork connects smoothly to modern Windows Server and Windows 10/11 desktops with enterprise-grade security and low-latency graphics.</p>
+    <p>Starting with version <strong>2026.11</strong>, Chicken Fork includes full native support for the <strong>Microsoft Remote Desktop Protocol (RDP)</strong>. Powered by statically linked <strong>FreeRDP 3.32.2</strong> and <strong>OpenSSL 3.x</strong>, Chicken Fork connects smoothly to modern Windows Server, Windows 10/11 desktops, and Linux workstations with enterprise-grade security and low-latency graphics.</p>
+
+    <h3>RDP on Linux</h3>
+    <p>RDP is no longer just for Windows. After Red Hat and other distributions killed X11 along with classic <code>vncserver</code> in favor of Wayland, remote desktop access on Linux shifted heavily toward RDP. Desktops using GNOME (via <code>gnome-remote-desktop</code>) and standalone servers like <code>xrdp</code> now rely on RDP for remote graphical sessions.</p>
+    <p>Chicken Fork provides first-class compatibility with both Windows hosts and Linux RDP servers, delivering hardware-accelerated rendering, dynamic resizing, and secure TLS authentication across platforms.</p>
 
     <div class="callout callout-tip">
       <div class="callout-title">💡 Why Native RDP in Chicken Fork?</div>
-      <p>Instead of juggling separate apps for Linux/Mac (VNC) and Windows (RDP), Chicken Fork brings both remote desktop protocols under one native, lightweight macOS application with unified bookmarks, SSH tunneling, and Keychain storage.</p>
+      <p>Instead of juggling separate apps for Linux/Mac and Windows, Chicken Fork brings both remote desktop protocols under one native, lightweight macOS application with unified bookmarks, SSH tunneling, and Keychain storage.</p>
     </div>
 
-    <h2>Connecting to Windows</h2>
+    <h2>Connecting to Windows &amp; Linux Hosts</h2>
     <p>Initiating an RDP connection in Chicken Fork is simple:</p>
 
     <div class="ui-card">

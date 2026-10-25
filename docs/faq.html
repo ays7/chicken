@@ -7,6 +7,11 @@
   <link rel="canonical" href="https://ays7.github.io/chicken/faq.html" />
   <meta property="og:title" content="Chicken Fork &mdash; Faq" />
   <meta property="og:url" content="https://ays7.github.io/chicken/faq.html" />
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="stylesheet" href="style_sheet.css" type="text/css" />
   <title>Frequently Asked Questions &mdash; Chicken Fork</title>
 </head>
@@ -16,7 +21,7 @@
   <!-- Sidebar Navigation -->
   <aside class="sidebar">
     <a href="index.html" class="brand">
-      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <img src="ChickenFork.png" alt="Chicken Fork Logo" class="brand-icon" />
       <div class="brand-text">
         <span class="brand-title">Chicken Fork</span>
         <span class="brand-subtitle">Documentation</span>
@@ -82,9 +87,9 @@
 
     <div class="ui-card">
       <div class="ui-card-header">
-        <span>Can I connect to Windows machines using Microsoft Remote Desktop (RDP)?</span>
+        <span>Can I connect to Windows and Linux machines using Microsoft Remote Desktop (RDP)?</span>
       </div>
-      <p class="ui-card-desc">Yes! Starting in version 2026.11, Chicken Fork includes native RDP support powered by FreeRDP 3.32.2 and OpenSSL 3.x. Select <strong>RDP</strong> in the connection window, double-click any <code>.rdp</code> file, or connect via <code>rdp://</code> URLs. See our dedicated <a href="rdp.html">RDP Guide</a> for complete instructions.</p>
+      <p class="ui-card-desc">Yes! Starting in version 2026.11, Chicken Fork includes native RDP support powered by FreeRDP 3.32.2 and OpenSSL 3.x. RDP is especially common on Linux distributions (such as RHEL, Fedora, and Ubuntu) since X11 and classic <code>vncserver</code> were dropped, leaving RDP (via <code>xrdp</code> or <code>gnome-remote-desktop</code>) as the primary way to connect remotely. Select <strong>RDP</strong> in the connection window, double-click any <code>.rdp</code> file, or connect via <code>rdp://</code> URLs. See our dedicated <a href="rdp.html">RDP Guide</a> for complete instructions.</p>
     </div>
 
     <div class="ui-card">
