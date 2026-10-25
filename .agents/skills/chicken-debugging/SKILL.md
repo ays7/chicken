@@ -1,17 +1,17 @@
 ---
 name: chicken-debugging
 description: >-
-  Troubleshoot and diagnose crashes, exceptions, and protocol faults in ForkOfTheChicken
+  Troubleshoot and diagnose crashes, exceptions, and protocol faults in Chicken Fork
   using unstripped Development builds and LLDB batch sessions. Use whenever a crash,
   hang, or regression occurs during VNC or RDP connections.
 ---
 
-# ForkOfTheChicken Debugging & Troubleshooting Guide
+# Chicken Fork Debugging & Troubleshooting Guide
 
-Use this skill when investigating crashes, unexpected disconnects, or memory faults in ForkOfTheChicken.
+Use this skill when investigating crashes, unexpected disconnects, or memory faults in Chicken Fork.
 
 ## Why Release / Deployment Builds Mislead Debugging
-- ForkOfTheChicken's `Deployment` build enables Link-Time Optimization (LTO) and runs `strip -D` on the binary.
+- Chicken Fork's `Deployment` build enables Link-Time Optimization (LTO) and runs `strip -D` on the binary.
 - When stripped binaries crash, backtraces show nearest preceding symbols and inlined offsets, leading to false diagnoses (e.g., attributing socket or drawing faults to unrelated methods like `-[RFBView setDelegate:]`).
 - **Rule**: Never debug stripped release binaries. Always build the `Development` configuration.
 
@@ -20,8 +20,8 @@ Use this skill when investigating crashes, unexpected disconnects, or memory fau
 ### Step 1: Compile the Development Build
 Compile with full DWARF debug symbols and active architecture only:
 ```bash
-cd cotvnc && xcodebuild -project Chicken.xcodeproj \
-  -scheme ForkOfTheChicken \
+cd cotvnc && xcodebuild -project ChickenFork.xcodeproj \
+  -scheme "Chicken Fork" \
   -configuration Development \
   -derivedDataPath ./DerivedData \
   ONLY_ACTIVE_ARCH=YES \
@@ -30,12 +30,12 @@ cd cotvnc && xcodebuild -project Chicken.xcodeproj \
   build
 ```
 The resulting unstripped `.app` bundle is located at:
-`cotvnc/DerivedData/Build/Products/Development/ForkOfTheChicken.app`
+`cotvnc/DerivedData/Build/Products/Development/Chicken Fork.app`
 
 ### Step 2: Launch Under LLDB for User Reproduction (Option 1)
 Run LLDB in batch mode via a background command (`BypassSandbox: true`):
 ```bash
-lldb cotvnc/DerivedData/Build/Products/Development/ForkOfTheChicken.app --batch \
+lldb "cotvnc/DerivedData/Build/Products/Development/Chicken Fork.app" --batch \
   -o "run" \
   -k "thread backtrace all" \
   -k "frame variable" \
@@ -53,7 +53,7 @@ lldb cotvnc/DerivedData/Build/Products/Development/ForkOfTheChicken.app --batch 
 ### Step 3: Interactive LLDB Shell (Option 2)
 If manual inspection (`po`, breakpoints, memory examination) is desired, run in a separate terminal:
 ```bash
-lldb cotvnc/DerivedData/Build/Products/Development/ForkOfTheChicken.app
+lldb "cotvnc/DerivedData/Build/Products/Development/Chicken Fork.app"
 (lldb) run
 ```
 

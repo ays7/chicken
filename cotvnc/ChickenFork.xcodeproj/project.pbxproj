@@ -264,7 +264,7 @@
 		7FC6DF6E05C31B0D0028A970 /* ServerFromRendezvous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerFromRendezvous.m; sourceTree = "<group>"; };
 		7FD35C1806CC583A00648090 /* ProfileDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ProfileDataManager.h; sourceTree = "<group>"; };
 		7FD35C1906CC583A00648090 /* ProfileDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ProfileDataManager.m; sourceTree = "<group>"; };
-		7FD66F5805E9E2B500229E5C /* ForkOfTheChicken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForkOfTheChicken.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FD66F5805E9E2B500229E5C /* Chicken Fork.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chicken Fork.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FF0C9A305CDBDCE008E39DD /* CotVNC.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; name = CotVNC.scriptSuite; path = Resources/CotVNC.scriptSuite; sourceTree = SOURCE_ROOT; };
 		7FF0C9A705CDC9A0008E39DD /* CotVNC.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; name = CotVNC.scriptTerminology; path = Resources/CotVNC.scriptTerminology; sourceTree = SOURCE_ROOT; };
 		7FFA8FE9062BA6330008D381 /* ServerBase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerBase.h; sourceTree = "<group>"; };
@@ -490,7 +490,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7FD66F5805E9E2B500229E5C /* ForkOfTheChicken.app */,
+				7FD66F5805E9E2B500229E5C /* Chicken Fork.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -909,9 +909,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7F7A93E305E71B5C00E20416 /* ForkOfTheChicken */ = {
+		7F7A93E305E71B5C00E20416 /* Chicken Fork */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "ForkOfTheChicken" */;
+			buildConfigurationList = E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken Fork" */;
 			buildPhases = (
 				7F7A93E405E71B5C00E20416 /* Headers */,
 				7F7A941805E71B5C00E20416 /* Resources */,
@@ -924,9 +924,9 @@
 			);
 			dependencies = (
 			);
-			name = ForkOfTheChicken;
-			productName = ForkOfTheChicken;
-			productReference = 7FD66F5805E9E2B500229E5C /* ForkOfTheChicken.app */;
+			name = "Chicken Fork";
+			productName = "Chicken Fork";
+			productReference = 7FD66F5805E9E2B500229E5C /* Chicken Fork.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -938,7 +938,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2660;
 			};
-			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */;
+			buildConfigurationList = E20426EA087531990026AA26 /* Build configuration list for PBXProject "ChickenFork" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = en;
 			hasScannedForEncodings = 1;
@@ -953,7 +953,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7F7A93E305E71B5C00E20416 /* ForkOfTheChicken */,
+				7F7A93E305E71B5C00E20416 /* Chicken Fork */,
 			);
 		};
 /* End PBXProject section */
@@ -996,11 +996,11 @@
 				"$(TARGET_BUILD_DIR)/$(FULL_PRODUCT_NAME)/Contents/Info.plist",
 			);
 			outputPaths = (
-				"$(BUILD_ROOT)/$(PRODUCT_NAME)-$(_CHICKEN_VERSION_).dmg",
+				"$(BUILD_ROOT)/Chicken-Fork-$(_CHICKEN_VERSION_).dmg",
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n# builds dmg\nDMG=${BUILD_ROOT}/${PRODUCT_NAME}-${_CHICKEN_VERSION_}.dmg\n\nrm -f $DMG\nhdiutil create $DMG -volname \"${PRODUCT_NAME}\" -fs HFS+ \\\n    -srcfolder \"${TARGET_BUILD_DIR}\"\n";
+			shellScript = "#!/bin/sh\n# builds dmg\nDMG=\"${BUILD_ROOT}/Chicken-Fork-${_CHICKEN_VERSION_}.dmg\"\n\nrm -f \"$DMG\"\nhdiutil create \"$DMG\" -ov -volname \"${PRODUCT_NAME}\" -fs HFS+ \\\n    -srcfolder \"${TARGET_BUILD_DIR}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1217,7 +1217,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
-				PRODUCT_NAME = ForkOfTheChicken;
+				PRODUCT_MODULE_NAME = ChickenFork;
+				PRODUCT_NAME = "Chicken Fork";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -1266,7 +1267,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
-				PRODUCT_NAME = ForkOfTheChicken;
+				PRODUCT_MODULE_NAME = ChickenFork;
+				PRODUCT_NAME = "Chicken Fork";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -1313,7 +1315,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
-				PRODUCT_NAME = ForkOfTheChicken;
+				PRODUCT_MODULE_NAME = ChickenFork;
+				PRODUCT_NAME = "Chicken Fork";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -1373,7 +1376,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2026.9;
+				_CHICKEN_VERSION_ = 2026.11;
 			};
 			name = Development;
 		};
@@ -1418,7 +1421,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				_CHICKEN_VERSION_ = 2026.9;
+				_CHICKEN_VERSION_ = 2026.11;
 			};
 			name = Deployment;
 		};
@@ -1463,7 +1466,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				_CHICKEN_VERSION_ = 2026.9;
+				_CHICKEN_VERSION_ = 2026.11;
 			};
 			name = Default;
 		};
@@ -1498,7 +1501,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.chicken;
-				PRODUCT_NAME = ForkOfTheChicken;
+				PRODUCT_MODULE_NAME = ChickenFork;
+				PRODUCT_NAME = "Chicken Fork";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = YES;
@@ -1556,14 +1560,14 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2026.9;
+				_CHICKEN_VERSION_ = 2026.11;
 			};
 			name = "Universal Fast Development";
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "ForkOfTheChicken" */ = {
+		E20426E6087531990026AA26 /* Build configuration list for PBXNativeTarget "Chicken Fork" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426E7087531990026AA26 /* Development */,
@@ -1574,7 +1578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		E20426EA087531990026AA26 /* Build configuration list for PBXProject "Chicken" */ = {
+		E20426EA087531990026AA26 /* Build configuration list for PBXProject "ChickenFork" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E20426EB087531990026AA26 /* Development */,

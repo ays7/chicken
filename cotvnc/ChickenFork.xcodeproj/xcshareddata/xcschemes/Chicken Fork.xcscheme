@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7F7A93E305E71B5C00E20416"
-               BuildableName = "ForkOfTheChicken.app"
-               BlueprintName = "ForkOfTheChicken"
-               ReferencedContainer = "container:Chicken.xcodeproj">
+               BuildableName = "Chicken Fork.app"
+               BlueprintName = "Chicken Fork"
+               ReferencedContainer = "container:ChickenFork.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7F7A93E305E71B5C00E20416"
-            BuildableName = "ForkOfTheChicken.app"
-            BlueprintName = "ForkOfTheChicken"
-            ReferencedContainer = "container:Chicken.xcodeproj">
+            BuildableName = "Chicken Fork.app"
+            BlueprintName = "Chicken Fork"
+            ReferencedContainer = "container:ChickenFork.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7F7A93E305E71B5C00E20416"
-            BuildableName = "ForkOfTheChicken.app"
-            BlueprintName = "ForkOfTheChicken"
-            ReferencedContainer = "container:Chicken.xcodeproj">
+            BuildableName = "Chicken Fork.app"
+            BlueprintName = "Chicken Fork"
+            ReferencedContainer = "container:ChickenFork.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

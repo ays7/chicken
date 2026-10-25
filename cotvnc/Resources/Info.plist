@@ -15,13 +15,13 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ForkOfTheChicken</string>
+	<string>Chicken Fork</string>
 	<key>CFBundleDisplayName</key>
-	<string>ForkOfTheChicken</string>
+	<string>Chicken Fork</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2026.9</string>
+	<string>2026.11</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -62,7 +62,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2026.9</string>
+	<string>2026.11</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>NSAppleScriptEnabled</key>

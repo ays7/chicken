@@ -8,8 +8,8 @@ DERIVED_DATA="${DERIVED_DATA_PATH:-./DerivedData}"
 echo "DerivedData: $DERIVED_DATA"
 
 xcodebuild \
-    -project Chicken.xcodeproj \
-    -scheme ForkOfTheChicken \
+    -project ChickenFork.xcodeproj \
+    -scheme "Chicken Fork" \
     -configuration Deployment \
     -derivedDataPath "$DERIVED_DATA" \
     ONLY_ACTIVE_ARCH=NO \

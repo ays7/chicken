@@ -33,7 +33,7 @@ void DiagnosticLog(DiagnosticLogLevel level, NSString *format, ...) {
     va_start(args, format);
     NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
-    NSLog(@"[ForkOfTheChicken] %@", msg);
+    NSLog(@"[Chicken Fork] %@", msg);
     [msg release];
 }
 

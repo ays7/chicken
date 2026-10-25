@@ -3,7 +3,7 @@
 # build_freerdp_mac.sh
 # 
 # Builds universal (arm64 + x86_64) static libraries for FreeRDP 3.x and OpenSSL 3.x
-# for ForkOfTheChicken on macOS.
+# for Chicken Fork on macOS.
 #
 # Output:
 #   cotvnc/freerdp/include/ (headers for FreeRDP, WinPR, OpenSSL)

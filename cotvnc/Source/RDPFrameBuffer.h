@@ -2,7 +2,7 @@
 //  RDPFrameBuffer.h
 //  Chicken
 //
-//  Created for ForkOfTheChicken RDP integration.
+//  Created for Chicken Fork RDP integration.
 //
 
 #import "FrameBuffer.h"

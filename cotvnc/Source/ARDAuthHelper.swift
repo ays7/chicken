@@ -194,7 +194,7 @@ fileprivate struct AES128ECBEncryption {
             UserDefaults.standard.integer(forKey: "DiagnosticLoggingLevel") :
             (UserDefaults.standard.bool(forKey: "EnableDiagnosticLogging") ? 1 : 0)
         if level >= 1 {
-            NSLog("[ForkOfTheChicken] ARDAuthHelper: \(message)")
+            NSLog("[Chicken Fork] ARDAuthHelper: \(message)")
         }
     }
 

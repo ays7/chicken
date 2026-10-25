@@ -343,7 +343,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 
 - (void)cmdlineUsage
 {
-    fprintf(stderr, "\nUsage: ForkOfTheChicken [options] [host:port | rdp://... | vnc://...]\n\n");
+    fprintf(stderr, "\nUsage: \"Chicken Fork\" [options] [host:port | rdp://... | vnc://...]\n\n");
     fprintf(stderr, "options:\n\n");
     fprintf(stderr, "--RDP\n");
     fprintf(stderr, "--VNC\n");

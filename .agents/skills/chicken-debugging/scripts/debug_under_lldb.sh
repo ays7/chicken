@@ -2,12 +2,12 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-APP_PATH="${REPO_ROOT}/cotvnc/DerivedData/Build/Products/Development/ForkOfTheChicken.app"
+APP_PATH="${REPO_ROOT}/cotvnc/DerivedData/Build/Products/Development/Chicken Fork.app"
 
-echo "==> Building ForkOfTheChicken (Development / Debug)..."
+echo "==> Building Chicken Fork (Development / Debug)..."
 cd "${REPO_ROOT}/cotvnc"
-xcodebuild -project Chicken.xcodeproj \
-  -scheme ForkOfTheChicken \
+xcodebuild -project ChickenFork.xcodeproj \
+  -scheme "Chicken Fork" \
   -configuration Development \
   -derivedDataPath ./DerivedData \
   ONLY_ACTIVE_ARCH=YES \
