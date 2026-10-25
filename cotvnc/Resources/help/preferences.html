@@ -1,45 +1,159 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>Chicken: Preferences</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style_sheet.css" type="text/css" />
+  <title>Preferences &amp; Shortcuts &mdash; Chicken Fork</title>
 </head>
 <body>
 
-<div id="PageContainer">
-<div id="header">
-	<h1>Preferences</h1>
-	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+<div class="layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Chicken Fork</span>
+        <span class="brand-subtitle">Documentation</span>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" class="version-pill" title="View releases on GitHub">v2026.11</a>
+      </div>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-heading">Getting Started</div>
+      <ul class="nav-list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Connection Setup</a></li>
+        <li><a href="rdp.html">Remote Desktop (RDP)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Configuration</div>
+      <ul class="nav-list">
+        <li><a href="profiles.html">Profiles &amp; Encodings</a></li>
+        <li><a href="preferences.html" class="active">Preferences &amp; Shortcuts</a></li>
+        <li><a href="advanced.html">Advanced Usage</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Support &amp; History</div>
+      <ul class="nav-list">
+        <li><a href="faq.html">Frequently Asked Questions</a></li>
+        <li><a href="history.html">Version History</a></li>
+        <li><a href="contact.html">Credits &amp; Contact</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="content">
+    <h1>Preferences &amp; Shortcuts</h1>
+    <p>Access application preferences at any time by choosing <strong>Chicken Fork &rarr; Preferences...</strong> (or <strong>Settings...</strong>) from the application menu or by pressing <kbd>⌘</kbd> + <kbd>,</kbd>.</p>
+
+    <h2>Preferences Panels</h2>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Performance Preferences</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Frontmost Connection Performance</span>
+        <p class="ui-card-desc">Adjusts how frequently the active session window requests framebuffer updates. Keeping this slider towards the right ensures maximum responsiveness and fluid cursor movement.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Background Connection Throttling</span>
+        <p class="ui-card-desc">Controls refresh rates for inactive background sessions. Setting this slider lower conserves CPU cycles, battery, and bandwidth when multiple connections are open. To completely halt background updates until manually refreshed (via <strong>Window &rarr; Refresh</strong>), move the slider to <strong>Only Update Manually</strong>.</p>
+      </div>
+    </div>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Fullscreen Preferences</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Autoscroll Speed</span>
+        <p class="ui-card-desc">When connected to a remote display larger than your physical Mac monitor, moving your mouse to the edge of the screen causes the viewport to pan. This slider adjusts the panning velocity.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Display Scrollbars While in Fullscreen</span>
+        <p class="ui-card-desc">Controls whether explicit vertical and horizontal scrollbars remain visible while in fullscreen mode.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Display Warning Before Entering Fullscreen</span>
+        <p class="ui-card-desc">By default, Chicken Fork displays a reminder showing the keyboard shortcut to exit fullscreen. If you are familiar with the exit shortcut (<kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>⌃</kbd> + <kbd>`</kbd>), you can disable this dialog.</p>
+      </div>
+    </div>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Keyboard Equivalents &amp; Scenarios</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Scenario-Based Key Mappings</span>
+        <p class="ui-card-desc">Because remote sessions capture keystrokes, Chicken Fork organizes keyboard shortcuts into three distinct window scenarios:</p>
+        <ul style="margin: 0.35rem 0 0 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">
+          <li><strong>Non-Connection Window</strong>: Standard macOS shortcuts when managing bookmarks or preferences.</li>
+          <li><strong>Windowed Connection</strong>: Active when a remote session is running inside a regular window.</li>
+          <li><strong>Fullscreen Connection</strong>: Active when a remote session occupies a macOS fullscreen space.</li>
+        </ul>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Customizing a Shortcut</span>
+        <p class="ui-card-desc">Select the desired scenario from the popup menu, locate the command in the table, double-click its <strong>Shortcut</strong> cell, and press your desired key combination. To remove a shortcut, press <kbd>Space</kbd>.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Restore Defaults</span>
+        <p class="ui-card-desc">Restores the default keyboard configuration across all three scenarios.</p>
+      </div>
+    </div>
+
+    <h2>Diagnostic Logging</h2>
+    <p>Chicken Fork includes built-in diagnostic logging levels to facilitate debugging and connection troubleshooting:</p>
+
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Log Level</th>
+            <th>Description</th>
+            <th>Console Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>None</strong></td>
+            <td>Standard silent operational logging. Only critical failures are printed to standard output.</td>
+            <td>Errors only</td>
+          </tr>
+          <tr>
+            <td><strong>Basic</strong></td>
+            <td>Logs connection state changes, protocol handshakes (RFB version, FreeRDP connect status), and session lifecycles.</td>
+            <td>Milestone events</td>
+          </tr>
+          <tr>
+            <td><strong>Verbose</strong></td>
+            <td>Full diagnostic protocol logging including NLA authentication exchanges, DisplayControl resolution changes, and clipboard channel synchronization.</td>
+            <td>Detailed trace</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-title">💡 Viewing Diagnostic Logs</div>
+      <p>Log output is visible in real-time by launching Chicken Fork from macOS Terminal or using the macOS <strong>Console.app</strong> filtering for <code>Process: ForkOfTheChicken</code> or subsystem <code>Chicken Fork</code>.</p>
+    </div>
+
+    <div class="page-footer">
+      <div>&larr; <a href="profiles.html">Profiles &amp; Encodings</a></div>
+      <div>Chicken Fork &copy; 2022&ndash;2026 Alexey Shakula &bull; <a href="https://github.com/ays7/chicken">GitHub</a></div>
+      <div><a href="advanced.html">Advanced Usage</a> &rarr;</div>
+    </div>
+  </main>
 </div>
-<div class="section">
-	<h1>Preferences</h1>
 
-	<div class="ss"><img src="prefs1.jpg" width="374" height="229" alt="Preferences Dialog" /></div>
-
-	<ul class="explanation">
-		<li><span class="item">Performance:</span>  Use the sliders to adjust how often your connections ask the server for updates.  Generally, you want the frontmost connection to update as often as possible, while other connections can be less responsive.  To force a connection to never update unless requested by choosing <strong>Refresh</strong> from the <strong>Window</strong> menu, set the slider to <strong>Only Update Manually</strong>.</li>
-	</ul>
-	
-	<div class="ss"><img src="prefs2.jpg" width="374" height="229" alt="Preferences Dialog" /></div>
-
-	<ul class="explanation">
-		<li><span class="item">Autoscroll Speed:</span>  Controls how quickly your fullscreen connection scrolls when the mouse is moved to the edge of your screen.</li>
-
-		<li><span class="item">Display Scrollbars While in Fullscreen Mode:</span>  Controls whether scrollbars are displayed for fullscreen connections.  They aren't necessary, since you can use the <strong>Autoscroll</strong> feature, but sometimes its nice to have an explicit scrollbar.</li>
-
-		<li><span class="item">Display Warning Before Entering Fullscreen Mode:</span>  Controls whether a warning panel is displayed before entering fullscreen mode.  Since the only way to get back out of fullscreen mode is by knowing the keyboard command, the warning is an important reminder.  If you're sure you know the keyboard command, you can use this to disable the warning.</li>
-	</ul>
-	
-	<div class="ss"><img src="prefs3.jpg" width="374" height="229" alt="Preferences Dialog" /></div>
-
-	<ul class="explanation">
-		<li><span class="item">Keyboard Equivalents:</span>  Use this section to change the keyboard equivalents for various menu commands for different connection scenarios.  The popup menu controls the scenario.  <strong>Non-Connection Window</strong> is the scenario in which a window other than a VNC connection is the frontmost window.  In other words, something like the Connection dialog or the preferences window is frontmost.  <strong>Windowed Connection</strong> is the scenario in which a VNC connection in a window is frontmost.  <strong>Fullscreen Connection</strong> is the scenario in which <strong>Fullscreen Mode</strong> is active.  You can change the keyboard equivalent used to move in and out of <strong>Fullscreen Mode</strong> by changing it in both the Windowed Connection and Fullscreen Connection scenarios.</li>
-
-		<li><span class="item">Keyboard Equivalent Table:</span>  Change a keyboard equivalent by navigating to the desired menu command and double-clicking the <strong>Shortcut</strong> next to it.  Press the keyboard equivalent you wish to use, or press <strong>Space</strong> on your keyboard to remove an equivalent.</li>
-
-		<li><span class="item">Restore Defaults:</span>  Use this to restore the default keyboard equivalents.  These are the standard keyboard equivalents when a non-connection window is frontmost, and no keyboard equivalents other than to switch in and out of <strong>Fullscreen Mode</strong> whenever a connection is frontmost.</li>
-	</ul>
-</div>
-</div></body></html>
+</body>
+</html>

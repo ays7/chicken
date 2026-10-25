@@ -1,66 +1,179 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>Chicken: Advanced usage</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style_sheet.css" type="text/css" />
+  <title>Advanced Usage &mdash; Chicken Fork</title>
 </head>
 <body>
-<div id="PageContainer">
-<div id="header">
-	<h1>Advanced usage</h1>
-	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+
+<div class="layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Chicken Fork</span>
+        <span class="brand-subtitle">Documentation</span>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" class="version-pill" title="View releases on GitHub">v2026.11</a>
+      </div>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-heading">Getting Started</div>
+      <ul class="nav-list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Connection Setup</a></li>
+        <li><a href="rdp.html">Remote Desktop (RDP)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Configuration</div>
+      <ul class="nav-list">
+        <li><a href="profiles.html">Profiles &amp; Encodings</a></li>
+        <li><a href="preferences.html">Preferences &amp; Shortcuts</a></li>
+        <li><a href="advanced.html" class="active">Advanced Usage</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Support &amp; History</div>
+      <ul class="nav-list">
+        <li><a href="faq.html">Frequently Asked Questions</a></li>
+        <li><a href="history.html">Version History</a></li>
+        <li><a href="contact.html">Credits &amp; Contact</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="content">
+    <h1>Advanced Usage</h1>
+    <p>Beyond standard remote desktop viewing, Chicken Fork provides modern macOS integration features designed for power users and system administrators.</p>
+
+    <h2 id="resizing">Dynamic Desktop Resizing</h2>
+    <p>Chicken Fork supports dynamic remote resolution resizing across both VNC and RDP sessions:</p>
+    <ul>
+      <li><strong>Microsoft RDP</strong>: Powered by FreeRDP's <code>DisplayControl</code> extension. Simply drag the corner of your session window to resize it; Windows instantly reconfigures its desktop geometry to match your window size without disconnecting.</li>
+      <li><strong>VNC / RFB</strong>: On VNC servers supporting the Extended Desktop Size protocol extension, resizing the session window sends a desktop geometry update to resize the remote framebuffer on the fly.</li>
+    </ul>
+
+    <h2 id="clipboard">Clipboard Sharing &amp; UTF-8 Extended Clipboard</h2>
+    <p>Legacy VNC clients were notoriously restricted to Latin-1 ASCII text. Chicken Fork modernizes clipboard exchange with full <strong>UTF-8 Extended Clipboard</strong> support:</p>
+    <ul>
+      <li><strong>Full Unicode Support</strong>: Seamlessly copy and paste international text, accented characters, Chinese/Japanese/Korean scripts, and emoji between macOS and remote sessions.</li>
+      <li><strong>Automatic Focus Synchronization</strong>: Chicken Fork automatically synchronizes the local macOS clipboard with the remote session when the session window gains focus, or right before sending middle-click events.</li>
+      <li><strong>Paste Options</strong>:
+        <ul>
+          <li><strong>Paste (<kbd>⌘</kbd> + <kbd>V</kbd>)</strong>: Simulates keyboard strokes typing the local clipboard text into the active remote application. Useful when pasting into terminals that intercept clipboard shortcuts.</li>
+          <li><strong>Paste to Remote Clipboard</strong>: Injects text directly into the remote operating system's internal clipboard without typing.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2 id="fullscreen">Fullscreen Spaces &amp; Space Management</h2>
+    <p>Chicken Fork integrates with native <strong>macOS Spaces Full Screen</strong> mode:</p>
+    <ul>
+      <li><strong>Toggling Fullscreen</strong>: Press <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>⌃</kbd> + <kbd>`</kbd> (or the green window zoom button). The back-quote key (<kbd>`</kbd>) is located immediately to the left of the <kbd>1</kbd> key on standard keyboards. You can rebind this shortcut in <a href="preferences.html">Preferences</a>.</li>
+      <li><strong>Space Isolation (Multi-Session Safety)</strong>: Chicken Fork disables aggressive window tabbing, ensuring that opening new connections, bookmarks, or dialogs while a session is fullscreen will not hijack the active fullscreen Space.</li>
+    </ul>
+
+    <h2>Touch Bar Integration <span class="badge badge-both">MacBook Pro</span></h2>
+    <p>On MacBook Pro models equipped with a Touch Bar, Chicken Fork surfaces handy interactive controls:</p>
+    <ul>
+      <li><strong>Session Switcher</strong>: Quickly jump between multiple concurrent remote sessions with dedicated Touch Bar tabs.</li>
+      <li><strong>One-Tap Quick Connect</strong>: Connect to your saved server bookmarks directly from the keyboard.</li>
+      <li><strong>Status Indicators</strong>: Active connection state indicators and instant fullscreen toggle buttons.</li>
+    </ul>
+
+    <h2 id="ard">Apple Remote Desktop (ARD) Authentication</h2>
+    <p>When connecting to modern macOS machines running <strong>Screen Sharing</strong> or <strong>Remote Management</strong>, Apple defaults to a proprietary Diffie-Hellman Key Exchange (DHX) and AES encryption scheme requiring a Mac system account.</p>
+    <p>Chicken Fork integrates native support for Apple Remote Desktop authentication (powered by CryptoSwift). Enter your macOS system username and password into Chicken Fork's connection dialog to authenticate directly &mdash; no need to downgrade to legacy VNC password authentication in macOS Sharing settings!</p>
+
+    <h2>Bonjour Network Discovery</h2>
+    <p>Chicken Fork listens for local network servers advertising themselves via Bonjour (mDNS / Zeroconf) using the <code>_rfb._tcp</code> and <code>_vnc._tcp</code> service types. Discovered Mac and Linux machines automatically populate in your Connection Window sidebar under the Rendezvous/Bonjour section.</p>
+
+    <h2>Listening (Reverse) Connections</h2>
+    <p>When a remote server is located behind a strict NAT router or firewall where inbound ports cannot be opened, you can use Chicken Fork in <strong>Listening Mode</strong>:</p>
+    <ol>
+      <li>Choose <strong>File &rarr; Listen for Server...</strong> from the menu bar.</li>
+      <li>Chicken Fork listens on local port <code>5500</code> for incoming connections.</li>
+      <li>Instruct the remote VNC server to initiate a reverse connection to your IP address on port <code>5500</code>. Chicken Fork will accept the connection and launch the session window.</li>
+    </ol>
+
+    <h2>Command-Line Reference</h2>
+    <p>Chicken Fork can be invoked directly from the macOS Terminal, scripts, or automations:</p>
+
+    <pre><code># Executable path
+cd "/Applications/Chicken Fork.app/Contents/MacOS"
+./"Chicken Fork" [options] [server-address]</code></pre>
+
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Argument</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--RDP</code></td>
+            <td>Forces connection protocol to Microsoft Remote Desktop (defaults to port 3389).</td>
+          </tr>
+          <tr>
+            <td><code>--VNC</code></td>
+            <td>Forces connection protocol to VNC / RFB (defaults to port 5900).</td>
+          </tr>
+          <tr>
+            <td><code>--Username &lt;user&gt;</code></td>
+            <td>Specifies the login username for RDP or Apple ARD VNC sessions.</td>
+          </tr>
+          <tr>
+            <td><code>--Display &lt;num&gt;</code></td>
+            <td>Specifies the VNC display number (e.g. <code>--Display 1</code> connects to port 5901).</td>
+          </tr>
+          <tr>
+            <td><code>--Profile &lt;name&gt;</code></td>
+            <td>Applies a specific named connection profile (e.g. <code>--Profile Windows</code>).</td>
+          </tr>
+          <tr>
+            <td><code>--Shared</code></td>
+            <td>Requests a shared VNC session, allowing other clients to remain connected.</td>
+          </tr>
+          <tr>
+            <td><code>--ViewOnly</code></td>
+            <td>Launches session in view-only non-interactive mode.</td>
+          </tr>
+          <tr>
+            <td><code>--Fullscreen</code></td>
+            <td>Opens the session directly into fullscreen mode.</td>
+          </tr>
+          <tr>
+            <td><code>--Listen</code></td>
+            <td>Starts Chicken Fork directly in VNC reverse listening mode on port 5500.</td>
+          </tr>
+          <tr>
+            <td><code>rdp://...</code></td>
+            <td>Direct URL connection: <code>rdp://admin@192.168.1.50:3389</code></td>
+          </tr>
+          <tr>
+            <td><code>vnc://...</code></td>
+            <td>Direct URL connection: <code>vnc://user@192.168.1.10:5900</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <div>&larr; <a href="preferences.html">Preferences &amp; Shortcuts</a></div>
+      <div>Chicken Fork &copy; 2022&ndash;2026 Alexey Shakula &bull; <a href="https://github.com/ays7/chicken">GitHub</a></div>
+      <div><a href="faq.html">Frequently Asked Questions</a> &rarr;</div>
+    </div>
+  </main>
 </div>
-<div class="section">
-	<h1>Full Screen Display</h1>
-	
-	<p>The Chicken can be toggled in and out of full screen display by pressing
-    the keyboard combination, which in the English language version, is command-option-control-`.  The 'command' key is also known as the 'Apple' key.  The back-quote (`) is the character immediately to the left of the number '1' on American keyboards.</p>
 
-	<p>If this key combination interferes with your work, or is not convenient on international keyboards, it can be changed in the <strong>Keyboard tab of the Preferences</strong>.</p>
-
-	<p>While in full screen mode, you cannot interact with the Dock or with any other programs running locally on your Macintosh.  If the remote screen is larger than your local screen, the display will 'auto-scroll' when the mouse is close the edge of the screen.  The scrolling speed and the presence of scrollbars can be adjusted in the Fullscreen tab of the Preferences.</p>
-</div>
-
-<div class="section">
-<h1>Copy and Paste</h1>
-
-<p>VNC supports copying and pasting text to and from the clipboard of the remote
-server.  Whenever you copy text on the remote server (and the server supports
-it), Chicken will place the text in your local clipboard. To transfer text to
-the server, you have two options. If you choose <strong>Paste</strong> from the
-<strong>Edit</strong> menu, Chicken will simulate keystrokes typing the text
-from the clipboard. The <strong>Paste to Remote Clipboard</strong> menu item
-will send the text to the server's clipboard.</p>
-
-<p>Note that, due to inherent limitations with VNC, copying from and pasting to
-the server's clipboard only works for text compatible with the Latin-1 encoding,
-which includes most Western European languages. In principle,
-<strong>Paste</strong> works for any script.  However, as always, Chicken is
-dependent on what operations are supported by the server.</p>
-</div>
-
-<div class="section">
-	<h1>More About Connections</h1>
-	
-	<p>Chicken supports server autodiscovery using Bonjour.  To enable it, select the <strong>Use Bonjour</strong> item in Chicken's application menu.  Servers that advertise themselves using Bonjour will automatically show up in your bookmarks window!</p>
-	
-	<p>If you wish to connect to a server without using bookmarks, just choose <strong>New Connection</strong> from the <strong>File</strong> menu.  Of course, if you decide that you want to bookmark the server, you can always check the "Save Server" button before you connect.</p>
-	
-	<p>You can get back to the bookmarks window you saw when you launched Chicken by selecting <strong>Open Connection</strong> from the <strong>File</strong> menu.</p>
-	
-	<p>You can connect to a server that is behind a firewall by using a listening connection.  Choose <strong>Listen for Server</strong> from the <strong>File</strong> menu and then set the VNC server up to initiate a listening connection to your client machine.</p>
-	
-</div>
-
-<div class="section">
-	<h1>Command Line Usage</h1>
-	
-	<p>You can use Chicken Fork by calling it from the command line.  To do this, you should 'cd' to the location of Chicken Fork.  Then, do the following:</p>
-	<p style="margin-left: 2em;"><code>cd "Chicken Fork.app/Contents/MacOS/"<br />
-	./"Chicken Fork"</code></p>
-	
-	<p>To get help on command line invocation, add "--help" to the invocation.</p>
-</div>
-</div></body></html>
+</body>
+</html>

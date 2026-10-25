@@ -1,71 +1,192 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>Getting started with Chicken</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style_sheet.css" type="text/css" />
+  <title>Connection Setup &mdash; Chicken Fork</title>
 </head>
 <body>
-<div id="PageContainer">
-<div id="header">
-	<h1>Getting started with Chicken</h1>
-	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+
+<div class="layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Chicken Fork</span>
+        <span class="brand-subtitle">Documentation</span>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" class="version-pill" title="View releases on GitHub">v2026.11</a>
+      </div>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-heading">Getting Started</div>
+      <ul class="nav-list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html" class="active">Connection Setup</a></li>
+        <li><a href="rdp.html">Remote Desktop (RDP)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Configuration</div>
+      <ul class="nav-list">
+        <li><a href="profiles.html">Profiles &amp; Encodings</a></li>
+        <li><a href="preferences.html">Preferences &amp; Shortcuts</a></li>
+        <li><a href="advanced.html">Advanced Usage</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Support &amp; History</div>
+      <ul class="nav-list">
+        <li><a href="faq.html">Frequently Asked Questions</a></li>
+        <li><a href="history.html">Version History</a></li>
+        <li><a href="contact.html">Credits &amp; Contact</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="content">
+    <h1>Connection Setup</h1>
+    <p>When you launch Chicken Fork, you are greeted by the <strong>Connection Window</strong>. From this dialog, you can configure connections to remote computers, save frequently accessed hosts into your bookmarks sidebar, and customize security settings.</p>
+
+    <h2>The Connection Window</h2>
+    <p>Chicken Fork supports both <strong>VNC</strong> (Virtual Network Computing) and <strong>RDP</strong> (Microsoft Remote Desktop) protocols. Use the controls detailed below to configure your connection:</p>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Connection Parameters &amp; Options</span>
+        <span class="badge badge-both">VNC &amp; RDP</span>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Protocol Selector <span class="badge badge-both">VNC / RDP</span></span>
+        <p class="ui-card-desc">Switch between <strong>VNC</strong> (classic RFB protocol and Apple Screen Sharing) and <strong>RDP</strong> (Microsoft Remote Desktop). The window fields adapt dynamically based on your chosen protocol.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Saved Servers Sidebar</span>
+        <p class="ui-card-desc">Store frequently visited servers for one-click access. Use the <kbd>+</kbd> and <kbd>&minus;</kbd> buttons at the bottom of the list to add or remove server bookmarks. Discovered Bonjour servers also appear here automatically.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Host</span>
+        <p class="ui-card-desc">The address of the remote machine. You can specify a DNS hostname (e.g. <code>myserver.example.com</code>), an IPv4 address (<code>192.168.1.50</code>), or an IPv6 address (<code>[fe80::1]</code>). You may also append an explicit port with a colon (e.g. <code>myserver.com:5902</code> or <code>winpc.local:3390</code>).</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Display or Port <span class="badge badge-vnc">VNC Only</span></span>
+        <p class="ui-card-desc">In VNC mode, numbers less than <strong>50</strong> are treated as VNC display numbers (display <code>0</code> maps to port <code>5900</code>, display <code>1</code> maps to port <code>5901</code>). Numbers 50 and higher are interpreted as direct TCP port numbers. In RDP mode, this field is hidden and defaults to port <code>3389</code>.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Username <span class="badge badge-both">RDP &amp; Apple ARD</span></span>
+        <p class="ui-card-desc">Enter the remote user account. Required for Windows RDP connections (e.g. <code>Administrator</code> or <code>DOMAIN\user</code>) and macOS Screen Sharing when using Apple Remote Desktop (ARD) authentication.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Password &amp; Remember Password</span>
+        <p class="ui-card-desc">The authentication password for the remote system. If <strong>Remember Password</strong> is checked, Chicken Fork saves the password into your secure <strong>macOS Keychain</strong> so you do not need to retype it on subsequent connections.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Connection Profile</span>
+        <p class="ui-card-desc">Select a profile to apply custom keyboard modifier mappings, color depths, and compression encodings. See <a href="profiles.html">Profiles &amp; Encodings</a> for more details.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">View Only</span>
+        <p class="ui-card-desc">When checked, the session runs in non-interactive observation mode. You can view remote screen updates, but no mouse movements, clicks, or keystrokes are transmitted.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Allow other clients to connect <span class="badge badge-vnc">VNC Only</span></span>
+        <p class="ui-card-desc">Requests a shared VNC session. If checked, other clients already connected to the VNC server are allowed to remain connected simultaneously.</p>
+      </div>
+
+      <div class="ui-card-row">
+        <span class="ui-card-label">Fullscreen Display</span>
+        <p class="ui-card-desc">Immediately opens the connection in native macOS Spaces Fullscreen mode rather than in a standard window.</p>
+      </div>
+    </div>
+
+    <h2>Tunneling Over SSH</h2>
+    <p>Chicken Fork features built-in SSH tunneling, allowing you to securely connect to remote VNC and RDP servers across untrusted networks or through corporate firewalls.</p>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>SSH Tunneling Configuration</span>
+        <span class="badge badge-both">VNC &amp; RDP</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Tunnel over SSH</span>
+        <p class="ui-card-desc">Check this box to instruct Chicken Fork to establish an encrypted SSH tunnel to an intermediate gateway (or the remote host itself) before initiating the remote desktop connection.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">SSH Host</span>
+        <p class="ui-card-desc">The SSH server to connect to. You can specify custom usernames and ports: <code>username@ssh.example.com:2222</code>. If no username is given, your local macOS username is used by default.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-title">🔑 Passphrase-Protected SSH Keys</div>
+      <p>If your SSH private key requires a passphrase, Chicken Fork detects this and prompts for entry. To avoid entering passphrases repeatedly, add your key to the macOS Keychain using Terminal:</p>
+      <pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519</code></pre>
+      <p>Once added, macOS unlocks the key automatically when Chicken Fork establishes the tunnel.</p>
+    </div>
+
+    <h2>Protocol Security Comparison</h2>
+    <p>Different protocols offer different security profiles. Here is how they compare in Chicken Fork:</p>
+
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Protocol / Method</th>
+            <th>Encryption</th>
+            <th>Authentication</th>
+            <th>Recommended Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Standard VNC</strong></td>
+            <td>None (Cleartext pixels &amp; keystrokes)</td>
+            <td>DES challenge-response (password truncated to 8 chars)</td>
+            <td>Isolated private LANs only. Never use over the public Internet without SSH!</td>
+          </tr>
+          <tr>
+            <td><strong>VNC + SSH Tunnel</strong></td>
+            <td>AES / ChaCha20 via SSH tunnel</td>
+            <td>SSH public key or password + VNC password</td>
+            <td>Connecting to remote Linux / Mac VNC servers over the Internet.</td>
+          </tr>
+          <tr>
+            <td><strong>Apple Remote Desktop (ARD)</strong></td>
+            <td>Diffie-Hellman Key Exchange + AES</td>
+            <td>macOS system username &amp; password</td>
+            <td>Connecting to modern macOS Screen Sharing without unencrypted passwords.</td>
+          </tr>
+          <tr>
+            <td><strong>Microsoft RDP</strong></td>
+            <td>TLS / SSL with OpenSSL 3.x</td>
+            <td>Network Level Authentication (NLA / CredSSP)</td>
+            <td>Native encrypted connection to Windows Server &amp; Windows 10/11 PCs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <div>&larr; <a href="index.html">Overview</a></div>
+      <div>Chicken Fork &copy; 2022&ndash;2026 Alexey Shakula &bull; <a href="https://github.com/ays7/chicken">GitHub</a></div>
+      <div><a href="rdp.html">Remote Desktop (RDP)</a> &rarr;</div>
+    </div>
+  </main>
 </div>
-<div class="section">
-	<h1>Using Chicken</h1>
 
-	<p>Use it just like any other VNC client - enter the address of a working VNC server (you can use <em>host:port</em> notation if you wish), the display number and your password and rock'n'roll...</p>
-
-	<div class="ss"><img src="connect.jpg" width="590" height="433" alt="Connection Dialog" /></div>
-	
-	<ul class="explanation">
-		<li><span class="item">Servers:</span>  You can store commonly used servers in this section.  Use the + and - buttons to add and remove servers.</li>
-
-		<li><span class="item">Host:</span>  The host to which you wish to connect.  This can be either a DNS name (like myserver.com) or an IP address.  You may optionally specify a port number here by appending it with a colon (like myserver.com:5900).  </li>
-
-		<li><span class="item">Display or port:</span> The display number for
-        the connection. Numbers larger than 50 will be treated as a port instead of a display. Thus, 0 has the same effect as 5900.  VNC server programs on Windows machines tend to default to display number 0, while older VNC servers on Mac OS X, such as OSXvnc version 0.7, tend to use display number 1.  If you can't connect, you can try switching the display number between these two values.  If you're having problems connecting, you should make sure that the port that corresponds to your display number is not firewalled on either your computer or on the server machine.  The port number is 5900 plus the display number - in other words, display zero is port 5900, display one is port 5901, etc.</li>
-
-		<li><span class="item">Password:</span>  The password needed to connect to the server running at the specified host and display.  If Remember Password was checked, this will be fetched from your Mac OS X Keychain after you've entered it initially.</li>
-
-		<li><span class="item">Remember Password:</span>  If checked, the password will be stored in your Mac OS X Keychain and remembered for later use.</li>
-
-		<li><span class="item">Profile:</span>  The connection profile to use when connecting to this server.  See the section below for more info about connection profiles.</li>
-	
-		<li><span class="item">View Only:</span>  If selected, your connection will not be interactive.  You will be able to view the server's screen, but mouse movements, key presses and the like will not be transmitted.</li>
-
-		<li><span class="item">Allow other clients to connect:</span>  If selected, multiple clients can connect to the same server simultaneously.  Otherwise, only one client can be connected to a given server at at time.</li>
-
-		<li><span class="item">Fullscreen Display:</span>  If selected, the connection will initially be opened using your entire screen, rather than in a window.</li>
-
-<a link="ssh"><li><span class="item">Tunnel over SSH:</span> If selected,
-Chicken first connects to the server using the SSH protocol and then establishes
-the VNC connection through an encrypted SSH tunnel. This is a beta feature and
-may not work in all circumstances.</li>
-
-<li><span class="item">SSH host:</span> The name of the SSH server to connect
-to, which need not be the same as the VNC server. You can specify a username
-other than your own by prepending "username@" and a non-standard port by
-appending ":portnumber".</li>
-	</ul>
-
-	<p>You can also check <a href="http://www.realvnc.com/">RealVNC's web page</a> for additional information on connection and configuring a VNC client.</p>
-</div>
-
-<div class="section">
-    <h1>A Note About Security</h1>
-    <p>VNC is not a secure protocol. Unless otherwise encrypted, your keypresses
-    and screenshots can be captured by anyone on the same network as you.  If
-    you are using VNC over the Internet or other public network, you should
-    tunnel it through an encrypted connection. The easiest way to do this is
-    with <strong>SSH</strong>, which you can do within Chicken by checking the
-    <strong>Tunnel over SSH</strong> checkbox, as described
-    <a href="#ssh">above</a>.</p>
-
-    <p>In order for this to work, the remote computer needs to be running an SSH
-    server. If the remote computer is a Mac, this can be enabled by going to
-    Sharing in System Preferences and checking the box next to Remote Login.
-    </p>
-</div>
-</body></html>
+</body>
+</html>

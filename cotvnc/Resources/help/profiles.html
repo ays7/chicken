@@ -1,77 +1,179 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>Chicken: Connection profiles</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style_sheet.css" type="text/css" />
+  <title>Profiles &amp; Encodings &mdash; Chicken Fork</title>
 </head>
 <body>
-<div id="PageContainer">
-<div id="header">
-	<h1>Connection profiles</h1>
-	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
-</div>
-<div class="section">
-	<h1>Using Connection Profiles</h1>
-	
-	<p>You can use profiles to store settings for an individual VNC server or for a class of servers.  For example, you might want to use full-color display for a server that is on your local area network, but drop down to 8-bit display for a remote machine.</p>
 
-	<p>You can also use profiles to specify your default encoding.  VNC operates by transferring an image of the screen from the server to the client.  This obviously requires lots of bandwidth.  The better the encoding that you use to transfer this information, the less "lag" you'll experience while using the Chicken.  Unfortunately, encodings that require less bandwidth also require more CPU utilization on both the server and client computers, so you may need to experiment to find the encoding that's right for your situation.</p>
+<div class="layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Chicken Fork</span>
+        <span class="brand-subtitle">Documentation</span>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" class="version-pill" title="View releases on GitHub">v2026.11</a>
+      </div>
+    </a>
 
-	<p class="noMargin">The different encodings are (in rough order of efficiency)<br/>
-	<ul id="encodingList">
-		<li>ZRLE</li>
-		<li>Tight</li>
-		<li>Zlib</li>
-		<li>ZlibHex</li>
-		<li>Hextile</li>
-		<li>CoRRE</li>
-		<li>RRE</li>
-		<li>Raw</li>
-	</ul></p>
-	
-	<div class="ss"><img src="profiles-encodings.jpg" width="627" height="417" alt="Profile Dialog" /></div>
+    <div class="nav-section">
+      <div class="nav-heading">Getting Started</div>
+      <ul class="nav-list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Connection Setup</a></li>
+        <li><a href="rdp.html">Remote Desktop (RDP)</a></li>
+      </ul>
+    </div>
 
-	<ul class="explanation">
-		<li><span class="item">Profiles:</span>  A list of profiles that are available to use for your connections.  Add a new profile by typing its name below the list and pressing <strong>New</strong>.  Remove a profile other than the default one by selecting it and pressing the <strong>Delete</strong> button.  The information in the remainder of the window belongs to the selected profile.</li>
+    <div class="nav-section">
+      <div class="nav-heading">Configuration</div>
+      <ul class="nav-list">
+        <li><a href="profiles.html" class="active">Profiles &amp; Encodings</a></li>
+        <li><a href="preferences.html">Preferences &amp; Shortcuts</a></li>
+        <li><a href="advanced.html">Advanced Usage</a></li>
+      </ul>
+    </div>
 
-		<li><span class="item">Encodings:</span>  The encoding to use for the connection.  Encodings are described above.  You can <strong>drag encodings</strong> to change your preferred encoding - the top one is tried first, and subsequent ones are tried until one is found that is supported by your server.  To disable an encoding, uncheck it.  <strong>CopyRect Encoding</strong> is an optimization that's useful in some situations.  If you're connecting to a very old server, you may wish to turn it off, but we haven't run across any situations where it isn't supported.</li>
-	</ul>
+    <div class="nav-section">
+      <div class="nav-heading">Support &amp; History</div>
+      <ul class="nav-list">
+        <li><a href="faq.html">Frequently Asked Questions</a></li>
+        <li><a href="history.html">Version History</a></li>
+        <li><a href="contact.html">Credits &amp; Contact</a></li>
+      </ul>
+    </div>
+  </aside>
 
-	<div class="ss"><a name="emulation"><img src="profiles-emulation.jpg" width="624" height="428" alt="Profile Dialog" /></a></div>
+  <!-- Main Content Area -->
+  <main class="content">
+    <h1>Profiles &amp; Encodings</h1>
+    <p><strong>Connection Profiles</strong> allow you to save tailored graphics, compression, mouse emulation, and keyboard mapping settings for different computers or network conditions. For instance, you can use high-bandwidth 32-bit color for local Gigabit LAN connections, while applying aggressive JPEG compression and 8-bit color for remote mobile tethering.</p>
 
-    <ul class="explanation">
-    <li><span class="item">Emulation:</span> If you are one of those cursed with a single button mouse, you have many mouse button emulation options.</li>
-	
-    <p>You can emulate a button click by holding down a modifier key while clicking your single button mouse using the <strong>Modifier Click</strong> emulation option.  For example, you can use this to imitate the familiar control-click paradigm used on your Macintosh.</p>
-	
-	<p>The <strong>Multi-Tap</strong> option lets you emulate a button click by tapping a particular modifier key quickly.  For example, you can right-click at the current mouse position by tapping the Command key twice quickly.</p>
-	
-	<p>The <strong>Tap and Click</strong> option lets you emulate a button click by tapping a modifier key a single time and then clicking the mouse.  This is the behavior that was in previous versions of Chicken of the VNC, so you may already be accustomed to it.  Once you've tapped the modifier key, the mouse cursor will change to indicate that a mouse click will be emulated.  You can cancel emulation by waiting for it to <strong>timeout</strong>, or by pressing the Escape key on your keyboard.</p>
-	
-	<p>If you don't wish to use mouse button emulation, you can set the <strong>No Emulation</strong> option.</p>
+    <p>To access the Profile Manager, choose <strong>Connection &rarr; Connection Profiles...</strong> from the menu bar or click the <strong>Profile</strong> popup in the Connection Window.</p>
 
-    <p>If you are lucky enough to have a two or three button mouse, you don't need to worry about emulation as Chicken supports up to three mouse buttons, as well as scroll-wheels on compatible servers.</p></li>
+    <h2>Managing Profiles</h2>
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Profile Management Controls</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Profile Selector List</span>
+        <p class="ui-card-desc">Displays all available profiles. Chicken Fork includes sensible defaults such as <strong>Default</strong>, <strong>Windows</strong>, and <strong>Low Bandwidth</strong>.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Creating &amp; Deleting Profiles</span>
+        <p class="ui-card-desc">Type a name in the text field below the list and click <strong>New</strong> to create a new profile. Select an existing custom profile and click <strong>Delete</strong> to remove it.</p>
+      </div>
+    </div>
+
+    <h2>Profile Configuration Tabs</h2>
+
+    <h3>1. Encodings Tab <span class="badge badge-vnc">VNC</span></h3>
+    <p>In VNC (RFB), screen updates are compressed using graphical encodings. The more efficient the encoding, the lower the network bandwidth required, at the cost of slight CPU overhead.</p>
+
+    <div class="callout callout-note">
+      <div class="callout-title">ℹ️ Note Regarding RDP Sessions</div>
+      <p>The Encodings tab applies specifically to VNC sessions. Microsoft RDP connections manage compression automatically using FreeRDP's hardware-assisted <strong>RemoteFX (RFX)</strong> and <strong>Enhanced GFX (EGFX)</strong> pipelines.</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Encoding</th>
+            <th>Type</th>
+            <th>Characteristics</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ZRLE</strong></td>
+            <td>Lossless</td>
+            <td>Zlib Run-Length Encoding. Highly efficient compression for text, code, and graphical user interfaces. Typically the best all-around default for VNC.</td>
+          </tr>
+          <tr>
+            <td><strong>Tight</strong></td>
+            <td>Lossy / Lossless</td>
+            <td>Blends 2D compression with JPEG image encoding, accelerated natively on Apple Silicon and Intel via <strong>libjpeg-turbo 3.2.0</strong>. Ideal for photographic content or remote video.</td>
+          </tr>
+          <tr>
+            <td><strong>Zlib / ZlibHex</strong></td>
+            <td>Lossless</td>
+            <td>Standard DEFLATE compression. Solid fallback when connecting to older Unix or embedded VNC servers.</td>
+          </tr>
+          <tr>
+            <td><strong>Hextile</strong></td>
+            <td>Lossless</td>
+            <td>Low CPU overhead tile-based encoding, effective on fast local networks with limited CPU resources.</td>
+          </tr>
+          <tr>
+            <td><strong>CopyRect</strong></td>
+            <td>Optimization</td>
+            <td>Tells the client to copy existing screen rectangles instead of re-transmitting pixels when windows or text scroll. Always keep enabled.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2. Emulation Tab (Mouse Buttons)</h3>
+    <p>While modern Macs feature multi-touch trackpads and multi-button mice, Chicken Fork provides extensive mouse emulation options for maximum flexibility:</p>
+
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Mouse Emulation Options</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">No Emulation (Recommended for Modern Macs)</span>
+        <p class="ui-card-desc">Directly transmits left-click, right-click (secondary click / two-finger tap), and middle-click. Scroll wheel and trackpad two-finger scrolling are passed natively.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Modifier Click</span>
+        <p class="ui-card-desc">Emulate secondary clicks by holding a chosen modifier key while clicking (e.g. <kbd>Control</kbd> + click or <kbd>Option</kbd> + click).</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Multi-Tap</span>
+        <p class="ui-card-desc">Emulate a button click by tapping a modifier key (such as <kbd>⌘</kbd>) twice in rapid succession at the current cursor position.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Tap and Click</span>
+        <p class="ui-card-desc">Tap a modifier key once to enter emulation mode (cursor changes shape), then click to execute the secondary click. Press <kbd>Esc</kbd> or wait for timeout to cancel.</p>
+      </div>
+    </div>
+
+    <h3>3. Modifiers Tab (Keyboard Mapping)</h3>
+    <p>Allows you to map macOS modifier keys (<kbd>⌘</kbd>, <kbd>⌥</kbd>, <kbd>⌃</kbd>) to keys expected by remote operating systems:</p>
+    <ul>
+      <li><strong>Command Key (<kbd>⌘</kbd>)</strong>: Commonly mapped to <strong>Meta</strong> on Unix/Linux, <strong>Alt</strong> on Windows, or the <strong>Windows Start Key</strong>.</li>
+      <li><strong>Option Key (<kbd>⌥</kbd>)</strong>: By default sent as Alt/Option. Setting this to <strong>none (local keymap)</strong> prevents Option from being intercepted by the remote server, enabling you to type special macOS accented characters (e.g. <kbd>⌥</kbd> + <kbd>e</kbd> for &eacute;).</li>
+      <li><strong>Control Key (<kbd>⌃</kbd>)</strong>: Maps directly to standard remote Control.</li>
     </ul>
 
-	<div class="ss"><img src="profiles-modifiers.jpg" width="635" height="431" alt="Profile Dialog" /></div>
+    <h3>4. Colors Tab (Depth &amp; Display Tinting)</h3>
+    <div class="ui-card">
+      <div class="ui-card-header">
+        <span>Color Settings &amp; Tinting</span>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Color Resolution</span>
+        <p class="ui-card-desc">Select <strong>Let Server Decide</strong> (32-bit true color) for pristine visual quality. Over congested networks, dropping to 16-bit (thousands of colors) or 8-bit (256 colors) significantly cuts bandwidth.</p>
+      </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">Tint Remote Display (Visual Distinguishability)</span>
+        <p class="ui-card-desc">One of Chicken's most celebrated features! When connecting from a Mac to another Mac, it can be disorienting to know whether a window is on your local machine or the remote screen. Checking <strong>Tint remote display</strong> tints the remote session with a soft, customizable color wash, eliminating any confusion.</p>
+      </div>
+    </div>
 
-	<ul class="explanation">
-		<li><span class="item">Modifiers:</span>  You can use this section to map the modifier keys on your Macintosh keyboard to keys commonly used on other operating systems.  This allows you to use the Alt key on a Windows server or the Meta key on a Unix server, for example. If you set the Option key to "none (local keymap)", then Option won't be sent to the server, but can be used to enter special characters using normal Mac keyboard combinations, such as Option-A for &aring; on a US keyboard.
-        For example, if connecting to an X11 server, to have your keyboard wokr
-        similarly to Apple's X11.app, set Command to "Meta" and Option to "none
-        (local keymap)".</li>
-	</ul>
-
-	<div class="ss"><img src="profiles-color.jpg" width="631" height="423" alt="Profile Dialog" /></div>
-
-	<ul class="explanation">
-		<li><span class="item">Color:</span>  You can use this section to select the color resolution you wish to use with your remote servers.  Since VNC is a bandwidth-intensive protocol, you may obtain better responsiveness by reducing your color resolution.  <strong>Let Server Decide</strong> uses the native color resolution of the server.</li>
-
-        <p>The <strong>Tint remote display</strong> setting will cause the
-        remote displays to be tinted a given color. Tinting creates a visual
-        distinction between the remote and local windows.</p>
-	</ul>
+    <div class="page-footer">
+      <div>&larr; <a href="rdp.html">Remote Desktop (RDP)</a></div>
+      <div>Chicken Fork &copy; 2022&ndash;2026 Alexey Shakula &bull; <a href="https://github.com/ays7/chicken">GitHub</a></div>
+      <div><a href="preferences.html">Preferences &amp; Shortcuts</a> &rarr;</div>
+    </div>
+  </main>
 </div>
-</div></body></html>
+
+</body>
+</html>

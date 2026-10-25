@@ -1,76 +1,185 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="style_sheet.css" type="text/css" />
-	<title>Chicken: Contact</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style_sheet.css" type="text/css" />
+  <title>Credits &amp; Contact &mdash; Chicken Fork</title>
 </head>
 <body>
 
-<div id="PageContainer">
-<div id="header">
-	<h1>Contact</h1>
-	<h2><img src="icon.jpg" width="128" height="128" alt="Chicken Icon" /></h2>
+<div class="layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <a href="index.html" class="brand">
+      <img src="icon.png" alt="Chicken Fork Logo" class="brand-icon" />
+      <div class="brand-text">
+        <span class="brand-title">Chicken Fork</span>
+        <span class="brand-subtitle">Documentation</span>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" class="version-pill" title="View releases on GitHub">v2026.11</a>
+      </div>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-heading">Getting Started</div>
+      <ul class="nav-list">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="getting-started.html">Connection Setup</a></li>
+        <li><a href="rdp.html">Remote Desktop (RDP)</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Configuration</div>
+      <ul class="nav-list">
+        <li><a href="profiles.html">Profiles &amp; Encodings</a></li>
+        <li><a href="preferences.html">Preferences &amp; Shortcuts</a></li>
+        <li><a href="advanced.html">Advanced Usage</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-heading">Support &amp; History</div>
+      <ul class="nav-list">
+        <li><a href="faq.html">Frequently Asked Questions</a></li>
+        <li><a href="history.html">Version History</a></li>
+        <li><a href="contact.html" class="active">Credits &amp; Contact</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="content">
+    <h1>Credits &amp; Contact</h1>
+
+    <h2>Maintainers &amp; Primary Contributors</h2>
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Contributor</th>
+            <th>Role &amp; Contributions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Alexey Shakula (<a href="https://github.com/ays7">@ays7</a>)</strong></td>
+            <td><strong>Current Maintainer (2022&ndash;present)</strong><br />Universal 64-bit Apple Silicon &amp; Intel architecture, native Microsoft Remote Desktop (RDP) client integration via FreeRDP 3.x, Apple Remote Desktop (ARD) authentication, dynamic desktop resizing, UTF-8 extended clipboard, Retina display boundary fixes, Touch Bar integration, and documentation modernization.</td>
+          </tr>
+          <tr>
+            <td><strong>Dustin Cartwright</strong></td>
+            <td><strong>Maintainer (2010&ndash;2011)</strong><br />Maintained Chicken 2.1 &amp; 2.2 series, integrated SSH tunneling, upgraded libjpeg-turbo, and authored numerous stability improvements.</td>
+          </tr>
+          <tr>
+            <td><strong>Jason Harris</strong></td>
+            <td><strong>Chicken of the VNC Project Manager (2002&ndash;2006)</strong><br />Ported VNCViewer to Mac OS X Cocoa, designed the original user interface, added core features, and authored initial documentation.</td>
+          </tr>
+          <tr>
+            <td><strong>Helmut Maierhofer</strong></td>
+            <td>Original author of VNCViewer for NeXTStep on Intel, encoding architect.</td>
+          </tr>
+          <tr>
+            <td><strong>Jared McIntyre</strong></td>
+            <td>GUI additions, Rendezvous / Bonjour server autodiscovery.</td>
+          </tr>
+          <tr>
+            <td><strong>Kurt Werle</strong></td>
+            <td>Performance and protocol optimizations.</td>
+          </tr>
+          <tr>
+            <td><strong>Sean Kamath</strong></td>
+            <td>Development and feedback.</td>
+          </tr>
+          <tr>
+            <td><strong>Cale Peeples</strong></td>
+            <td>Generous creator of the original beloved Chicken mascot icon.</td>
+          </tr>
+          <tr>
+            <td><strong>Tobia Conforto</strong></td>
+            <td>Original VNC graphics in About dialog.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Third-Party Open Source Libraries</h2>
+    <p>Chicken Fork is made possible by the dedication of the open-source software community:</p>
+
+    <div class="table-wrapper">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Library / Project</th>
+            <th>Purpose</th>
+            <th>License</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><a href="https://www.freerdp.com/">FreeRDP</a> (v3.32.2)</strong></td>
+            <td>Native Microsoft Remote Desktop Protocol client implementation, graphics pipelines (RFX/EGFX), and virtual channels.</td>
+            <td>Apache 2.0</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://www.openssl.org/">OpenSSL</a> (v3.x)</strong></td>
+            <td>Static TLS 1.2/1.3 engine and cryptographic cipher implementations.</td>
+            <td>Apache 2.0</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://github.com/krzyzanowskim/CryptoSwift">CryptoSwift</a></strong></td>
+            <td>Swift cryptography functions (DHX &amp; AES) powering Apple Remote Desktop (ARD) authentication.</td>
+            <td>Fair Source / BSD</td>
+          </tr>
+          <tr>
+            <td><strong><a href="https://libjpeg-turbo.org/">libjpeg-turbo</a> (v3.2.0)</strong></td>
+            <td>SIMD-accelerated JPEG decompression powering the TightVNC encoding.</td>
+            <td>IJG / BSD</td>
+          </tr>
+          <tr>
+            <td><strong>AT&amp;T Laboratories Cambridge &amp; D3DES</strong></td>
+            <td>Core RFB protocol structures and DES encryption for standard VNC authentication.</td>
+            <td>GPL</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Project Resources &amp; Support</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>GitHub Repository</h3>
+        <p>Source code, issue tracker, and discussion:</p>
+        <p style="margin-top: 0.5rem;"><a href="https://github.com/ays7/chicken" target="_blank">https://github.com/ays7/chicken</a></p>
+      </div>
+
+      <div class="card">
+        <h3>Releases &amp; Downloads</h3>
+        <p>Download precompiled disk images (.dmg) and app bundles:</p>
+        <p style="margin-top: 0.5rem;"><a href="https://github.com/ays7/chicken/releases" target="_blank">https://github.com/ays7/chicken/releases</a></p>
+      </div>
+
+      <div class="card">
+        <h3>Issue &amp; Bug Tracker</h3>
+        <p>Report bugs, crashes, or suggest feature ideas:</p>
+        <p style="margin-top: 0.5rem;"><a href="https://github.com/ays7/chicken/issues" target="_blank">https://github.com/ays7/chicken/issues</a></p>
+      </div>
+    </div>
+
+    <h2>Distribution and License Agreement</h2>
+    <p>Chicken Fork is released under the <strong>GNU General Public License v2.0 or later (GPL-2.0+)</strong>:</p>
+    <div class="callout callout-note">
+      <p>Chicken Fork is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</p>
+      <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+    </div>
+    <p>Precompiled release binaries bundling FreeRDP and OpenSSL (Apache 2.0) are distributed under the terms of <strong>GNU General Public License v3.0</strong> in accordance with Section 9 of the GPL-2.0 ("or later") clause.</p>
+
+    <div class="page-footer">
+      <div>&larr; <a href="history.html">Version History</a></div>
+      <div>Chicken Fork &copy; 2022&ndash;2026 Alexey Shakula &bull; <a href="https://github.com/ays7/chicken">GitHub</a></div>
+      <div><a href="index.html">Overview</a> &rarr;</div>
+    </div>
+  </main>
 </div>
 
-<div class="section">
-	<h1>Distribution and License Agreement</h1>
-	
-	<p>Chicken is released under the GNU GPL. If you're interested in seeing the
-    source code or contributing, the project is hosted based at
-    <a href="http://sourceforge.net/projects/chicken/">http://sourceforge.net/projects/chicken/</a>.</p>
-
-	<p>Chicken is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.</p>
-
-	<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
-
-	<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.</p>
-</div>
-
-<div class="section">
-	<h1>Primary Contributors</h1>
-	
-	<ul>
-        <li><span class="contributor">Dustin Cartwright</span> &mdash; Current maintainer</li>
-		<li><span class="contributor">Jason Harris</span> &mdash; Chicken of the VNC project manager, port to Mac OS X, various code enhancements, documentation</li>
-		<li><span class="contributor">Jared McIntyre</span> &mdash; GUI additions, Rendezvous implementation, additional development</li>
-		<li><span class="contributor">Helmut Maierhofer</span> &mdash; Original implementation for NeXTStep, encoding guru extraordinaire</li>
-		<li><span class="contributor">Kurt Werle</span> &mdash; Development, speed and feature enhancements</li>
-		<li><span class="contributor">Sean Kamath</span> &mdash; Additional development and feedback</li>
-</ul>
-<p>Chicken also incorporates contributions from other projects:</p>
-<ul>
-    <li><a href="http://libjpeg-turbo.virtualgl.org/">libjpeg-turbo</a> by
-    <span class="contributor">D. R. Commander</span> and others &mdash;
-    Optimized decoding of JPEG images</li>
-    <li><a href="http://sparkle.andymatuschak.org/">Sparkle</a> by
-    <span class="contributor">Andy Matuschak</span> &mdash; Automatic updating.</li>
-    <li>VNC by <span class="contributor">AT&amp;T Laboratories Cambridge</span>
-    &mdash; Authentication code and protocol structures.</li>
-    <li>D3DES by <span class="contributor">Richard Outerbridge</span> &mdash;
-    DES encryption used for VNC authentication.</li>
-</div>
-
-<div class="section">
-	<h1>Contact Information</h1>
-	
-	<div id="contactInfo">
-	<p>You can always get the latest versions of Chicken, at its homepage:</p>
-<p class="address"><a href="http://chicken.sourceforge.net/">http://chicken.sourceforge.net/</a></p>
-
-	<p>To get support for Chicken, you can post in the help forum:</p>
-<p class="address"><a href="http://sourceforge.net/projects/chicken/forums/forum/1269540">http://sourceforge.net/projects/chicken/forums/forum/1269540</a></p>
-
-	<p>To submit an idea or suggestion for Chicken, use this address:</p>
-<p class="address"><a href="http://sourceforge.net/tracker/?group_id=364722&atid=1521168">http://sourceforge.net/tracker/?group_id=364722&atid=1521168</a></p>
-	</div>
-</div>
-
-<div id="footer">
-<p>VNCViewer Copyright &copy;1998-2000 Helmut Maierhofer<br/>
-Chicken of the VNC Copyright &copy;2002-2006 Geekspiff and Jason Harris<br/>
-This Readme Copyright &copy;2002-2006 Geekspiff and Jason Harris<br/>
-All Rights Reserved</p>
-</div>
-</div></body></html>
+</body>
+</html>

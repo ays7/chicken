@@ -136,8 +136,16 @@
 
 - (IBAction)showHelp: (id)sender
 {
-	NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
-    [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:path]];
+	NSURL *url = [[NSBundle mainBundle] URLForResource: @"index" withExtension: @"html" subdirectory: @"help"];
+	if (!url) {
+		NSString *path = [[NSBundle mainBundle] pathForResource: @"index" ofType: @"html" inDirectory: @"help"];
+		if (path) {
+			url = [NSURL fileURLWithPath: path];
+		}
+	}
+	if (url) {
+		[[NSWorkspace sharedWorkspace] openURL: url];
+	}
 }
 
 - (IBAction)setDiagnosticLogLevel:(id)sender
