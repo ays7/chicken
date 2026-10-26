@@ -125,12 +125,12 @@ jobs:
             if [ -n "$NOTES_FILE" ]; then
               echo "Using release notes file: $NOTES_FILE"
               gh release create "$TAG_NAME" "$DMG_PATH" \
-                --title "Chicken Fork ${TAG_NAME}" \
+                --title "${TAG_NAME}" \
                 --notes-file "$NOTES_FILE"
             else
               echo "Generating release notes automatically"
               gh release create "$TAG_NAME" "$DMG_PATH" \
-                --title "Chicken Fork ${TAG_NAME}" \
+                --title "${TAG_NAME}" \
                 --generate-notes
             fi
           fi
