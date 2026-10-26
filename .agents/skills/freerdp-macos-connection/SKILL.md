@@ -111,4 +111,39 @@ freerdp_settings_set_uint32(settings, FreeRDP_TlsSecLevel, 1);    // Level 1 all
 - **Clipboard (`cliprdr`)**: Set `FreeRDP_RedirectClipboard = TRUE`. In `CLIPRDR_SVC_CHANNEL_NAME`, respond to `MonitorReady` by sending `ClientCapabilities` (`CB_USE_LONG_FORMAT_NAMES`) and `ClientFormatList`. Convert between macOS `NSUTF8StringEncoding` (`\n`) and Windows `CF_UNICODETEXT` (`UTF-16LE` with `\r\n` via WinPR `wClipboard` or manual conversion).
 - **Hidden `rdpdr` / `rdpsnd` Coupling (`client/common/cmdline.c:6275–6300`)**:
   - Enabling `FreeRDP_AudioPlayback`, `FreeRDP_NetworkAutoDetect`, `FreeRDP_SupportHeartbeatPdu`, or `FreeRDP_SupportMultitransport` causes `freerdp_client_load_addins()` to automatically enable `FreeRDP_DeviceRedirection = TRUE` (`rdpdr`) and `rdpsnd`!
-  - If your client statically links only specific channels (and does **not** link `rdpdr` or `rdpsnd`), you **must** set `AudioPlayback = FALSE`, `DeviceRedirection = FALSE`, `NetworkAutoDetect = FALSE`, `SupportHeartbeatPdu = FALSE`, and `SupportMultitransport = FALSE`.
+  - Windows RDP servers require the `rdpdr` static virtual channel to be registered and complete its handshake before initializing the audio driver (`rdpsnd`).
+  - Statically link `CHANNEL_RDPSND=ON`, `CHANNEL_RDPSND_CLIENT=ON`, `CHANNEL_RDPDR=ON`, `CHANNEL_RDPDR_CLIENT=ON`, and `-DWITH_MACAUDIO=ON` (`rdpsnd_mac.m` with `AVAudioEngine`).
+  - On macOS, linking `rdpsnd_mac.m` and `rdpdr` into the host app requires `AVFoundation.framework`, `CoreAudio.framework`, `AudioToolbox.framework`, and `CoreServices.framework`.
+  - When disabling device redirections (drives, printers, smartcards, serial/parallel ports), set their individual booleans (`FreeRDP_RedirectDrives = FALSE`, etc.) to `FALSE` while keeping `FreeRDP_DeviceRedirection = TRUE` when `AudioPlayback == TRUE`.
+
+---
+
+### E. Audio Reception (`rdpsnd` & `drdynvc`) on macOS (Windows & Linux GNOME)
+
+```c
+// 1. Enable Audio Playback & Device Redirection
+freerdp_settings_set_bool(settings, FreeRDP_AudioPlayback, TRUE);
+freerdp_settings_set_bool(settings, FreeRDP_DeviceRedirection, TRUE); // Mandatory for rdpsnd
+freerdp_settings_set_bool(settings, FreeRDP_RemoteConsoleAudio, FALSE);
+
+// 2. Network Autodetect & Heartbeat (MANDATORY for GNOME Remote Desktop)
+// GNOME Remote Desktop intentionally drops audio output redirection if the client
+// does not support autodetecting network characteristics ([MS-RDPEAUT])!
+freerdp_settings_set_bool(settings, FreeRDP_NetworkAutoDetect, TRUE);
+freerdp_settings_set_bool(settings, FreeRDP_SupportHeartbeatPdu, TRUE);
+
+// 3. Dynamic Virtual Channels
+freerdp_settings_set_bool(settings, FreeRDP_SupportDynamicChannels, TRUE);
+```
+
+- **Linux / GNOME Remote Desktop (RHEL, Fedora, Ubuntu)**:
+  - During connection, GNOME Remote Desktop queries client formats (`[AAC: false, Opus: false, PCM: true]`).
+  - While it prefers Opus or AAC when compiled with those libraries, standard uncompressed PCM (`WAVE_FORMAT_PCM`, 16-bit stereo 44.1kHz) is fully supported as a fallback over SVC or DVC.
+  - **Critical Failure Mode**: If `NetworkAutoDetect` is `FALSE`, `gnome-remote-desktop` logs:
+    `[RDP] Client does not support autodetecting network characteristics. Disabling audio output redirection`
+    and skips opening the audio channel entirely. Always enable `FreeRDP_NetworkAutoDetect` and `FreeRDP_SupportHeartbeatPdu`.
+- **Windows Server / Desktop**:
+  - Requires `FreeRDP_DeviceRedirection = TRUE` (`rdpdr`) static channel to complete initialization before the remote audio driver starts streaming `rdpsnd` packets.
+- **macOS Backend (`rdpsnd_mac.m`)**:
+  - Schedules PCM buffers to `AVAudioPlayerNode` / `AVAudioEngine`.
+  - Supports `WAVE_FORMAT_PCM` with `wBitsPerSample == 16` and `nChannels == 2`. Audio blocks arrive over dynamic DVC as `Wave2PDU` (4096 bytes per packet) and static SVC as `WavePDU`.

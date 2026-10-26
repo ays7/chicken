@@ -172,6 +172,9 @@ open "rdp://Administrator@winserver.local:3390"
     <h3>Dynamic Desktop Resizing</h3>
     <p>Chicken Fork supports dynamic display resizing via Microsoft's RDP <code>DisplayControl</code> extension. When you resize the Chicken Fork session window on macOS, a dynamic monitor layout update is transmitted to Windows. The Windows remote desktop instantly reorganizes its desktop resolution to match your macOS window dimensions &mdash; no reconnecting or logging off required!</p>
 
+    <h3>Audio Reception &amp; Output</h3>
+    <p>Remote audio is streamed directly to your Mac using Microsoft's RDP Audio Output extension (<code>rdpsnd</code>) powered by macOS <code>AVAudioEngine</code> and CoreAudio. High-fidelity stereo audio plays seamlessly with automatic latency compensation. When opening <code>.rdp</code> connection files, Chicken Fork respects the standard <code>audiomode:i:</code> setting (redirect to client, play on remote server, or mute).</p>
+
     <h3>Automatic Clipboard Synchronization</h3>
     <p>Text, Unicode characters, and rich formatting are automatically synchronized bidirectionally between your Mac clipboard and the remote Windows desktop via the <code>cliprdr</code> channel. Simply press <kbd>⌘</kbd> + <kbd>C</kbd> on macOS and <kbd>Ctrl</kbd> + <kbd>V</kbd> on Windows.</p>
 

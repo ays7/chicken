@@ -252,18 +252,25 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     freerdp_settings_set_bool(settings, FreeRDP_RemoteFxCodec, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_NSCodec, TRUE);
 
-    // Disable channels requiring rdpdr or external dynamic libraries
-    freerdp_settings_set_bool(settings, FreeRDP_DeviceRedirection, FALSE);
+    // Audio & Device Redirection (rdpsnd & rdpdr)
+    int audioMode = [server_ respondsToSelector:@selector(rdpAudioMode)] ? [server_ rdpAudioMode] : 0;
+    BOOL enableAudio = (audioMode == 0);
+    BOOL remoteConsoleAudio = (audioMode == 1);
+
+    freerdp_settings_set_bool(settings, FreeRDP_AudioPlayback, enableAudio);
+    freerdp_settings_set_bool(settings, FreeRDP_RemoteConsoleAudio, remoteConsoleAudio);
+    freerdp_settings_set_bool(settings, FreeRDP_DeviceRedirection, enableAudio);
+
+    // Keep unused hardware/filesystem device redirections disabled
     freerdp_settings_set_bool(settings, FreeRDP_RedirectDrives, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_RedirectHomeDrive, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_RedirectPrinters, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_RedirectSmartCards, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_RedirectSerialPorts, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_RedirectParallelPorts, FALSE);
-    freerdp_settings_set_bool(settings, FreeRDP_AudioPlayback, FALSE);
     freerdp_settings_set_bool(settings, FreeRDP_AudioCapture, FALSE);
-    freerdp_settings_set_bool(settings, FreeRDP_NetworkAutoDetect, FALSE);
-    freerdp_settings_set_bool(settings, FreeRDP_SupportHeartbeatPdu, FALSE);
+    freerdp_settings_set_bool(settings, FreeRDP_NetworkAutoDetect, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_SupportHeartbeatPdu, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_SupportMultitransport, FALSE);
 
     // Security negotiation

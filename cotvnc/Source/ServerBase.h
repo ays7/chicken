@@ -43,6 +43,8 @@
     NSString  *_sshHost;
     in_port_t _sshPort; // 0 means use default port
     NSString  *_sshUser;
+
+    int       _rdpAudioMode; // 0 = play locally, 1 = play on server, 2 = do not play
 }
 
 - (id)init;
@@ -59,6 +61,7 @@
 - (BOOL)rememberPassword;
 - (int)port;
 - (bool)shared;
+- (int)rdpAudioMode;
 
 - (bool)viewOnly;
 - (bool)fullscreen;
@@ -75,6 +78,7 @@
 - (void)setPassword: (NSString*)password;
 - (void)setRemoteProtocol: (RemoteProtocol)protocol;
 - (void)setUsername: (NSString*)username;
+- (void)setRdpAudioMode:(int)mode;
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;
 - (void)setPort: (int)port;

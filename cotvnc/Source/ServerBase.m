@@ -46,6 +46,7 @@
 
         _remoteProtocol = RemoteProtocolVNC;
         _username = nil;
+        _rdpAudioMode = 0;
 
         _viewOnly = NO;
         _profile = [[[ProfileDataManager sharedInstance] defaultProfile]retain];
@@ -382,6 +383,16 @@
 	}
 }
 
+- (int)rdpAudioMode
+{
+    return _rdpAudioMode;
+}
+
+- (void)setRdpAudioMode:(int)mode
+{
+    _rdpAudioMode = mode;
+}
+
 - (void)copyServer: (id<IServerData>)server
 {
     [self setHost:[server host]];
@@ -393,6 +404,9 @@
 
     _viewOnly = [server viewOnly];
     [self setProfile:[server profile]];
+    if ([server respondsToSelector:@selector(rdpAudioMode)]) {
+        _rdpAudioMode = [server rdpAudioMode];
+    }
 }
 
 - (bool)addToServerListOnConnect

@@ -140,6 +140,10 @@
 		8AF000062FAA000100000001 /* libwinpr3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000052FAA000100000001 /* libwinpr3.a */; };
 		8AF000082FAA000100000001 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000072FAA000100000001 /* libssl.a */; };
 		8AF0000A2FAA000100000001 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000092FAA000100000001 /* libcrypto.a */; };
+		8AF000112FAA000100000001 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000102FAA000100000001 /* AVFoundation.framework */; };
+		8AF000132FAA000100000001 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000122FAA000100000001 /* CoreAudio.framework */; };
+		8AF000152FAA000100000001 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000142FAA000100000001 /* AudioToolbox.framework */; };
+		8AF000172FAA000100000001 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000162FAA000100000001 /* CoreServices.framework */; };
 		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
 		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
 		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
@@ -277,6 +281,10 @@
 		8AF000052FAA000100000001 /* libwinpr3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwinpr3.a; path = "freerdp/lib/libwinpr3.a"; sourceTree = "<group>"; };
 		8AF000072FAA000100000001 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "freerdp/lib/libssl.a"; sourceTree = "<group>"; };
 		8AF000092FAA000100000001 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "freerdp/lib/libcrypto.a"; sourceTree = "<group>"; };
+		8AF000102FAA000100000001 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		8AF000122FAA000100000001 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		8AF000142FAA000100000001 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		8AF000162FAA000100000001 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8AC541EB2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/AuthPrompt.xib; sourceTree = "<group>"; };
 		8AC541EC2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ConnectionDialog.xib; sourceTree = "<group>"; };
@@ -466,6 +474,10 @@
 				8AF000062FAA000100000001 /* libwinpr3.a in Frameworks */,
 				8AF000082FAA000100000001 /* libssl.a in Frameworks */,
 				8AF0000A2FAA000100000001 /* libcrypto.a in Frameworks */,
+				8AF000112FAA000100000001 /* AVFoundation.framework in Frameworks */,
+				8AF000132FAA000100000001 /* CoreAudio.framework in Frameworks */,
+				8AF000152FAA000100000001 /* AudioToolbox.framework in Frameworks */,
+				8AF000172FAA000100000001 /* CoreServices.framework in Frameworks */,
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
@@ -478,6 +490,10 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8AF000102FAA000100000001 /* AVFoundation.framework */,
+				8AF000122FAA000100000001 /* CoreAudio.framework */,
+				8AF000142FAA000100000001 /* AudioToolbox.framework */,
+				8AF000162FAA000100000001 /* CoreServices.framework */,
 				DA1FDD9112D6B1A000632D78 /* Security.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				E2F48D78040EDD5100BD55BA /* Carbon.framework */,

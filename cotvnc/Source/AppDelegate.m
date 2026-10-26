@@ -243,6 +243,7 @@
         int port = 3389;
         NSString *user = nil;
         NSString *domain = nil;
+        int audioMode = 0; // Default: 0 = play on this computer
 
         if (content)
         {
@@ -270,11 +271,17 @@
                 {
                     domain = [line substringFromIndex:[@"domain:s:" length]];
                 }
+                else if ([line hasPrefix:@"audiomode:i:"])
+                {
+                    NSString *modeStr = [line substringFromIndex:[@"audiomode:i:" length]];
+                    audioMode = [modeStr intValue];
+                }
             }
         }
 
         ServerStandAlone *server = [[ServerStandAlone alloc] init];
         [server setRemoteProtocol:RemoteProtocolRDP];
+        [server setRdpAudioMode:audioMode];
         if (host)
         {
             [server setHostAndPort:host];

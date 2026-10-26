@@ -84,5 +84,7 @@ typedef NS_ENUM(NSInteger, RemoteProtocol) {
 
 @optional
 - (void)setRememberPassword: (BOOL)rememberPassword;
+- (int)rdpAudioMode;
+- (void)setRdpAudioMode:(int)mode;
 
 @end
