@@ -4,13 +4,19 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to publish (leave empty to use Info.plist version)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
 
 jobs:
   release:
-    name: Build and Publish Release DMG
+    name: Build, Sign, Notarize and Publish Release DMG
     runs-on: macos-latest
 
     steps:
@@ -33,82 +39,35 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             clean build
 
-      - name: Package and Verify DMG
+      - name: Sign, Package, Notarize and Staple DMG
         id: package
+        env:
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         run: |
-          mkdir -p dist
-
-          # Locate built Chicken Fork.app bundle
-          APP_PATH=$(find ./DerivedData -name "Chicken Fork.app" -type d | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            echo "Error: Chicken Fork.app not found in DerivedData!"
-            exit 1
-          fi
-          echo "Found Chicken Fork.app at: $APP_PATH"
-
-          # Apply ad-hoc code signature to the app bundle and its contents
-          echo "=== Applying Ad-Hoc Code Signature to App Bundle ==="
-          codesign --force --deep -s - "$APP_PATH"
-          codesign -dv "$APP_PATH"
-          codesign --verify --deep --strict "$APP_PATH"
-          echo "====================================================="
-
-          # Extract version from Info.plist
-          VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.11")
-          DMG_NAME="Chicken-Fork-${VERSION}.dmg"
-          DMG_PATH="dist/${DMG_NAME}"
-
-          # Create a clean staging directory for the DMG
-          STAGING_DIR="dmg_staging"
-          rm -rf "$STAGING_DIR"
-          mkdir -p "$STAGING_DIR"
-
-          # Copy Chicken Fork.app and create Applications symlink for drag-and-drop install
-          cp -R "$APP_PATH" "$STAGING_DIR/"
-          ln -s /Applications "$STAGING_DIR/Applications"
-
-          echo "Creating compressed UDZO DMG at $DMG_PATH..."
-          hdiutil create \
-            -volname "Chicken Fork" \
-            -srcfolder "$STAGING_DIR" \
-            -ov \
-            -format UDZO \
-            "$DMG_PATH"
-
-          sync
-
-          # Apply ad-hoc code signature to the DMG image
-          echo "=== Applying Ad-Hoc Code Signature to DMG ==="
-          codesign --force -s - "$DMG_PATH"
-          codesign -dv "$DMG_PATH"
-          codesign --verify "$DMG_PATH"
-          echo "============================================="
-
-          # Verify DMG mountability on runner
-          echo "=== Testing DMG mountability ==="
-          MOUNT_DIR="/tmp/chickenfork_test_mount"
-          mkdir -p "$MOUNT_DIR"
-          hdiutil attach "$DMG_PATH" -mountpoint "$MOUNT_DIR" -nobrowse -readonly
-          ls -la "$MOUNT_DIR"
-          hdiutil detach "$MOUNT_DIR"
-          rm -rf "$MOUNT_DIR" "$STAGING_DIR"
-          echo "=== DMG mount test passed ==="
-
-          echo "=== Artifact Details ==="
-          ls -lh dist/
-          shasum -a 256 dist/*.dmg
-          echo "========================"
-
-          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
-          echo "dmg_name=$DMG_NAME" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          ./scripts/sign_and_notarize.sh
 
       - name: Publish GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ github.ref_name }}
+          EVENT_TAG: ${{ github.ref_name }}
+          INPUT_TAG: ${{ github.event.inputs.tag_name }}
           DMG_PATH: ${{ steps.package.outputs.dmg_path }}
+          VERSION: ${{ steps.package.outputs.version }}
         run: |
+          TAG_NAME="${INPUT_TAG}"
+          if [ -z "$TAG_NAME" ]; then
+            if [ "${{ github.event_name }}" = "push" ]; then
+              TAG_NAME="$EVENT_TAG"
+            else
+              TAG_NAME="v${VERSION}"
+            fi
+          fi
+
           CLEAN_VERSION="${TAG_NAME#v}"
           NOTES_FILE=""
           if [ -f "release-notes/${CLEAN_VERSION}.md" ]; then

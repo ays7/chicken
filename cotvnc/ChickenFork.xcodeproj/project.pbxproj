@@ -39,11 +39,6 @@
 		7F7A93FC05E71B5C00E20416 /* RawEncodingReader.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71D9033DB4A801A8010C /* RawEncodingReader.h */; };
 		7F7A93FE05E71B5C00E20416 /* RFBConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DD033DB4A801A8010C /* RFBConnection.h */; };
 		7F7A93FF05E71B5C00E20416 /* RFBConnectionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */; };
-		C07000010000000000000002 /* RemoteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000010000000000000001 /* RemoteConnection.h */; };
-		C07000020000000000000002 /* RDPFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000020000000000000001 /* RDPFrameBuffer.h */; };
-		C07000020000000000000004 /* RDPFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000020000000000000003 /* RDPFrameBuffer.m */; };
-		C07000030000000000000002 /* RDPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000030000000000000001 /* RDPConnection.h */; };
-		C07000030000000000000004 /* RDPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000030000000000000003 /* RDPConnection.m */; };
 		7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */; };
 		7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E3033DB4A801A8010C /* rfbproto.h */; };
 		7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5DC71E4033DB4A801A8010C /* RFBProtocol.h */; };
@@ -135,6 +130,7 @@
 		8A0B0E7616127F3E8A14CC23 /* Exponentiation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */; };
 		8A5828462FAA24D700A4E226 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8A5828452FAA24D700A4E226 /* Localizable.xcstrings */; };
 		8A84A0992D5BC6CF00277CAC /* libturbojpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */; };
+		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
 		8AF000022FAA000100000001 /* libfreerdp3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000012FAA000100000001 /* libfreerdp3.a */; };
 		8AF000042FAA000100000001 /* libfreerdp-client3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000032FAA000100000001 /* libfreerdp-client3.a */; };
 		8AF000062FAA000100000001 /* libwinpr3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000052FAA000100000001 /* libwinpr3.a */; };
@@ -144,13 +140,17 @@
 		8AF000132FAA000100000001 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000122FAA000100000001 /* CoreAudio.framework */; };
 		8AF000152FAA000100000001 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000142FAA000100000001 /* AudioToolbox.framework */; };
 		8AF000172FAA000100000001 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF000162FAA000100000001 /* CoreServices.framework */; };
-		8A84A09B2D5BC78E00277CAC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A84A09A2D5BC78E00277CAC /* libz.tbd */; };
 		91B500FDFA5A346B6964C098 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C982E772F26EA68BBEAF6D /* Codable.swift */; };
 		93BAB23BE11EC34CF74C1CA2 /* Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2149C1B8288F348A035BA7 /* Addition.swift */; };
 		9E648D1D93EAA7ECF5F2D88F /* BigUInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E2A364B41F949C9C5126B6 /* BigUInt.swift */; };
 		9EF4AB0FE722A093EE774A06 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF34D9BB98B98C6741057041 /* Random.swift */; };
 		A11CEB86DA3AF191B3679527 /* Subtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B99EF228C2BA8102DB86645 /* Subtraction.swift */; };
 		B3260DA14A9AAB4E95EA4B71 /* BigInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F81447C3F26F481900F1674 /* BigInt.swift */; };
+		C07000010000000000000002 /* RemoteConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000010000000000000001 /* RemoteConnection.h */; };
+		C07000020000000000000002 /* RDPFrameBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000020000000000000001 /* RDPFrameBuffer.h */; };
+		C07000020000000000000004 /* RDPFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000020000000000000003 /* RDPFrameBuffer.m */; };
+		C07000030000000000000002 /* RDPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000030000000000000001 /* RDPConnection.h */; };
+		C07000030000000000000004 /* RDPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000030000000000000003 /* RDPConnection.m */; };
 		C1DB65427CF08686781F946F /* Multiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2414BD5025D38343B896663 /* Multiplication.swift */; };
 		C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C2C28573CF34D12230072 /* CS.swift */; };
 		C68A7701D2AC549231897A86 /* Shifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3268AEF31863553C9B05C7E /* Shifts.swift */; };
@@ -276,15 +276,6 @@
 		85BAD133D6AFB8E816EB7F1B /* SquareRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SquareRoot.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/SquareRoot.swift; sourceTree = "<group>"; };
 		8A5828452FAA24D700A4E226 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = "<group>"; };
 		8A84A0982D5BC6CF00277CAC /* libturbojpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libturbojpeg.a; path = "libjpeg-turbo/lib/libturbojpeg.a"; sourceTree = "<group>"; };
-		8AF000012FAA000100000001 /* libfreerdp3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreerdp3.a; path = "freerdp/lib/libfreerdp3.a"; sourceTree = "<group>"; };
-		8AF000032FAA000100000001 /* libfreerdp-client3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreerdp-client3.a; path = "freerdp/lib/libfreerdp-client3.a"; sourceTree = "<group>"; };
-		8AF000052FAA000100000001 /* libwinpr3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwinpr3.a; path = "freerdp/lib/libwinpr3.a"; sourceTree = "<group>"; };
-		8AF000072FAA000100000001 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "freerdp/lib/libssl.a"; sourceTree = "<group>"; };
-		8AF000092FAA000100000001 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "freerdp/lib/libcrypto.a"; sourceTree = "<group>"; };
-		8AF000102FAA000100000001 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
-		8AF000122FAA000100000001 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
-		8AF000142FAA000100000001 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
-		8AF000162FAA000100000001 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8A84A09A2D5BC78E00277CAC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8AC541EB2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/AuthPrompt.xib; sourceTree = "<group>"; };
 		8AC541EC2413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ConnectionDialog.xib; sourceTree = "<group>"; };
@@ -294,10 +285,24 @@
 		8AC541F02413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/OSX_RFBViewer.xib; sourceTree = "<group>"; };
 		8AC541F12413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/RFBConnection.xib; sourceTree = "<group>"; };
 		8AC541F22413D92700B6450B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ServerDisplay.xib; sourceTree = "<group>"; };
+		8AF000012FAA000100000001 /* libfreerdp3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreerdp3.a; path = freerdp/lib/libfreerdp3.a; sourceTree = "<group>"; };
+		8AF000032FAA000100000001 /* libfreerdp-client3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libfreerdp-client3.a"; path = "freerdp/lib/libfreerdp-client3.a"; sourceTree = "<group>"; };
+		8AF000052FAA000100000001 /* libwinpr3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwinpr3.a; path = freerdp/lib/libwinpr3.a; sourceTree = "<group>"; };
+		8AF000072FAA000100000001 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = freerdp/lib/libssl.a; sourceTree = "<group>"; };
+		8AF000092FAA000100000001 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = freerdp/lib/libcrypto.a; sourceTree = "<group>"; };
+		8AF000102FAA000100000001 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		8AF000122FAA000100000001 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		8AF000142FAA000100000001 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		8AF000162FAA000100000001 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		90C8824EBB058327090BA2B2 /* FloatingPointConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FloatingPointConversion.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/FloatingPointConversion.swift; sourceTree = "<group>"; };
 		90E2FDA4AEA9CE89624F909E /* GCD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCD.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/GCD.swift; sourceTree = "<group>"; };
 		9FA4506AC7AE0E801C327D4B /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Division.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Division.swift; sourceTree = "<group>"; };
 		A66EF26593DBA9CB11BCF37E /* WordsAndBits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WordsAndBits.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/WordsAndBits.swift; sourceTree = "<group>"; };
+		C07000010000000000000001 /* RemoteConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RemoteConnection.h; sourceTree = "<group>"; };
+		C07000020000000000000001 /* RDPFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPFrameBuffer.h; sourceTree = "<group>"; };
+		C07000020000000000000003 /* RDPFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPFrameBuffer.m; sourceTree = "<group>"; };
+		C07000030000000000000001 /* RDPConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPConnection.h; sourceTree = "<group>"; };
+		C07000030000000000000003 /* RDPConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPConnection.m; sourceTree = "<group>"; };
 		C3268AEF31863553C9B05C7E /* Shifts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Shifts.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Shifts.swift; sourceTree = "<group>"; };
 		CF34D9BB98B98C6741057041 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Random.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Random.swift; sourceTree = "<group>"; };
 		D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exponentiation.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Exponentiation.swift; sourceTree = "<group>"; };
@@ -423,11 +428,6 @@
 		F5DC71DA033DB4A801A8010C /* RawEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RawEncodingReader.m; sourceTree = "<group>"; };
 		F5DC71DD033DB4A801A8010C /* RFBConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnection.h; sourceTree = "<group>"; };
 		F5DC71DE033DB4A801A8010C /* RFBConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnection.m; sourceTree = "<group>"; };
-		C07000010000000000000001 /* RemoteConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RemoteConnection.h; sourceTree = "<group>"; };
-		C07000020000000000000001 /* RDPFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPFrameBuffer.h; sourceTree = "<group>"; };
-		C07000020000000000000003 /* RDPFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPFrameBuffer.m; sourceTree = "<group>"; };
-		C07000030000000000000001 /* RDPConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPConnection.h; sourceTree = "<group>"; };
-		C07000030000000000000003 /* RDPConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPConnection.m; sourceTree = "<group>"; };
 		F5DC71DF033DB4A801A8010C /* RFBConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBConnectionManager.h; sourceTree = "<group>"; };
 		F5DC71E0033DB4A801A8010C /* RFBConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RFBConnectionManager.m; sourceTree = "<group>"; };
 		F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RFBHandshaker.h; sourceTree = "<group>"; };
@@ -1208,7 +1208,9 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/ChickenFork.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1258,7 +1260,9 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/ChickenFork.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1306,7 +1310,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/ChickenFork.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -1492,7 +1498,9 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = 4X5WA3953A;
 				ENABLE_HARDENED_RUNTIME = YES;
+				CODE_SIGN_ENTITLEMENTS = Resources/ChickenFork.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",

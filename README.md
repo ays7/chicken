@@ -65,6 +65,9 @@ Chicken Fork has undergone significant modernization to enhance stability, displ
    ```
 3. Select the scheme (e.g., **Chicken Fork**) and build/run (`Cmd + R`) or archive it to build the Universal release application.
 
+### Distribution & Code Signing
+For packaging signed and notarized `.dmg` releases for direct macOS distribution via GitHub Releases, refer to the [Apple Developer ID Code Signing & Notarization Guide](docs/developer-id-signing.md).
+
 ---
 
 ## 📄 License

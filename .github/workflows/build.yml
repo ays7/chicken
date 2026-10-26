@@ -44,9 +44,13 @@ jobs:
           fi
           echo "Found Chicken Fork.app at: $APP_PATH"
 
-          # Apply ad-hoc code signature to the app bundle and its contents
+          # Apply ad-hoc code signature with Hardened Runtime and entitlements
           echo "=== Applying Ad-Hoc Code Signature to App Bundle ==="
-          codesign --force --deep -s - "$APP_PATH"
+          ENTITLEMENTS_ARG=""
+          if [ -f "cotvnc/Resources/ChickenFork.entitlements" ]; then
+            ENTITLEMENTS_ARG="--entitlements cotvnc/Resources/ChickenFork.entitlements"
+          fi
+          codesign --force --deep --options runtime -s - $ENTITLEMENTS_ARG "$APP_PATH"
           codesign -dv "$APP_PATH"
           codesign --verify --deep --strict "$APP_PATH"
           echo "====================================================="
