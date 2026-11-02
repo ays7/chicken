@@ -135,7 +135,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 - (void)dealloc
 {
     [self removeMouseMovedTrackingRect];
-    hasPendingMouseMove = NO;
     [self closeConnection];
     [server_ release];
     [socketHandler release];
@@ -632,7 +631,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 - (void)closeConnection
 {
     [self removeMouseMovedTrackingRect];
-    hasPendingMouseMove = NO;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(performDelayedDesktopSize) object:nil];
 
     shouldStop = YES;
@@ -763,23 +761,23 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     if (!rfbView) return;
     NSWindow *window = [rfbView window];
-    NSPoint mousePoint = [rfbView convertPoint:[window convertPointFromScreen:[NSEvent mouseLocation]] fromView:nil];
-    BOOL mouseInVisibleRect = [rfbView mouse:mousePoint inRect:[rfbView visibleRect]];
+    [window setAcceptsMouseMovedEvents:YES];
 
     if (_mouseMovedTrackingTag)
         [rfbView removeTrackingRect:_mouseMovedTrackingTag];
-    _mouseMovedTrackingTag = [rfbView addTrackingRect:[rfbView bounds] owner:self userData:nil assumeInside:mouseInVisibleRect];
-    if (mouseInVisibleRect)
-        [window setAcceptsMouseMovedEvents:YES];
+    _mouseMovedTrackingTag = [rfbView addTrackingRect:[rfbView bounds] owner:self userData:nil assumeInside:YES];
 }
 
 - (void)removeMouseMovedTrackingRect
 {
-    if (_mouseMovedTrackingTag && rfbView)
+    if (rfbView)
     {
-        [rfbView removeTrackingRect:_mouseMovedTrackingTag];
+        if (_mouseMovedTrackingTag)
+        {
+            [rfbView removeTrackingRect:_mouseMovedTrackingTag];
+            _mouseMovedTrackingTag = 0;
+        }
         [[rfbView window] setAcceptsMouseMovedEvents:NO];
-        _mouseMovedTrackingTag = 0;
     }
 }
 
@@ -791,8 +789,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    if (rfbView)
-        [[rfbView window] setAcceptsMouseMovedEvents:NO];
 }
 - (void)viewFrameDidChange:(NSNotification *)notification {}
 
@@ -871,24 +867,27 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 #pragma mark - Mouse & Key Events from EventFilter
 
-- (void)flushPendingMouseMove
+- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    if (!hasPendingMouseMove || !freerdpContext || !isConnected)
-    {
-        hasPendingMouseMove = NO;
+    if (!freerdpContext || !isConnected || !rfbView)
         return;
-    }
 
-    UINT16 x = pendingMouseX;
-    UINT16 y = pendingMouseY;
-    hasPendingMouseMove = NO;
+    CGFloat width = [rfbView bounds].size.width;
+    CGFloat height = [rfbView bounds].size.height;
+
+    if (thePoint.x < 0) thePoint.x = 0;
+    if (thePoint.y < 0) thePoint.y = 0;
+    if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
+    if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+
+    UINT16 x = (UINT16)thePoint.x;
+    UINT16 y = (UINT16)(height - 1 - thePoint.y);
 
     if (x == lastSentMouseX && y == lastSentMouseY)
         return;
 
     lastSentMouseX = x;
     lastSentMouseY = y;
-    lastMouseSendTimeMach = mach_absolute_time();
 
     [inputLock lock];
     if (freerdpContext && isConnected)
@@ -902,73 +901,23 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     [inputLock unlock];
 }
 
-- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
-{
-    if (!freerdpContext || !isConnected)
-        return;
-
-    UINT16 x = (UINT16)thePoint.x;
-    UINT16 y = (UINT16)([rfbView bounds].size.height - thePoint.y);
-
-    if (x == lastSentMouseX && y == lastSentMouseY && !hasPendingMouseMove)
-        return;
-
-    // During active dragging (buttons held down), send moves immediately with minimal throttle
-    if (mask != 0 || _pressedButtons != 0)
-    {
-        hasPendingMouseMove = NO;
-        lastSentMouseX = x;
-        lastSentMouseY = y;
-        lastMouseSendTimeMach = mach_absolute_time();
-
-        [inputLock lock];
-        if (freerdpContext && isConnected)
-        {
-            rdpContext *ctx = (rdpContext *)freerdpContext;
-            if (ctx && ctx->input)
-            {
-                freerdp_input_send_mouse_event(ctx->input, PTR_FLAGS_MOVE, x, y);
-            }
-        }
-        [inputLock unlock];
-        return;
-    }
-
-    // Pure mouse motion: rate-limit to ~80 Hz (12 ms) to prevent server input backlog
-    static mach_timebase_info_data_t tb;
-    if (tb.denom == 0) mach_timebase_info(&tb);
-    uint64_t now = mach_absolute_time();
-    uint64_t elapsedNs = (now - lastMouseSendTimeMach) * tb.numer / tb.denom;
-
-    pendingMouseX = x;
-    pendingMouseY = y;
-
-    if (elapsedNs >= 12000000ULL /* 12 ms */)
-    {
-        [self flushPendingMouseMove];
-    }
-    else if (!hasPendingMouseMove)
-    {
-        hasPendingMouseMove = YES;
-        uint64_t delayNs = 12000000ULL - elapsedNs;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)delayNs), dispatch_get_main_queue(), ^{
-            [self flushPendingMouseMove];
-        });
-    }
-}
-
 - (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    if (!freerdpContext || !isConnected)
+    if (!freerdpContext || !isConnected || !rfbView)
         return;
 
-    [self flushPendingMouseMove];
+    CGFloat width = [rfbView bounds].size.width;
+    CGFloat height = [rfbView bounds].size.height;
+
+    if (thePoint.x < 0) thePoint.x = 0;
+    if (thePoint.y < 0) thePoint.y = 0;
+    if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
+    if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
 
     UINT16 x = (UINT16)thePoint.x;
-    UINT16 y = (UINT16)([rfbView bounds].size.height - thePoint.y);
+    UINT16 y = (UINT16)(height - 1 - thePoint.y);
     lastSentMouseX = x;
     lastSentMouseY = y;
-    lastMouseSendTimeMach = mach_absolute_time();
 
     unsigned int changed = mask ^ _pressedButtons;
 

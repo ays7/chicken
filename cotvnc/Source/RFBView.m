@@ -167,6 +167,7 @@ typedef int NSInteger;
     [_serverCursor release];
     _serverCursor = [aCursor retain];
     if (!_modifierCursor) {
+        [[self window] invalidateCursorRectsForView: self];
         if (aCursor)
             [aCursor set];
         else
@@ -249,9 +250,19 @@ typedef int NSInteger;
 /* Called by system to set-up cursors for this view */
 - (void)resetCursorRects
 {
-    // Dynamic cursor management is handled via NSTrackingCursorUpdate and cursorUpdate:.
-    // Leaving resetCursorRects empty prevents NSWindow from caching static cursor rectangles
-    // that revert [NSCursor set] on incoming mouseMoved: events during active motion.
+    if (!_delegate || [_delegate viewOnly])
+        return;
+
+    NSRect cursorRect = [self visibleRect];
+    if (NSIsEmptyRect(cursorRect))
+        return;
+
+    if (_modifierCursor)
+        [self addCursorRect: cursorRect cursor: _modifierCursor];
+    else if (_serverCursor)
+        [self addCursorRect: cursorRect cursor: _serverCursor];
+    else
+        [self addCursorRect: cursorRect cursor: [[self class] _cursorForName: @"rfbCursor"]];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -276,7 +287,8 @@ typedef int NSInteger;
 {  [[self window] setAcceptsMouseMovedEvents: YES];  }
 
 - (void)mouseExited:(NSEvent *)theEvent
-{  [[self window] setAcceptsMouseMovedEvents: NO];  }
+{
+}
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {  [_eventFilter mouseMoved: theEvent];  }
