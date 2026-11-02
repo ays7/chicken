@@ -89,6 +89,12 @@ typedef int NSInteger;
 
 - (void)dealloc
 {
+    if (_cursorTrackingArea)
+    {
+        [self removeTrackingArea:_cursorTrackingArea];
+        [_cursorTrackingArea release];
+        _cursorTrackingArea = nil;
+    }
     if (_delegate)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:_delegate name:NSViewFrameDidChangeNotification object:self];
@@ -107,6 +113,36 @@ typedef int NSInteger;
     [super dealloc];
 }
 
+- (void)updateTrackingAreas
+{
+    [super updateTrackingAreas];
+    if (_cursorTrackingArea)
+    {
+        [self removeTrackingArea:_cursorTrackingArea];
+        [_cursorTrackingArea release];
+        _cursorTrackingArea = nil;
+    }
+    _cursorTrackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
+                                                       options:(NSTrackingCursorUpdate |
+                                                                NSTrackingMouseMoved |
+                                                                NSTrackingMouseEnteredAndExited |
+                                                                NSTrackingActiveInKeyWindow |
+                                                                NSTrackingInVisibleRect)
+                                                         owner:self
+                                                      userInfo:nil];
+    [self addTrackingArea:_cursorTrackingArea];
+}
+
+- (void)cursorUpdate:(NSEvent *)theEvent
+{
+    if (_modifierCursor)
+        [_modifierCursor set];
+    else if (_serverCursor)
+        [_serverCursor set];
+    else
+        [[[self class] _cursorForName:@"rfbCursor"] set];
+}
+
 - (void)setCursorTo: (NSString *)name
 {
     [_modifierCursor release];
@@ -114,15 +150,23 @@ typedef int NSInteger;
         _modifierCursor = nil;
     else
         _modifierCursor = [[[self class] _cursorForName: name] retain];
-    [[self window] invalidateCursorRectsForView: self];
+
+    if (_modifierCursor)
+        [_modifierCursor set];
+    else if (_serverCursor)
+        [_serverCursor set];
+    else
+        [[[self class] _cursorForName:@"rfbCursor"] set];
 }
 
 - (void)setServerCursorTo: (NSCursor *)aCursor
 {
+    if (_serverCursor == aCursor)
+        return;
+
     [_serverCursor release];
     _serverCursor = [aCursor retain];
     if (!_modifierCursor) {
-        [[self window] invalidateCursorRectsForView: self];
         if (aCursor)
             [aCursor set];
         else
@@ -205,19 +249,9 @@ typedef int NSInteger;
 /* Called by system to set-up cursors for this view */
 - (void)resetCursorRects
 {
-    if (!_delegate || [_delegate viewOnly])
-        return;
-
-    NSRect cursorRect = [self visibleRect];
-    if (NSIsEmptyRect(cursorRect))
-        return;
-
-    if (_modifierCursor)
-        [self addCursorRect: cursorRect cursor: _modifierCursor];
-    else if (_serverCursor)
-        [self addCursorRect: cursorRect cursor: _serverCursor];
-    else
-        [self addCursorRect: cursorRect cursor: [[self class] _cursorForName: @"rfbCursor"]];
+    // Dynamic cursor management is handled via NSTrackingCursorUpdate and cursorUpdate:.
+    // Leaving resetCursorRects empty prevents NSWindow from caching static cursor rectangles
+    // that revert [NSCursor set] on incoming mouseMoved: events during active motion.
 }
 
 - (void)mouseDown:(NSEvent *)theEvent

@@ -25,9 +25,11 @@
 #include <freerdp/codec/color.h>
 #include <freerdp/client/disp.h>
 #include <freerdp/client/cliprdr.h>
+#include <freerdp/client/cmdline.h>
 #include <freerdp/event.h>
 #include <winpr/synch.h>
 #include <winpr/input.h>
+#include <mach/mach_time.h>
 
 struct rdp_chicken_context
 {
@@ -107,6 +109,8 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         currentDesktopSize = NSMakeSize(1024, 768);
         stopEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
         inputLock = [[NSLock alloc] init];
+        lastSentMouseX = UINT16_MAX;
+        lastSentMouseY = UINT16_MAX;
     }
     return self;
 }
@@ -122,12 +126,16 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         currentDesktopSize = NSMakeSize(1024, 768);
         stopEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
         inputLock = [[NSLock alloc] init];
+        lastSentMouseX = UINT16_MAX;
+        lastSentMouseY = UINT16_MAX;
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [self removeMouseMovedTrackingRect];
+    hasPendingMouseMove = NO;
     [self closeConnection];
     [server_ release];
     [socketHandler release];
@@ -283,6 +291,13 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_IgnoreCertificate, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_AutoAcceptCertificate, TRUE);
+
+    // Apply network connection type & performance optimizations
+    freerdp_set_connection_type(settings, CONNECTION_TYPE_AUTODETECT);
+    freerdp_performance_flags_make(settings);
+    UINT32 perfFlags = freerdp_settings_get_uint32(settings, FreeRDP_PerformanceFlags);
+    perfFlags |= PERF_DISABLE_CURSOR_SHADOW;
+    freerdp_settings_set_uint32(settings, FreeRDP_PerformanceFlags, perfFlags);
 
     shouldStop = NO;
     workerThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain:) object:nil];
@@ -616,6 +631,8 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)closeConnection
 {
+    [self removeMouseMovedTrackingRect];
+    hasPendingMouseMove = NO;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(performDelayedDesktopSize) object:nil];
 
     shouldStop = YES;
@@ -742,8 +759,41 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 - (void)requestFrameBufferUpdate:(id)sender {}
 - (void)forceFrameBufferUpdate {}
 - (void)setFrameBufferUpdateSeconds:(float)seconds {}
-- (void)installMouseMovedTrackingRect {}
-- (void)removeMouseMovedTrackingRect {}
+- (void)installMouseMovedTrackingRect
+{
+    if (!rfbView) return;
+    NSWindow *window = [rfbView window];
+    NSPoint mousePoint = [rfbView convertPoint:[window convertPointFromScreen:[NSEvent mouseLocation]] fromView:nil];
+    BOOL mouseInVisibleRect = [rfbView mouse:mousePoint inRect:[rfbView visibleRect]];
+
+    if (_mouseMovedTrackingTag)
+        [rfbView removeTrackingRect:_mouseMovedTrackingTag];
+    _mouseMovedTrackingTag = [rfbView addTrackingRect:[rfbView bounds] owner:self userData:nil assumeInside:mouseInVisibleRect];
+    if (mouseInVisibleRect)
+        [window setAcceptsMouseMovedEvents:YES];
+}
+
+- (void)removeMouseMovedTrackingRect
+{
+    if (_mouseMovedTrackingTag && rfbView)
+    {
+        [rfbView removeTrackingRect:_mouseMovedTrackingTag];
+        [[rfbView window] setAcceptsMouseMovedEvents:NO];
+        _mouseMovedTrackingTag = 0;
+    }
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+    if (rfbView)
+        [[rfbView window] setAcceptsMouseMovedEvents:YES];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+    if (rfbView)
+        [[rfbView window] setAcceptsMouseMovedEvents:NO];
+}
 - (void)viewFrameDidChange:(NSNotification *)notification {}
 
 - (BOOL)pasteFromPasteboard:(NSPasteboard *)pasteboard
@@ -821,13 +871,24 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 #pragma mark - Mouse & Key Events from EventFilter
 
-- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
+- (void)flushPendingMouseMove
 {
-    if (!freerdpContext || !isConnected)
+    if (!hasPendingMouseMove || !freerdpContext || !isConnected)
+    {
+        hasPendingMouseMove = NO;
+        return;
+    }
+
+    UINT16 x = pendingMouseX;
+    UINT16 y = pendingMouseY;
+    hasPendingMouseMove = NO;
+
+    if (x == lastSentMouseX && y == lastSentMouseY)
         return;
 
-    UINT16 x = (UINT16)thePoint.x;
-    UINT16 y = (UINT16)([rfbView bounds].size.height - thePoint.y);
+    lastSentMouseX = x;
+    lastSentMouseY = y;
+    lastMouseSendTimeMach = mach_absolute_time();
 
     [inputLock lock];
     if (freerdpContext && isConnected)
@@ -841,13 +902,73 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     [inputLock unlock];
 }
 
-- (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
+- (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
     if (!freerdpContext || !isConnected)
         return;
 
     UINT16 x = (UINT16)thePoint.x;
     UINT16 y = (UINT16)([rfbView bounds].size.height - thePoint.y);
+
+    if (x == lastSentMouseX && y == lastSentMouseY && !hasPendingMouseMove)
+        return;
+
+    // During active dragging (buttons held down), send moves immediately with minimal throttle
+    if (mask != 0 || _pressedButtons != 0)
+    {
+        hasPendingMouseMove = NO;
+        lastSentMouseX = x;
+        lastSentMouseY = y;
+        lastMouseSendTimeMach = mach_absolute_time();
+
+        [inputLock lock];
+        if (freerdpContext && isConnected)
+        {
+            rdpContext *ctx = (rdpContext *)freerdpContext;
+            if (ctx && ctx->input)
+            {
+                freerdp_input_send_mouse_event(ctx->input, PTR_FLAGS_MOVE, x, y);
+            }
+        }
+        [inputLock unlock];
+        return;
+    }
+
+    // Pure mouse motion: rate-limit to ~80 Hz (12 ms) to prevent server input backlog
+    static mach_timebase_info_data_t tb;
+    if (tb.denom == 0) mach_timebase_info(&tb);
+    uint64_t now = mach_absolute_time();
+    uint64_t elapsedNs = (now - lastMouseSendTimeMach) * tb.numer / tb.denom;
+
+    pendingMouseX = x;
+    pendingMouseY = y;
+
+    if (elapsedNs >= 12000000ULL /* 12 ms */)
+    {
+        [self flushPendingMouseMove];
+    }
+    else if (!hasPendingMouseMove)
+    {
+        hasPendingMouseMove = YES;
+        uint64_t delayNs = 12000000ULL - elapsedNs;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)delayNs), dispatch_get_main_queue(), ^{
+            [self flushPendingMouseMove];
+        });
+    }
+}
+
+- (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
+{
+    if (!freerdpContext || !isConnected)
+        return;
+
+    [self flushPendingMouseMove];
+
+    UINT16 x = (UINT16)thePoint.x;
+    UINT16 y = (UINT16)([rfbView bounds].size.height - thePoint.y);
+    lastSentMouseX = x;
+    lastSentMouseY = y;
+    lastMouseSendTimeMach = mach_absolute_time();
 
     unsigned int changed = mask ^ _pressedButtons;
 

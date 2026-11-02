@@ -35,6 +35,23 @@ When introducing changes or dependency bumps, update the following files in acco
 - Record new features, library upgrades, and fixes in `release-notes/<ACTIVE_VERSION>.md` (currently `release-notes/2026.12.md`).
 - Keep past release files (e.g., `release-notes/2026.11.md`) frozen with the contents as originally shipped.
 
+#### 📝 Release Notes Editorial & Tone Standards
+> [!IMPORTANT]
+> **Never Include Low-Level Code Details in Release Notes:**
+> Release notes are user-facing, high-level summaries for end users and administrators. They must **never** read like a git commit log, PR description, or technical post-mortem.
+
+* **🚫 Prohibited in Release Notes**:
+  - **No source file names or paths**: Never mention source files (e.g., `RFBView.m`, `RDPConnection.h`, `scripts/build_freerdp_mac.sh`).
+  - **No function, method, or selector names**: Never mention code routines (e.g., `resetCursorRects`, `cursorUpdate:`, `mouseAt:buttons:`, `installMouseMovedTrackingRect`, `inputLock`).
+  - **No internal class, struct, or variable names**: Never mention codebase internals (e.g., `RFBView`, `RDPConnection`, `_cursorTrackingArea`).
+  - **No compiler/CMake flags or CLI switches**: Never mention build flags (e.g., `-DWITH_APPLE_VIDEOTOOLBOX=ON`, `CMAKE_ARGS`).
+  - **No internal enum values or raw protocol constants**: Never mention low-level constants (e.g., `PERF_DISABLE_CURSOR_SHADOW`, `CONNECTION_TYPE_AUTODETECT`, `PTR_FLAGS_MOVE`, `FreeRDP_GfxH264`).
+
+* **✅ Required in Release Notes**:
+  - **User-Centric Capabilities & Benefits**: Focus on how the change impacts the user (e.g., "instant cursor shape changes", "fluid pointer navigation", "reduced CPU usage during video playback").
+  - **High-Level Protocol & Technology Names**: Use recognized platform and industry terms (e.g., "Apple VideoToolbox Hardware H.264 Decoding", "Modern RDPEGFX Display Pipelines", "Network Level Authentication (NLA)").
+  - **Action-Oriented, Concise Phrasing**: Bold topic title followed by a clear, benefit-driven summary matching the style of previous releases (`2026.11.md`, `2026.9.md`).
+
 ### 2. Project Metadata & Build Settings
 - **`cotvnc/Resources/Info.plist`**:
   - `CFBundleShortVersionString`: Set to active target (e.g., `2026.12`).

@@ -44,6 +44,14 @@
 
     unsigned int _pressedButtons;
     NSSize currentDesktopSize;
+
+    NSTrackingRectTag _mouseMovedTrackingTag;
+    uint16_t lastSentMouseX;
+    uint16_t lastSentMouseY;
+    uint16_t pendingMouseX;
+    uint16_t pendingMouseY;
+    BOOL hasPendingMouseMove;
+    uint64_t lastMouseSendTimeMach;
 }
 
 - (id)initWithFileHandle:(NSFileHandle *)file server:(id<IServerData>)server;

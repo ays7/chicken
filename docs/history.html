@@ -97,8 +97,9 @@
       </div>
       <ul class="release-features">
         <li><strong>FreeRDP 3.33.0 Upgrade</strong>: Upgraded bundled universal static FreeRDP and WinPR libraries to version 3.33.0 with latest stability and CVE security fixes.</li>
-        <li><strong>Apple VideoToolbox Hardware H.264 Acceleration</strong>: Built with native VideoToolbox support and linked VideoToolbox, CoreMedia, and CoreVideo frameworks for hardware-accelerated AVC420 / AVC444 decoding on Apple Silicon and Intel Macs.</li>
-        <li><strong>Modern RDPEGFX Codecs</strong>: Enabled H.264 and AVC444 graphics pipelines in RDP connection profiles for higher fidelity and responsive rendering.</li>
+        <li><strong>Apple VideoToolbox Hardware H.264 Acceleration</strong>: Hardware-accelerated AVC420 / AVC444 decoding on Apple Silicon and Intel Macs, significantly reducing CPU usage and latency.</li>
+        <li><strong>Modern RDPEGFX Codecs</strong>: Enabled modern H.264 and AVC444 graphics pipelines in RDP connection profiles for higher fidelity and responsive rendering.</li>
+        <li><strong>Fluid Remote Cursor &amp; Mouse Motion</strong>: Dynamic cursor shapes (I-beams, resize arrows, pointing hands) update instantly without lag or flickering, with optimized mouse event delivery.</li>
       </ul>
     </div>
 
@@ -142,10 +143,10 @@
       <ul class="release-features">
         <li><strong>Apple Silicon Universal Binary</strong>: Re-engineered project build pipeline to produce native Universal binaries (<code>arm64</code> for Apple Silicon and <code>x86_64</code> for Intel).</li>
         <li><strong>Dynamic Desktop Resizing</strong>: Added support for dynamic resolution changes when resizing VNC connection windows.</li>
-        <li><strong>Retina Display Stability</strong>: Fixed an off-by-one boundary checking bug in framebuffer drawing (<code>FrameBufferDrawing</code>) that caused memory out-of-bounds crashes on high-DPI screens.</li>
+        <li><strong>Retina Display Stability</strong>: Fixed a boundary calculation issue in high-resolution display rendering that could cause memory out-of-bounds crashes on high-DPI screens.</li>
         <li><strong>UTF-8 Extended Clipboard</strong>: Added support for the VNC extended-clipboard protocol, enabling seamless copy-paste of Unicode and emoji characters.</li>
         <li><strong>Automatic Clipboard Synchronization</strong>: Automatically synchronizes clipboard contents when a session window gains focus or right before sending middle-click events.</li>
-        <li><strong>Space Occlusion Tracking</strong>: Modernized window visibility tracking using <code>NSWindowOcclusionStateVisible</code> to eliminate screen artifacts across virtual Spaces.</li>
+        <li><strong>Space Occlusion Tracking</strong>: Modernized window visibility and occlusion tracking to eliminate visual screen artifacts across virtual Spaces.</li>
         <li><strong>"Liquid Glass" Iconography</strong>: Retired the legacy pixelated icon in favor of the ultra-high-resolution 3D glassmorphic Chicken Fork logo.</li>
       </ul>
     </div>

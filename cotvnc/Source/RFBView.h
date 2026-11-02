@@ -28,6 +28,7 @@
     EventFilter     *_eventFilter;
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
+    NSTrackingArea  *_cursorTrackingArea;
     FrameBuffer     *fbuf;
     NSColor         *tint;
     BOOL            drawTint;
