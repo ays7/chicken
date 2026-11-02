@@ -56,7 +56,7 @@ jobs:
           echo "====================================================="
 
           # Extract version from Info.plist
-          VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.11")
+          VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.12")
           DMG_NAME="Chicken-Fork-${VERSION}.dmg"
           DMG_PATH="dist/${DMG_NAME}"
 

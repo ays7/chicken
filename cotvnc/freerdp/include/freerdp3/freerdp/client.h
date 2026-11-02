@@ -153,7 +153,12 @@ extern "C"
 		ALIGN64 BOOL pressed_buttons[5];            /**< (offset 11) @since version 3.17.0 */
 		ALIGN64 rdpClientOAuth2* oauth2;            /**< (offset 16) @since version 3.32.0 */
 		ALIGN64 AadAuthHelper* aadHelper;           /**< (offset 17) @since version 3.32.0 */
-		UINT64 reserved[129 - 18];                  /**< (offset 18) */
+		ALIGN64 pConnectCallback PreConnect;        /**< (offset 18) @since version 3.33.0 */
+		ALIGN64 pConnectCallback PostConnect;       /**< (offset 19) @since version 3.33.0 */
+		ALIGN64 pPostDisconnect PostDisconnect;     /**< (offset 20) @since version 3.33.0 */
+		ALIGN64 pPostDisconnect PostFinalDisconnect; /**< (offset 21) @since version 3.33.0 */
+		ALIGN64 HANDLE pipethread;                   /**< (offset 22) @since version 3.33.0 */
+		UINT64 reserved[129 - 23];                   /**< (offset 23) */
 	};
 
 	typedef BOOL (*window_events_fkt_t)(freerdp* instance);
@@ -169,6 +174,17 @@ extern "C"
 	FREERDP_API int freerdp_client_start(rdpContext* context);
 
 	FREERDP_API int freerdp_client_stop(rdpContext* context);
+
+	/**
+	 * Initialize the client-common and dependent FreeRDP translation domains.
+	 *
+	 * @param locale Locale name, or NULL/empty to use the environment locale.
+	 * @param searchPath Optional gettext catalog directory for this module.
+	 * @return TRUE on success, otherwise FALSE.
+	 * @since version 3.33.0
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API BOOL freerdp_client_enable_translation(const char* locale, const char* searchPath);
 
 	WINPR_ATTR_NODISCARD
 	FREERDP_API freerdp* freerdp_client_get_instance(rdpContext* context);
@@ -456,6 +472,38 @@ extern "C"
 	WINPR_ATTR_MALLOC(winpr_zfree, 1)
 	FREERDP_API char* freerdp_client_extract_aad_code(rdpClientContext* cctx, const char* data,
 	                                                  size_t length);
+
+	typedef enum WINPR_C23_ENUM_TYPE(uint32_t)
+	{
+		FREERDP_CLIENT_KBD_MOD_NONE = 0x00,
+		FREERDP_CLIENT_KBD_MOD_LSHIFT = 0x01,
+		FREERDP_CLIENT_KBD_MOD_RSHIFT = 0x02,
+		FREERDP_CLIENT_KBD_MOD_LMENU = 0x04,
+		FREERDP_CLIENT_KBD_MOD_RMENU = 0x08,
+		FREERDP_CLIENT_KBD_MOD_LCONTROL = 0x10,
+		FREERDP_CLIENT_KBD_MOD_RCONTROL = 0x20,
+		FREERDP_CLIENT_KBD_MOD_LWIN = 0x40,
+		FREERDP_CLIENT_KBD_MOD_RWIN = 0x80
+	} FREERDP_CLIENT_KBD_MOD;
+
+	/** @brief Helper to send unicode input.
+	 *
+	 *  Checks the input for certain conditions and sends the input as unicode if the conditions do
+	 * not match, otherwise fall back to scancodes to send.
+	 *
+	 *  @param cctx The client context to use for sending
+	 *  @param flags The flags (KEY_RELEASE, ..)
+	 *  @param str A UTF-8 string to send as unicode
+	 *  @param scancode The RDP scancode of the current key
+	 *  @param modmask The keyboard modifiers currently pressed
+	 *
+	 *  @return TRUE if sent successfully, FALSE otherwise
+	 *  @since version 3.33.0
+	 */
+	WINPR_ATTR_NODISCARD
+	FREERDP_API BOOL freerdp_client_send_key_as_unicode(rdpClientContext* cctx, UINT16 flags,
+	                                                    const char* str, UINT32 scancode,
+	                                                    FREERDP_CLIENT_KBD_MOD modmask);
 
 #ifdef __cplusplus
 }

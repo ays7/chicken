@@ -7,6 +7,7 @@
 
 #define WINPR_INSTALL_PREFIX "/Volumes/Sync/ap/chicken/cotvnc/freerdp"
 #define WINPR_INSTALL_SYSCONFDIR "/Volumes/Sync/ap/chicken/cotvnc/freerdp/etc"
+#define WINPR_INSTALL_LOCALEDIR "/Volumes/Sync/ap/chicken/cotvnc/freerdp/share/locale"
 
 #define WINPR_LIBRARY_PATH ""
 

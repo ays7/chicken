@@ -182,10 +182,13 @@ struct rdp_settings
 	UINT64 padding0512[512 - 448]; /* 448 */
 
 	/* Client Multitransport Channel Data */
-	SETTINGS_DEPRECATED(ALIGN64 UINT32 MultitransportFlags); /* 512 */
-	SETTINGS_DEPRECATED(ALIGN64 BOOL SupportMultitransport); /* 513 */
-	UINT64 padding0576[576 - 514];                           /* 514 */
-	UINT64 padding0640[640 - 576];                           /* 576 */
+	SETTINGS_DEPRECATED(ALIGN64 UINT32 MultitransportFlags);    /* 512 */
+	SETTINGS_DEPRECATED(ALIGN64 BOOL SupportMultitransport);    /* 513 */
+	SETTINGS_DEPRECATED(ALIGN64 BOOL SupportMultitransportUdp); /** 514
+		                                                         * @since version 3.33.0
+		                                                         */
+	UINT64 padding0576[576 - 515];                              /* 515 */
+	UINT64 padding0640[640 - 576];                              /* 576 */
 
 	/*
 	 * Client Info
@@ -303,7 +306,11 @@ struct rdp_settings
 	SETTINGS_DEPRECATED(ALIGN64 BOOL RemoteCredentialGuard);        /* 1114 */
 	SETTINGS_DEPRECATED(ALIGN64 BOOL RestrictedAdminModeSupported); /** 1115
 		                                                             * @since version 3.16.0 */
-	UINT64 padding1152[1152 - 1116];                                /* 1116 */
+	SETTINGS_DEPRECATED(ALIGN64 UINT32 RdstlsEnabledModes);         /** 1116
+		                                                             * Allowed server side modes for RDSTLS
+		                                                             * auth. By default all are allowed.
+		                                                             * @since version 3.33.0 */
+	UINT64 padding1152[1152 - 1117];                                /* 1117 */
 
 	/* Connection Cookie */
 	SETTINGS_DEPRECATED(ALIGN64 BOOL MstscCookieMode);      /* 1152 */
@@ -547,7 +554,15 @@ struct rdp_settings
 		                                                             * the default when unset).
 		                                                             * @since version 3.32.0
 		                                                             */
-	UINT64 padding2112[2112 - 2029];                                /* 2029 */
+	SETTINGS_DEPRECATED(ALIGN64 char* AadAuthUserAgent);            /** 2029
+		                                                             * User-Agent the out-of-process
+		                                                             * AAD auth helper's embedded
+		                                                             * browser presents. NULL (the
+		                                                             * default) keeps the helper's
+		                                                             * native UA.
+		                                                             * @since version 3.32.2
+		                                                             */
+	UINT64 padding2112[2112 - 2030];                                /* 2030 */
 
 	/**
 	 * RemoteApp

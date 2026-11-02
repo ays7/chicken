@@ -50,16 +50,20 @@
 /* #undef WITH_FAAD2 */
 /* #undef WITH_FAAC */
 /* #undef WITH_SOXR */
-/* #undef WITH_GFX_H264 */
+#define WITH_GFX_H264
 /* #undef WITH_OPENH264 */
 /* #undef WITH_OPENH264_LOADING */
 /* #undef WITH_VIDEO_FFMPEG */
+#define WITH_APPLE_VIDEOTOOLBOX
+/* #undef WITH_H264_WEBCODECS */
 /* #undef WITH_DSP_EXPERIMENTAL */
 /* #undef WITH_DSP_FFMPEG */
 /* #undef WITH_OPENCL */
 /* #undef WITH_MEDIA_FOUNDATION */
 /* #undef WITH_MEDIACODEC */
 /* #undef WITH_GFX_AV1 */
+/* #undef WITH_GFX_AZURE */
+/* #undef WITH_RDPEUDP */
 
 /* #undef WITH_FFMPEG_HWACCEL */
 

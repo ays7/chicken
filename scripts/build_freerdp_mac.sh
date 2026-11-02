@@ -19,7 +19,7 @@ OUTPUT_DIR="${ROOT_DIR}/cotvnc/freerdp"
 WORK_DIR="${WORK_DIR:-/tmp/chicken_rdp_build}"
 
 OPENSSL_VERSION="${OPENSSL_VERSION:-4.1.0}"
-FREERDP_TAG="${FREERDP_TAG:-3.32.2}"
+FREERDP_TAG="${FREERDP_TAG:-3.33.0}"
 
 export MACOSX_DEPLOYMENT_TARGET="11.0"
 
@@ -106,7 +106,12 @@ fi
 # ==============================================================================
 # 2. Build Universal FreeRDP 3.x
 # ==============================================================================
-FREERDP_SRC_DIR="${WORK_DIR}/FreeRDP"
+if [ -d "/Volumes/Sync/ap/FreeRDP" ]; then
+    DEFAULT_FREERDP_SRC="/Volumes/Sync/ap/FreeRDP"
+else
+    DEFAULT_FREERDP_SRC="${WORK_DIR}/FreeRDP"
+fi
+FREERDP_SRC_DIR="${FREERDP_SRC_DIR:-${DEFAULT_FREERDP_SRC}}"
 FREERDP_BUILD_DIR="${WORK_DIR}/freerdp-build-universal"
 
 if [ ! -d "${FREERDP_SRC_DIR}" ]; then
@@ -179,6 +184,7 @@ pushd "${FREERDP_BUILD_DIR}" >/dev/null
     -DCHANNEL_RDPSND=ON \
     -DCHANNEL_RDPSND_CLIENT=ON \
     -DWITH_MACAUDIO=ON \
+    -DWITH_APPLE_VIDEOTOOLBOX=ON \
     -DCHANNEL_AUDIN=OFF \
     -DCHANNEL_AUDIN_CLIENT=OFF \
     -DCHANNEL_TSMF=OFF \

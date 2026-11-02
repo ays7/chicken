@@ -248,6 +248,9 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     freerdp_settings_set_bool(settings, FreeRDP_GfxSmallCache, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_GfxProgressive, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_GfxProgressiveV2, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxH264, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_GfxAVC444v2, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_SoftwareGdi, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_RemoteFxCodec, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_NSCodec, TRUE);

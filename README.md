@@ -16,7 +16,7 @@
 
 Chicken Fork has undergone significant modernization to enhance stability, display performance, OS integration, and compatibility:
 
-* **Native Microsoft Remote Desktop (RDP) Support (2026.11)**: Integrated full RDP client capabilities powered by FreeRDP 3.32.2 and OpenSSL 3.x, supporting modern Windows Server and Windows 10/11 hosts with Network Level Authentication (NLA/CredSSP), TLS encryption, mouse cursor shape synchronization, and clipboard transfer.
+* **Native Microsoft Remote Desktop (RDP) Support (2026.11)**: Integrated full RDP client capabilities powered by FreeRDP 3.x and OpenSSL 3.x, supporting modern Windows Server and Windows 10/11 hosts with Network Level Authentication (NLA/CredSSP), TLS encryption, mouse cursor shape synchronization, and clipboard transfer.
 * **Dynamic Desktop Resizing**: Added support for resizable session windows when connected to VNC servers that support dynamic desktop resizing.
 * **Retina Display & High-DPI Stability**: Fixed an off-by-one boundary checking bug in framebuffer drawing that caused out-of-bounds memory access and crashes on Retina screens.
 * **Automatic Clipboard Synchronization**: Synchronizes clipboard content automatically when the session window gains focus or right before sending middle mouse button events.
@@ -41,7 +41,8 @@ Chicken Fork has undergone significant modernization to enhance stability, displ
 
 ## 📝 Release Notes
 
-* [Version 2026.11](release-notes/2026.11.md) — Product renamed to **Chicken Fork**, version bump to 2026.11, and FreeRDP 3.32.2 integration.
+* [Version 2026.12](release-notes/2026.12.md) — FreeRDP 3.33.0 upgrade with Apple VideoToolbox hardware H.264 decoding and modern RDPEGFX AVC420/AVC444 pipelines.
+* [Version 2026.11](release-notes/2026.11.md) — Product renamed to **Chicken Fork**, version bump to 2026.11, and initial FreeRDP 3.32.2 integration.
 * [Version 2026.9](release-notes/2026.9.md) — Touch Bar support, Apple Remote Desktop (ARD) authentication, SSH passphrase guidance, and fullscreen space management fixes.
 * [Version 2026.6](release-notes/2026.6.md) — Universal binary (Apple Silicon + Intel), dynamic desktop resizing, UTF-8 extended-clipboard, Retina display fixes, and application modernizations.
 
