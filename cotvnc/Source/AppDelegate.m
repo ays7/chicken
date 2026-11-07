@@ -245,6 +245,7 @@
         NSString *domain = nil;
         int audioMode = 0; // Default: 0 = play on this computer
         BOOL fullscreen = NO;
+        BOOL useAllScreens = NO;
 
         if (content)
         {
@@ -283,6 +284,15 @@
                     if ([modeStr intValue] == 2)
                         fullscreen = YES;
                 }
+                else if ([line hasPrefix:@"use multimon:i:"])
+                {
+                    NSString *modeStr = [line substringFromIndex:[@"use multimon:i:" length]];
+                    if ([modeStr intValue] == 1)
+                    {
+                        useAllScreens = YES;
+                        fullscreen = YES;
+                    }
+                }
             }
         }
 
@@ -290,6 +300,7 @@
         [server setRemoteProtocol:RemoteProtocolRDP];
         [server setRdpAudioMode:audioMode];
         [server setFullscreen:fullscreen];
+        [server setUseAllScreens:useAllScreens];
         if (host)
         {
             [server setHostAndPort:host];

@@ -248,6 +248,41 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopWidth, initWidth);
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopHeight, initHeight);
+
+    BOOL useMultimon = session && [session useAllScreensActive];
+    if (useMultimon)
+    {
+        NSArray *descriptors = [session multiMonitorDescriptors];
+        NSUInteger count = [descriptors count];
+        if (count > 1)
+        {
+            rdpMonitor *monitors = (rdpMonitor *)calloc(count, sizeof(rdpMonitor));
+            if (monitors)
+            {
+                for (NSUInteger i = 0; i < count; i++)
+                {
+                    NSDictionary *desc = [descriptors objectAtIndex:i];
+                    monitors[i].x = [desc[@"rdpLeft"] intValue];
+                    monitors[i].y = [desc[@"rdpTop"] intValue];
+                    monitors[i].width = [desc[@"width"] intValue];
+                    monitors[i].height = [desc[@"height"] intValue];
+                    monitors[i].is_primary = [desc[@"isPrimary"] boolValue];
+                    monitors[i].orig_screen = (UINT32)i;
+                    monitors[i].attributes.physicalWidth = (UINT32)(monitors[i].width * 25.4 / 96.0);
+                    monitors[i].attributes.physicalHeight = (UINT32)(monitors[i].height * 25.4 / 96.0);
+                    monitors[i].attributes.orientation = 0;
+                    monitors[i].attributes.desktopScaleFactor = 100;
+                    monitors[i].attributes.deviceScaleFactor = 100;
+                }
+                freerdp_settings_set_bool(settings, FreeRDP_UseMultimon, TRUE);
+                freerdp_settings_set_bool(settings, FreeRDP_Fullscreen, TRUE);
+                freerdp_settings_set_bool(settings, FreeRDP_SupportMonitorLayoutPdu, TRUE);
+                freerdp_settings_set_monitor_def_array_sorted(settings, monitors, count);
+                free(monitors);
+            }
+        }
+    }
+
     freerdp_settings_set_uint32(settings, FreeRDP_ColorDepth, 32);
     freerdp_settings_set_bool(settings, FreeRDP_FastPathInput, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_FastPathOutput, TRUE);
@@ -377,7 +412,11 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 - (void)notifyDirtyRect:(NSRect)rect
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (self->rfbView)
+        if (self->session && [self->session isInMultiMonitorFullScreen])
+        {
+            [self->session invalidateDirtyRect:rect];
+        }
+        else if (self->rfbView)
         {
             NSRect bounds = [self->rfbView bounds];
             NSRect viewRect = rect;
@@ -385,25 +424,45 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
             [self->rfbView setNeedsDisplayInRect:viewRect];
         }
 
-        // Adaptive check: if server desktop size does not match window size
+        // Adaptive check: if server desktop size does not match target size
         // (e.g. login screen transition completed and GDM had ignored previous resize)
         if (self->dispReady && self->isConnected && self->session && ![self viewOnly])
         {
-            NSWindow *win = [self->session window];
-            if (win && ![win inLiveResize])
+            if ([self->session isInMultiMonitorFullScreen])
             {
-                NSSize winSize = [[win contentView] frame].size;
-                UINT32 winW = ((UINT32)winSize.width) & ~1;
-                UINT32 winH = (UINT32)winSize.height;
-                if (winW >= 200 && winH >= 200 &&
-                    (winW != (UINT32)self->currentDesktopSize.width || winH != (UINT32)self->currentDesktopSize.height))
+                NSSize boundingBox = [self->session multiMonitorBoundingBoxSize];
+                UINT32 targetW = ((UINT32)boundingBox.width) & ~1;
+                UINT32 targetH = (UINT32)boundingBox.height;
+                if (targetW >= 200 && targetH >= 200 &&
+                    (targetW != (UINT32)self->currentDesktopSize.width || targetH != (UINT32)self->currentDesktopSize.height))
                 {
                     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
                     if (now - self->lastDesktopSizeSentTime >= 2.0 && !self->hasPendingDesktopSize)
                     {
-                        NSLog(@"[RDPConnection] Desktop size (%ux%u) != window size (%ux%u); retrying SendMonitorLayout...",
-                              (UINT32)self->currentDesktopSize.width, (UINT32)self->currentDesktopSize.height, winW, winH);
-                        [self writeSetDesktopSize:winSize];
+                        NSLog(@"[RDPConnection] Multi-monitor desktop size (%ux%u) != bounding box (%ux%u); retrying SendMonitorLayout...",
+                              (UINT32)self->currentDesktopSize.width, (UINT32)self->currentDesktopSize.height, targetW, targetH);
+                        [self writeSetDesktopSize:boundingBox];
+                    }
+                }
+            }
+            else
+            {
+                NSWindow *win = [self->session window];
+                if (win && ![win inLiveResize])
+                {
+                    NSSize winSize = [[win contentView] frame].size;
+                    UINT32 winW = ((UINT32)winSize.width) & ~1;
+                    UINT32 winH = (UINT32)winSize.height;
+                    if (winW >= 200 && winH >= 200 &&
+                        (winW != (UINT32)self->currentDesktopSize.width || winH != (UINT32)self->currentDesktopSize.height))
+                    {
+                        NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+                        if (now - self->lastDesktopSizeSentTime >= 2.0 && !self->hasPendingDesktopSize)
+                        {
+                            NSLog(@"[RDPConnection] Desktop size (%ux%u) != window size (%ux%u); retrying SendMonitorLayout...",
+                                  (UINT32)self->currentDesktopSize.width, (UINT32)self->currentDesktopSize.height, winW, winH);
+                            [self writeSetDesktopSize:winSize];
+                        }
                     }
                 }
             }
@@ -488,6 +547,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         if (self->rfbView)
         {
             [self->rfbView setServerCursorTo:cursor];
+        }
+        if (self->session)
+        {
+            [self->session updateCursorOnCompanionViews:cursor];
         }
     });
 }
@@ -729,6 +792,17 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     if (!session || [self viewOnly])
         return;
 
+    if ([session isInMultiMonitorFullScreen])
+    {
+        NSSize boundingBox = [session multiMonitorBoundingBoxSize];
+        if (boundingBox.width >= 200 && boundingBox.height >= 200 &&
+            (boundingBox.width != currentDesktopSize.width || boundingBox.height != currentDesktopSize.height))
+        {
+            [self writeSetDesktopSize:boundingBox];
+        }
+        return;
+    }
+
     NSWindow *win = [session window];
     if (!win)
         return;
@@ -778,6 +852,50 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         // Channel or connection not ready yet; keep hasPendingDesktopSize = YES.
         // It will be dispatched when dispReady && isConnected are true.
         return;
+    }
+
+    if (session && [session isInMultiMonitorFullScreen])
+    {
+        NSArray *descriptors = [session multiMonitorDescriptors];
+        UINT32 count = (UINT32)[descriptors count];
+        if (count > 1)
+        {
+            DISPLAY_CONTROL_MONITOR_LAYOUT *layouts = (DISPLAY_CONTROL_MONITOR_LAYOUT *)calloc(count, sizeof(DISPLAY_CONTROL_MONITOR_LAYOUT));
+            if (layouts)
+            {
+                for (UINT32 i = 0; i < count; i++)
+                {
+                    NSDictionary *desc = [descriptors objectAtIndex:i];
+                    layouts[i].Flags = [desc[@"isPrimary"] boolValue] ? DISPLAY_CONTROL_MONITOR_PRIMARY : 0;
+                    layouts[i].Left = [desc[@"rdpLeft"] intValue];
+                    layouts[i].Top = [desc[@"rdpTop"] intValue];
+                    layouts[i].Width = (UINT32)[desc[@"width"] unsignedIntValue];
+                    layouts[i].Height = (UINT32)[desc[@"height"] unsignedIntValue];
+                    layouts[i].Orientation = ORIENTATION_LANDSCAPE;
+                    layouts[i].PhysicalWidth = (UINT32)(layouts[i].Width * 25.4 / 96.0);
+                    layouts[i].PhysicalHeight = (UINT32)(layouts[i].Height * 25.4 / 96.0);
+                    if (layouts[i].PhysicalWidth < 10) layouts[i].PhysicalWidth = 10;
+                    if (layouts[i].PhysicalHeight < 10) layouts[i].PhysicalHeight = 10;
+                    layouts[i].DesktopScaleFactor = 100;
+                    layouts[i].DeviceScaleFactor = 100;
+                }
+
+                NSLog(@"[RDPConnection] Sending multi-monitor DisplayControl layout (%u monitors)", count);
+                [inputLock lock];
+                DispClientContext *disp = (DispClientContext *)dispContext;
+                if (disp && disp->SendMonitorLayout)
+                {
+                    disp->SendMonitorLayout(disp, count, layouts);
+                }
+                [inputLock unlock];
+                free(layouts);
+
+                lastDesktopSizeSent = [session multiMonitorBoundingBoxSize];
+                lastDesktopSizeSentTime = [NSDate timeIntervalSinceReferenceDate];
+                hasPendingDesktopSize = NO;
+                return;
+            }
+        }
     }
 
     NSSize newSize = pendingDesktopSize;
@@ -957,19 +1075,39 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)mouseAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    if (!freerdpContext || !isConnected || !rfbView)
+    if (!freerdpContext || !isConnected)
         return;
 
-    CGFloat width = [rfbView bounds].size.width;
-    CGFloat height = [rfbView bounds].size.height;
+    RFBView *activeView = [_eventFilter view] ?: rfbView;
+    if (!activeView)
+        return;
 
-    if (thePoint.x < 0) thePoint.x = 0;
-    if (thePoint.y < 0) thePoint.y = 0;
-    if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
-    if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+    UINT16 x = 0;
+    UINT16 y = 0;
 
-    UINT16 x = (UINT16)thePoint.x;
-    UINT16 y = (UINT16)(height - 1 - thePoint.y);
+    if (session && [session isInMultiMonitorFullScreen])
+    {
+        NSPoint rdpPt = [session rdpCoordinatesForViewPoint:thePoint inView:activeView];
+        x = (UINT16)rdpPt.x;
+        y = (UINT16)rdpPt.y;
+    }
+    else
+    {
+        CGFloat width = [activeView bounds].size.width;
+        CGFloat height = [activeView bounds].size.height;
+
+        if (thePoint.x < 0) thePoint.x = 0;
+        if (thePoint.y < 0) thePoint.y = 0;
+        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
+        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+
+        NSPoint monOrigin = [activeView monitorOrigin];
+        UINT16 localX = (UINT16)thePoint.x;
+        UINT16 localY = (UINT16)(height - 1 - thePoint.y);
+
+        x = (UINT16)(localX + monOrigin.x);
+        y = (UINT16)(localY + monOrigin.y);
+    }
 
     if (x == lastSentMouseX && y == lastSentMouseY)
         return;
@@ -991,19 +1129,39 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)mouseClickedAt:(NSPoint)thePoint buttons:(unsigned int)mask
 {
-    if (!freerdpContext || !isConnected || !rfbView)
+    if (!freerdpContext || !isConnected)
         return;
 
-    CGFloat width = [rfbView bounds].size.width;
-    CGFloat height = [rfbView bounds].size.height;
+    RFBView *activeView = [_eventFilter view] ?: rfbView;
+    if (!activeView)
+        return;
 
-    if (thePoint.x < 0) thePoint.x = 0;
-    if (thePoint.y < 0) thePoint.y = 0;
-    if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
-    if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+    UINT16 x = 0;
+    UINT16 y = 0;
 
-    UINT16 x = (UINT16)thePoint.x;
-    UINT16 y = (UINT16)(height - 1 - thePoint.y);
+    if (session && [session isInMultiMonitorFullScreen])
+    {
+        NSPoint rdpPt = [session rdpCoordinatesForViewPoint:thePoint inView:activeView];
+        x = (UINT16)rdpPt.x;
+        y = (UINT16)rdpPt.y;
+    }
+    else
+    {
+        CGFloat width = [activeView bounds].size.width;
+        CGFloat height = [activeView bounds].size.height;
+
+        if (thePoint.x < 0) thePoint.x = 0;
+        if (thePoint.y < 0) thePoint.y = 0;
+        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
+        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+
+        NSPoint monOrigin = [activeView monitorOrigin];
+        UINT16 localX = (UINT16)thePoint.x;
+        UINT16 localY = (UINT16)(height - 1 - thePoint.y);
+
+        x = (UINT16)(localX + monOrigin.x);
+        y = (UINT16)(localY + monOrigin.y);
+    }
     lastSentMouseX = x;
     lastSentMouseY = y;
 

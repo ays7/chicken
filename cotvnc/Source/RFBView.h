@@ -32,12 +32,16 @@
     FrameBuffer     *fbuf;
     NSColor         *tint;
     BOOL            drawTint;
+    NSPoint         _monitorOrigin;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;
 - (void)setDelegate:(id<RemoteConnection>)delegate;
 - (id<RemoteConnection>)delegate;
 - (void)drawRect:(NSRect)aRect;
+
+- (NSPoint)monitorOrigin;
+- (void)setMonitorOrigin:(NSPoint)origin;
 
 - (void)setCursorTo: (NSString *)name;
 - (void)setServerCursorTo: (NSCursor *)aCursor;

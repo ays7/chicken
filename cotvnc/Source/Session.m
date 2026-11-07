@@ -60,6 +60,14 @@ enum {
 };
 #endif
 
+@interface RDPMultiMonitorWindow : NSWindow
+@end
+
+@implementation RDPMultiMonitorWindow
+- (BOOL)canBecomeKeyWindow { return YES; }
+- (BOOL)canBecomeMainWindow { return YES; }
+@end
+
 @interface Session(Private)
 
 - (void)startTimerForReconnectSheet;
@@ -94,6 +102,7 @@ enum {
         }
     }
     _nibTopLevelObjects = [tlo retain];
+    _companionWindows = [[NSMutableArray alloc] init];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSPasteboardTypeFileURL, nil]];
 
     password = [[connection password] retain];
@@ -128,6 +137,9 @@ enum {
 
 - (void)dealloc
 {
+    [self hideCompanionWindows];
+    [_companionWindows release];
+    _companionWindows = nil;
     [rfbView setDelegate:nil];
     [rfbView setFrameBuffer:nil];
     [connection closeConnection];
@@ -258,6 +270,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)connectionProblem
 {
+    [self hideCompanionWindows];
     [rfbView setDelegate:nil];
     [rfbView setFrameBuffer:nil];
     [connection closeConnection];
@@ -267,6 +280,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)endSession
 {
+    [self hideCompanionWindows];
     [sshTunnel close];
     [sshTunnel release];
     sshTunnel = nil;
@@ -574,8 +588,291 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     return NO;
 }
 
+- (BOOL)useAllScreensActive
+{
+    return ([server_ remoteProtocol] == RemoteProtocolRDP) &&
+           [server_ fullscreen] &&
+           [server_ useAllScreens] &&
+           ([[NSScreen screens] count] > 1);
+}
+
+- (BOOL)isInMultiMonitorFullScreen
+{
+    return [self useAllScreensActive] &&
+           ((([window styleMask] & NSWindowStyleMaskFullScreen) != 0) || _enteringInitialFullscreen);
+}
+
+- (NSArray *)multiMonitorDescriptors
+{
+    NSArray *screens = [NSScreen screens];
+    if ([screens count] <= 1) {
+        return nil;
+    }
+
+    NSScreen *primaryScreen = [window screen] ? [window screen] : [screens objectAtIndex:0];
+    if (![screens containsObject:primaryScreen]) {
+        primaryScreen = [screens objectAtIndex:0];
+    }
+    NSRect primaryFrame = [primaryScreen frame];
+    CGFloat primaryTop = primaryFrame.origin.y + primaryFrame.size.height;
+
+    NSMutableArray *descriptors = [NSMutableArray arrayWithCapacity:[screens count]];
+
+    int minRdpX = 0;
+    int maxRdpX = 0;
+    int minRdpY = 0;
+    int maxRdpY = 0;
+
+    for (NSUInteger i = 0; i < [screens count]; i++) {
+        NSScreen *s = [screens objectAtIndex:i];
+        NSRect sf = [s frame];
+        BOOL isPrimary = (s == primaryScreen);
+        int w = ((int)sf.size.width) & ~1;
+        int h = (int)sf.size.height;
+        CGFloat sTop = sf.origin.y + sf.size.height;
+        int rdpLeft = (int)(sf.origin.x - primaryFrame.origin.x);
+        int rdpTop = (int)(primaryTop - sTop);
+
+        if (isPrimary) {
+            rdpLeft = 0;
+            rdpTop = 0;
+        }
+
+        if (i == 0) {
+            minRdpX = rdpLeft;
+            maxRdpX = rdpLeft + w;
+            minRdpY = rdpTop;
+            maxRdpY = rdpTop + h;
+        } else {
+            minRdpX = MIN(minRdpX, rdpLeft);
+            maxRdpX = MAX(maxRdpX, rdpLeft + w);
+            minRdpY = MIN(minRdpY, rdpTop);
+            maxRdpY = MAX(maxRdpY, rdpTop + h);
+        }
+
+        [descriptors addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+            s, @"screen",
+            [NSNumber numberWithBool:isPrimary], @"isPrimary",
+            [NSNumber numberWithInt:rdpLeft], @"rdpLeft",
+            [NSNumber numberWithInt:rdpTop], @"rdpTop",
+            [NSNumber numberWithInt:w], @"width",
+            [NSNumber numberWithInt:h], @"height",
+            nil]];
+    }
+
+    int totalWidth = (maxRdpX - minRdpX) & ~1;
+    int totalHeight = maxRdpY - minRdpY;
+    NSSize boundingBoxSize = NSMakeSize(totalWidth, totalHeight);
+
+    for (NSMutableDictionary *dict in descriptors) {
+        int rdpLeft = [[dict objectForKey:@"rdpLeft"] intValue];
+        int rdpTop = [[dict objectForKey:@"rdpTop"] intValue];
+        int bufX = rdpLeft - minRdpX;
+        int bufY = rdpTop - minRdpY;
+        [dict setObject:[NSValue valueWithPoint:NSMakePoint(bufX, bufY)] forKey:@"bufferOrigin"];
+        [dict setObject:[NSValue valueWithSize:boundingBoxSize] forKey:@"boundingBoxSize"];
+    }
+
+    return descriptors;
+}
+
+- (NSSize)multiMonitorBoundingBoxSize
+{
+    NSArray *descriptors = [self multiMonitorDescriptors];
+    if ([descriptors count] > 0) {
+        return [[[descriptors objectAtIndex:0] objectForKey:@"boundingBoxSize"] sizeValue];
+    }
+    NSScreen *screen = [window screen] ? [window screen] : [NSScreen mainScreen];
+    return screen ? [screen frame].size : NSMakeSize(1024, 768);
+}
+
+- (void)showCompanionWindows
+{
+    if (![self useAllScreensActive]) {
+        return;
+    }
+
+    if ([_companionWindows count] > 0) {
+        NSLog(@"[Session] showCompanionWindows: refreshing existing %lu companion windows", (unsigned long)[_companionWindows count]);
+        for (NSWindow *cw in _companionWindows) {
+            [cw orderFrontRegardless];
+            RFBView *cv = (RFBView *)[cw contentView];
+            if ([cv respondsToSelector:@selector(setNeedsDisplay:)]) {
+                [cv setNeedsDisplay:YES];
+            }
+        }
+        return;
+    }
+
+    [self hideCompanionWindows];
+
+    NSArray *descriptors = [self multiMonitorDescriptors];
+    NSLog(@"[Session] showCompanionWindows: creating companion windows for %lu screens", (unsigned long)[descriptors count]);
+    for (NSDictionary *desc in descriptors) {
+        BOOL isPrimary = [[desc objectForKey:@"isPrimary"] boolValue];
+        NSPoint bufOrigin = [[desc objectForKey:@"bufferOrigin"] pointValue];
+        NSScreen *screen = [desc objectForKey:@"screen"];
+        NSRect sf = [screen frame];
+
+        if (isPrimary) {
+            [rfbView setMonitorOrigin:bufOrigin];
+            [rfbView setFrame:NSMakeRect(0, 0, ((int)sf.size.width) & ~1, (int)sf.size.height)];
+            [scrollView setHasHorizontalScroller:NO];
+            [scrollView setHasVerticalScroller:NO];
+            [rfbView setNeedsDisplay:YES];
+            NSLog(@"[Session] Primary monitor configured: screenFrame=%@, bufOrigin=%@",
+                  NSStringFromRect(sf), NSStringFromPoint(bufOrigin));
+        } else {
+            RDPMultiMonitorWindow *compWin = [[RDPMultiMonitorWindow alloc] initWithContentRect:sf
+                                                                                      styleMask:NSWindowStyleMaskBorderless
+                                                                                        backing:NSBackingStoreBuffered
+                                                                                          defer:NO];
+            [compWin setFrame:sf display:YES];
+            [compWin setReleasedWhenClosed:NO];
+            [compWin setCollectionBehavior:NSWindowCollectionBehaviorFullScreenAuxiliary |
+                                           NSWindowCollectionBehaviorCanJoinAllSpaces |
+                                           NSWindowCollectionBehaviorStationary];
+            [compWin setLevel:NSMainMenuWindowLevel + 1];
+            [compWin setAcceptsMouseMovedEvents:YES];
+            [compWin setHidesOnDeactivate:YES];
+            [compWin setOpaque:YES];
+            [compWin setHasShadow:NO];
+
+            RFBView *compView = [[RFBView alloc] initWithFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
+            [compView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [compView setDelegate:connection];
+            [compView setFrameBuffer:[connection frameBuffer]];
+            [compView setFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
+            [compView setMonitorOrigin:bufOrigin];
+            [compWin setContentView:compView];
+            [compView release];
+
+            [compWin orderFrontRegardless];
+            [_companionWindows addObject:compWin];
+            [compWin release];
+
+            NSLog(@"[Session] Companion window created: targetFrame=%@, actualFrame=%@, screen=%@, bufOrigin=%@",
+                  NSStringFromRect(sf), NSStringFromRect([compWin frame]),
+                  [[compWin screen] localizedName], NSStringFromPoint(bufOrigin));
+        }
+    }
+}
+
+- (void)hideCompanionWindows
+{
+    if ([rfbView monitorOrigin].x != 0 || [rfbView monitorOrigin].y != 0) {
+        [rfbView setMonitorOrigin:NSZeroPoint];
+    }
+    for (NSWindow *win in _companionWindows) {
+        RFBView *view = (RFBView *)[win contentView];
+        if ([view respondsToSelector:@selector(setDelegate:)]) {
+            [view setDelegate:nil];
+        }
+        if ([view respondsToSelector:@selector(setFrameBuffer:)]) {
+            [view setFrameBuffer:nil];
+        }
+        [win orderOut:nil];
+        [win close];
+    }
+    [_companionWindows removeAllObjects];
+}
+
+- (void)invalidateDirtyRect:(NSRect)dirtyRect
+{
+    NSPoint pOrigin = [rfbView monitorOrigin];
+    NSSize pSize = [rfbView bounds].size;
+    NSRect pRect = NSMakeRect(pOrigin.x, pOrigin.y, pSize.width, pSize.height);
+    NSRect pInter = NSIntersectionRect(dirtyRect, pRect);
+    if (pInter.size.width > 0 && pInter.size.height > 0) {
+        NSRect localRect;
+        localRect.origin.x = pInter.origin.x - pOrigin.x;
+        localRect.origin.y = pSize.height - (pInter.origin.y - pOrigin.y + pInter.size.height);
+        localRect.size = pInter.size;
+        [rfbView setNeedsDisplayInRect:localRect];
+    }
+
+    for (NSWindow *win in _companionWindows) {
+        RFBView *view = (RFBView *)[win contentView];
+        NSPoint monOrigin = [view monitorOrigin];
+        NSSize monSize = [view bounds].size;
+        NSRect monRect = NSMakeRect(monOrigin.x, monOrigin.y, monSize.width, monSize.height);
+        NSRect inter = NSIntersectionRect(dirtyRect, monRect);
+        if (inter.size.width > 0 && inter.size.height > 0) {
+            NSRect localRect;
+            localRect.origin.x = inter.origin.x - monOrigin.x;
+            localRect.origin.y = monSize.height - (inter.origin.y - monOrigin.y + inter.size.height);
+            localRect.size = inter.size;
+            [view setNeedsDisplayInRect:localRect];
+        }
+    }
+}
+
+- (void)updateCursorOnCompanionViews:(NSCursor *)cursor
+{
+    for (NSWindow *win in _companionWindows) {
+        RFBView *view = (RFBView *)[win contentView];
+        if ([view respondsToSelector:@selector(setServerCursorTo:)]) {
+            [view setServerCursorTo:cursor];
+        }
+    }
+}
+
+- (NSPoint)rdpCoordinatesForViewPoint:(NSPoint)viewPoint inView:(NSView *)view
+{
+    NSPoint screenPoint = viewPoint;
+    if (view && [view window]) {
+        NSPoint winPoint = [view convertPoint:viewPoint toView:nil];
+        screenPoint = [[view window] convertPointToScreen:winPoint];
+    } else {
+        screenPoint = [NSEvent mouseLocation];
+    }
+
+    if (![self isInMultiMonitorFullScreen]) {
+        CGFloat h = view ? [view bounds].size.height : 768.0;
+        return NSMakePoint(viewPoint.x, h - 1.0 - viewPoint.y);
+    }
+
+    NSArray *descriptors = [self multiMonitorDescriptors];
+    if (!descriptors || [descriptors count] == 0) {
+        CGFloat h = view ? [view bounds].size.height : 768.0;
+        return NSMakePoint(viewPoint.x, h - 1.0 - viewPoint.y);
+    }
+
+    NSScreen *primaryScreen = [window screen] ? [window screen] : [[NSScreen screens] objectAtIndex:0];
+    NSRect primaryFrame = [primaryScreen frame];
+    CGFloat primaryTop = primaryFrame.origin.y + primaryFrame.size.height;
+
+    NSSize boundingBox = [self multiMonitorBoundingBoxSize];
+
+    int minRdpX = 0;
+    int minRdpY = 0;
+    for (NSDictionary *desc in descriptors) {
+        int left = [[desc objectForKey:@"rdpLeft"] intValue];
+        int top = [[desc objectForKey:@"rdpTop"] intValue];
+        minRdpX = MIN(minRdpX, left);
+        minRdpY = MIN(minRdpY, top);
+    }
+
+    CGFloat minGlobalX = primaryFrame.origin.x + minRdpX;
+    CGFloat maxGlobalY = primaryTop - minRdpY;
+
+    CGFloat rdpX = screenPoint.x - minGlobalX;
+    CGFloat rdpY = maxGlobalY - screenPoint.y;
+
+    if (rdpX < 0) rdpX = 0;
+    if (rdpX >= boundingBox.width) rdpX = boundingBox.width - 1;
+    if (rdpY < 0) rdpY = 0;
+    if (rdpY >= boundingBox.height) rdpY = boundingBox.height - 1;
+
+    return NSMakePoint(rdpX, rdpY);
+}
+
 - (NSSize)preferredInitialDesktopSize
 {
+    if ([self useAllScreensActive]) {
+        return [self multiMonitorBoundingBoxSize];
+    }
+
     NSScreen *screen = [window screen] ? [window screen] : [NSScreen mainScreen];
     if ([window isVisible]) {
         if ([server_ fullscreen] && screen) {
@@ -706,10 +1003,15 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
     if (_enteringInitialFullscreen) {
         [window toggleFullScreen:nil];
-    } else if (isAnyFullScreen) {
-        NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
-        if (cmWin) {
-            [cmWin orderOut:nil];
+    } else {
+        if ([self isInMultiMonitorFullScreen]) {
+            [self showCompanionWindows];
+        }
+        if (isAnyFullScreen) {
+            NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
+            if (cmWin) {
+                [cmWin orderOut:nil];
+            }
         }
     }
 }
@@ -741,6 +1043,25 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)resize:(NSSize)size
 {
+    if ([self isInMultiMonitorFullScreen]) {
+        _maxSize = size;
+        NSScreen *primaryScreen = [window screen] ? [window screen] : [[NSScreen screens] firstObject];
+        NSSize pSize = [primaryScreen frame].size;
+        [rfbView setFrame:NSMakeRect(0, 0, ((int)pSize.width) & ~1, (int)pSize.height)];
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setHasVerticalScroller:NO];
+        if ([_companionWindows count] == 0 && (([window styleMask] & NSWindowStyleMaskFullScreen) != 0)) {
+            [self showCompanionWindows];
+        } else {
+            for (NSWindow *compWin in _companionWindows) {
+                RFBView *compView = (RFBView *)[compWin contentView];
+                [compView setNeedsDisplay:YES];
+            }
+        }
+        [rfbView setNeedsDisplay:YES];
+        return;
+    }
+
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         _maxSize = size;
         [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
@@ -904,6 +1225,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
+    [self hideCompanionWindows];
     // dealloc closes the window, so we have to null it out here
     // The window will autorelease itself when closed.  If we allow terminateConnection
     // to close it again, it will get double-autoreleased.  Bummer.
@@ -943,7 +1265,11 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [scrollView setHasVerticalScroller:NO];
         // If not dragging live (e.g. zoom/maximize button or setupWindow), update the server immediately
         if (![window inLiveResize] && !_enteringInitialFullscreen) {
-            [connection writeSetDesktopSize:[[window contentView] frame].size];
+            if ([self isInMultiMonitorFullScreen]) {
+                [connection writeSetDesktopSize:[self multiMonitorBoundingBoxSize]];
+            } else {
+                [connection writeSetDesktopSize:[[window contentView] frame].size];
+            }
         }
         return;
     }
@@ -956,13 +1282,24 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 {
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         // User finished dragging the window; send final size to server
-        [connection writeSetDesktopSize:[[window contentView] frame].size];
+        if ([self isInMultiMonitorFullScreen]) {
+            [connection writeSetDesktopSize:[self multiMonitorBoundingBoxSize]];
+        } else {
+            [connection writeSetDesktopSize:[[window contentView] frame].size];
+        }
     }
 }
 
 - (void)windowDidEnterFullScreen:(NSNotification *)aNotification
 {
     _enteringInitialFullscreen = NO;
+    if ([self useAllScreensActive]) {
+        [self showCompanionWindows];
+        if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+            [connection writeSetDesktopSize:[self multiMonitorBoundingBoxSize]];
+        }
+        return;
+    }
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
         NSSize winSize = [[window contentView] frame].size;
         uint32_t winW = ((uint32_t)winSize.width) & ~1;
@@ -976,6 +1313,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 - (void)windowDidExitFullScreen:(NSNotification *)aNotification
 {
     _enteringInitialFullscreen = NO;
+    [self hideCompanionWindows];
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
         NSSize winSize = [[window contentView] frame].size;
         uint32_t winW = ((uint32_t)winSize.width) & ~1;
@@ -989,6 +1327,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)aWindow
 {
     _enteringInitialFullscreen = NO;
+    [self hideCompanionWindows];
 }
 
 - (void)windowDidChangeScreen:(NSNotification *)aNotification
@@ -1016,8 +1355,15 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     // sync server clipboard automatically
     [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
 
-    // If server supports dynamic resize, ensure remote desktop matches window frame
-    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window && !_enteringInitialFullscreen) {
+    if ([self isInMultiMonitorFullScreen]) {
+        if ([_companionWindows count] == 0) {
+            [self showCompanionWindows];
+        } else {
+            for (NSWindow *cw in _companionWindows) {
+                [cw orderFrontRegardless];
+            }
+        }
+    } else if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window && !_enteringInitialFullscreen) {
         NSSize winSize = [[window contentView] frame].size;
         uint32_t winW = ((uint32_t)winSize.width) & ~1;
         uint32_t winH = (uint32_t)winSize.height;
@@ -1030,6 +1376,12 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
+    if ([self isInMultiMonitorFullScreen] && [NSApp isActive]) {
+        // App is still frontmost (e.g. user focused a companion window in this session).
+        // Maintain high frame rate and do not dim tint.
+        return;
+    }
+
 	[connection removeMouseMovedTrackingRect];
 	
 	// Only update frame rate if window is actually visible

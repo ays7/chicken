@@ -35,6 +35,7 @@
 
 	bool      _viewOnly;	
 	bool      _fullscreen;
+	bool      _useAllScreens;
     Profile   *_profile;
 
     RemoteProtocol _remoteProtocol;
@@ -65,6 +66,7 @@
 
 - (bool)viewOnly;
 - (bool)fullscreen;
+- (bool)useAllScreens;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
 
@@ -85,6 +87,7 @@
 
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setFullscreen: (bool)fullscreen;
+- (void)setUseAllScreens: (bool)useAllScreens;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
 - (void)setSshHost:(NSString *)sshHost;

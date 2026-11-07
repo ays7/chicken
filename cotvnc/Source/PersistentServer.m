@@ -39,6 +39,7 @@
         _rememberPassword = [[dict objectForKey:@"rememberPassword"] boolValue];
         _shared = [[dict objectForKey:@"shared"] boolValue];
         _fullscreen = [[dict objectForKey:@"fullscreen"] boolValue];
+        _useAllScreens = [[dict objectForKey:@"useAllScreens"] boolValue];
 
         NSNumber *protoNum = [dict objectForKey:@"remoteProtocol"];
         if (protoNum) {
@@ -73,6 +74,7 @@
 		[NSNumber numberWithBool:_rememberPassword],	@"rememberPassword",
 		[NSNumber numberWithBool:_shared],				@"shared",
 		[NSNumber numberWithBool:_fullscreen],			@"fullscreen",
+		[NSNumber numberWithBool:_useAllScreens],		@"useAllScreens",
 
 		[NSNumber numberWithBool:_viewOnly],            @"viewOnly", 
 		[_profile profileName],							@"lastProfile",

@@ -49,6 +49,7 @@
     IBOutlet NSButton *shared;
 	IBOutlet NSButton *viewOnly;
 	IBOutlet NSButton *fullscreen;
+	IBOutlet NSButton *useAllScreens;
 	IBOutlet NSButton *save;
     IBOutlet NSButton *useSshTunnel;
     IBOutlet NSTextField *sshHost;
@@ -85,6 +86,7 @@
 - (IBAction)sharedChanged:(id)sender;
 - (IBAction)viewOnlyChanged:(id)sender;
 - (IBAction)fullscreenChanged:(id)sender;
+- (IBAction)useAllScreensChanged:(id)sender;
 - (IBAction)useSshTunnelChanged:(id)sender;
 - (IBAction)sshHostChanged:(id)sender;
 - (IBAction)connectToServer:(id)sender;

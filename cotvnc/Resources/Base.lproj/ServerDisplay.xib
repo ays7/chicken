@@ -28,6 +28,7 @@
                 <outlet property="shared" destination="26" id="43"/>
                 <outlet property="sshHost" destination="133" id="139"/>
                 <outlet property="sshHostLabel" destination="135" id="167"/>
+                <outlet property="useAllScreens" destination="170" id="172"/>
                 <outlet property="useSshTunnel" destination="131" id="140"/>
                 <outlet property="username" destination="152" id="162"/>
                 <outlet property="usernameLabel" destination="153" id="163"/>
@@ -257,6 +258,17 @@
                                     <connections>
                                         <action selector="fullscreenChanged:" target="-2" id="94"/>
                                         <outlet property="nextKeyView" destination="131" id="91"/>
+                                    </connections>
+                                </button>
+                                <button toolTip="Use all connected displays for the full-screen RDP session." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="170">
+                                    <rect key="frame" x="121" y="98" width="204" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Use all screens" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="171">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="useAllScreensChanged:" target="-2" id="173"/>
                                     </connections>
                                 </button>
                                 <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="131">

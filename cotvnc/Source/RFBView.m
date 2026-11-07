@@ -126,7 +126,7 @@ typedef int NSInteger;
                                                        options:(NSTrackingCursorUpdate |
                                                                 NSTrackingMouseMoved |
                                                                 NSTrackingMouseEnteredAndExited |
-                                                                NSTrackingActiveInKeyWindow |
+                                                                NSTrackingActiveInActiveApp |
                                                                 NSTrackingInVisibleRect)
                                                          owner:self
                                                       userInfo:nil];
@@ -210,6 +210,16 @@ typedef int NSInteger;
 	return _delegate;
 }
 
+- (NSPoint)monitorOrigin
+{
+    return _monitorOrigin;
+}
+
+- (void)setMonitorOrigin:(NSPoint)origin
+{
+    _monitorOrigin = origin;
+}
+
 - (void)drawRect:(NSRect)destRect
 {
     if (!fbuf)
@@ -229,19 +239,29 @@ typedef int NSInteger;
     if (drawTint)
         [tint setFill];
 
+    BOOL supportsMonitorOffset = [fbuf respondsToSelector:@selector(drawRect:at:monitorOrigin:viewHeight:)];
+
     [self getRectsBeingDrawn:&rects count:&numRects];
     if (rects && numRects > 0) {
         for (i = 0; i < numRects; i++) {
             NSRect      r = rects[i];
             r.origin.y = b.size.height - NSMaxY(r);
-            [fbuf drawRect:r at:rects[i].origin];
+            if (supportsMonitorOffset) {
+                [(id)fbuf drawRect:r at:rects[i].origin monitorOrigin:_monitorOrigin viewHeight:b.size.height];
+            } else {
+                [fbuf drawRect:r at:rects[i].origin];
+            }
             if (drawTint)
                 NSRectFillUsingOperation(rects[i], NSCompositingOperationSourceOver);
         }
     } else {
         NSRect r = destRect;
         r.origin.y = b.size.height - NSMaxY(r);
-        [fbuf drawRect:r at:destRect.origin];
+        if (supportsMonitorOffset) {
+            [(id)fbuf drawRect:r at:destRect.origin monitorOrigin:_monitorOrigin viewHeight:b.size.height];
+        } else {
+            [fbuf drawRect:r at:destRect.origin];
+        }
         if (drawTint)
             NSRectFillUsingOperation(destRect, NSCompositingOperationSourceOver);
     }
@@ -266,22 +286,22 @@ typedef int NSInteger;
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
-{  [_eventFilter mouseDown: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter mouseDown: theEvent];  }
 
 - (void)rightMouseDown:(NSEvent *)theEvent
-{  [_eventFilter rightMouseDown: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter rightMouseDown: theEvent];  }
 
 - (void)otherMouseDown:(NSEvent *)theEvent
-{  [_eventFilter otherMouseDown: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter otherMouseDown: theEvent];  }
 
 - (void)mouseUp:(NSEvent *)theEvent
-{  [_eventFilter mouseUp: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter mouseUp: theEvent];  }
 
 - (void)rightMouseUp:(NSEvent *)theEvent
-{  [_eventFilter rightMouseUp: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter rightMouseUp: theEvent];  }
 
 - (void)otherMouseUp:(NSEvent *)theEvent
-{  [_eventFilter otherMouseUp: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter otherMouseUp: theEvent];  }
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {  [[self window] setAcceptsMouseMovedEvents: YES];  }
@@ -291,19 +311,19 @@ typedef int NSInteger;
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
-{  [_eventFilter mouseMoved: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter mouseMoved: theEvent];  }
 
 - (void)mouseDragged:(NSEvent *)theEvent
-{  [_eventFilter mouseDragged: theEvent];}
+{  [_eventFilter setView:self]; [_eventFilter mouseDragged: theEvent];}
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
-{  [_eventFilter rightMouseDragged: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter rightMouseDragged: theEvent];  }
 
 - (void)otherMouseDragged:(NSEvent *)theEvent
-{  [_eventFilter otherMouseDragged: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter otherMouseDragged: theEvent];  }
 
 - (void)scrollWheel:(NSEvent *)theEvent
-{  [_eventFilter scrollWheel: theEvent];  }
+{  [_eventFilter setView:self]; [_eventFilter scrollWheel: theEvent];  }
 
 - (void)keyDown:(NSEvent *)theEvent
 {  [_eventFilter keyDown: theEvent];  }

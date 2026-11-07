@@ -136,6 +136,7 @@
     [displayLabel setHidden:isRDP];
     [displayDescription setHidden:isRDP];
     [shared setHidden:isRDP];
+    [useAllScreens setHidden:!isRDP];
 
     NSRect f;
 #define SET_POS(v, yVal) do { if (v) { f = [v frame]; f.origin.y = (yVal); [v setFrame:f]; } } while(0)
@@ -148,10 +149,11 @@
     SET_POS(profileLabel, isRDP ? 230 : 198);
     SET_POS(viewOnly, isRDP ? 191 : 159);
     SET_POS(shared, 138);
-    SET_POS(fullscreen, isRDP ? 164 : 117);
-    SET_POS(useSshTunnel, isRDP ? 136 : 92);
-    SET_POS(sshHost, isRDP ? 108 : 64);
-    SET_POS(sshHostLabel, isRDP ? 113 : 69);
+    SET_POS(fullscreen, isRDP ? 169 : 117);
+    SET_POS(useAllScreens, 147);
+    SET_POS(useSshTunnel, isRDP ? 124 : 92);
+    SET_POS(sshHost, isRDP ? 96 : 64);
+    SET_POS(sshHostLabel, isRDP ? 101 : 69);
 #undef SET_POS
 
     [hostName setNextKeyView: isRDP ? username : display];
@@ -162,7 +164,12 @@
     [profilePopup setNextKeyView: viewOnly];
     [viewOnly setNextKeyView: isRDP ? fullscreen : shared];
     [shared setNextKeyView: fullscreen];
-    [fullscreen setNextKeyView: useSshTunnel];
+    if (isRDP && [mServer fullscreen]) {
+        [fullscreen setNextKeyView: useAllScreens];
+        [useAllScreens setNextKeyView: useSshTunnel];
+    } else {
+        [fullscreen setNextKeyView: useSshTunnel];
+    }
     [useSshTunnel setNextKeyView: [useSshTunnel state] ? sshHost : connectBtn];
     [sshHost setNextKeyView: connectBtn];
 }
@@ -249,6 +256,7 @@
 
 		[viewOnly setIntValue:[mServer viewOnly]];
 		[fullscreen setIntValue:[mServer fullscreen]];
+		[useAllScreens setIntValue:[mServer useAllScreens]];
 		[self setProfilePopupToProfile: [mServer profile]];
         if ([mServer sshHost] == nil) {
             [useSshTunnel setIntValue:NO];
@@ -267,6 +275,7 @@
 
         [viewOnly setEnabled: YES];
         [fullscreen setEnabled: YES];
+        [useAllScreens setEnabled:(proto == RemoteProtocolRDP && [mServer fullscreen])];
 
     }
 	else
@@ -279,6 +288,7 @@
 		[display setEnabled: NO];
 		[shared setEnabled: NO];
 		[fullscreen setEnabled: NO];
+		[useAllScreens setEnabled: NO];
 		[profilePopup setEnabled: NO];
 		[connectBtn setEnabled: NO];
         [useSshTunnel setEnabled: NO];
@@ -291,6 +301,7 @@
 		[display setStringValue:@""];
 		[shared setIntValue:0];
 		[fullscreen setIntValue:0];
+		[useAllScreens setIntValue:0];
 
 		[viewOnly setIntValue:0];
         [useSshTunnel setIntValue:0];
@@ -545,6 +556,22 @@
 	if( nil != mServer )
 	{
 		[mServer setFullscreen:![mServer fullscreen]];
+		BOOL isRDP = ([mServer remoteProtocol] == RemoteProtocolRDP);
+		[useAllScreens setEnabled:(isRDP && [mServer fullscreen])];
+		if (isRDP && [mServer fullscreen]) {
+			[fullscreen setNextKeyView: useAllScreens];
+			[useAllScreens setNextKeyView: useSshTunnel];
+		} else {
+			[fullscreen setNextKeyView: useSshTunnel];
+		}
+	}
+}
+
+- (IBAction)useAllScreensChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		[mServer setUseAllScreens:![mServer useAllScreens]];
 	}
 }
 
@@ -681,6 +708,7 @@
     [shared setEnabled: NO];
     [viewOnly setEnabled: NO];
     [fullscreen setEnabled: NO];
+    [useAllScreens setEnabled: NO];
     [useSshTunnel setEnabled: NO];
     [sshHost setEnabled: NO];
     [superController setControlsEnabled: NO];

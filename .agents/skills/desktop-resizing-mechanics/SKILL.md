@@ -144,3 +144,15 @@ Dynamic desktop resizing operates in two distinct phases:
   2. While macOS animated the window into its dedicated Space, `windowDidResize:` fired with the temporary pre-animation windowed content size.
   3. The client dispatched a layout PDU for this intermediate size, clobbering the initial fullscreen negotiation and triggering `lastDesktopSizeSent` deadlocks.
 * **Rule**: Gate all dynamic resize PDU transmissions behind `!_enteringInitialFullscreen`. Only permit resize dispatch once `windowDidEnterFullScreen:` or normal windowed presentation is confirmed.
+
+### Gotcha 7: Multi-Monitor Full-Screen Layout Constraints (MS-RDPEDISP & AppKit)
+* **Coordinate Systems**:
+  - In AppKit, screen frames are in Cocoa coordinates with (0,0) at primary screen bottom-left, Y increasing upwards.
+  - In FreeRDP and MS-RDPEDISP, monitor coordinates are top-down with the primary monitor positioned strictly at `(0, 0)`.
+  - Convert `rdpLeft = screen.origin.x - primary.origin.x` and `rdpTop = (primary.origin.y + primary.size.height) - (screen.origin.y + screen.size.height)`.
+  - Widths must be even integers (`w & ~1`).
+* **FrameBuffer Offsets & Auxiliary Windows**:
+  - The unified GDI / `RDPFrameBuffer` size matches the total bounding box of all displays.
+  - The primary display runs in a native macOS fullscreen Space; companion displays run borderless windows with `NSWindowCollectionBehaviorFullScreenAuxiliary | NSWindowCollectionBehaviorStationary` at `NSMainMenuWindowLevel + 1`.
+  - Each `RFBView` maintains a `monitorOrigin` pointing to its monitor's buffer origin in the unified framebuffer (`imgX = -monOrigin.x; imgY = viewHeight + monOrigin.y - size.height;`).
+  - Pointer event coordinates clamp to the active view and add `monitorOrigin` to deliver virtual desktop coordinates to `freerdp_input_send_mouse_event`.

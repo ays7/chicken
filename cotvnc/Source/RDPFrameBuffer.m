@@ -99,6 +99,11 @@
 
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint
 {
+    [self drawRect:aRect at:aPoint monitorOrigin:NSZeroPoint viewHeight:size.height];
+}
+
+- (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint monitorOrigin:(NSPoint)monOrigin viewHeight:(CGFloat)viewHeight
+{
     if (!_buffer || size.width <= 0 || size.height <= 0 || _stride <= 0)
         return;
 
@@ -130,7 +135,9 @@
     {
         CGContextClipToRect(ctx, CGRectMake(aPoint.x, aPoint.y, aRect.size.width, aRect.size.height));
     }
-    CGContextDrawImage(ctx, CGRectMake(0, 0, size.width, size.height), image);
+    CGFloat imgX = -monOrigin.x;
+    CGFloat imgY = viewHeight + monOrigin.y - size.height;
+    CGContextDrawImage(ctx, CGRectMake(imgX, imgY, size.width, size.height), image);
     CGContextRestoreGState(ctx);
 
     CGImageRelease(image);

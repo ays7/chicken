@@ -73,6 +73,7 @@ ConnectionWaiterDelegate>
     NSTimer                         *_reconnectSheetTimer;
     ConnectionWaiter                *_reconnectWaiter;
     NSArray                         *_nibTopLevelObjects;
+    NSMutableArray                  *_companionWindows;
 }
 
 - (id)initWithConnection:(id<RemoteConnection>)conn;
@@ -119,5 +120,13 @@ ConnectionWaiterDelegate>
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)window;
 
 - (id<RemoteConnection>)connection;
+
+- (BOOL)useAllScreensActive;
+- (BOOL)isInMultiMonitorFullScreen;
+- (NSArray *)multiMonitorDescriptors;
+- (NSSize)multiMonitorBoundingBoxSize;
+- (void)invalidateDirtyRect:(NSRect)rect;
+- (void)updateCursorOnCompanionViews:(NSCursor *)cursor;
+- (NSPoint)rdpCoordinatesForViewPoint:(NSPoint)viewPoint inView:(NSView *)view;
 
 @end

@@ -22,5 +22,6 @@
 - (size_t)stride;
 
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint;
+- (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint monitorOrigin:(NSPoint)monOrigin viewHeight:(CGFloat)viewHeight;
 
 @end

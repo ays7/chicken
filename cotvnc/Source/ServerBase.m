@@ -44,6 +44,7 @@
         _port = 5900;
         _shared = NO;
         _fullscreen = NO;
+        _useAllScreens = NO;
 
         _remoteProtocol = RemoteProtocolVNC;
         _username = nil;
@@ -177,6 +178,16 @@
 - (void)setFullscreen:(bool)fullscreen
 {
 	_fullscreen = fullscreen;
+}
+
+- (bool)useAllScreens
+{
+	return _useAllScreens;
+}
+
+- (void)setUseAllScreens:(bool)useAllScreens
+{
+	_useAllScreens = useAllScreens;
 }
 
 - (NSString *)sshHost
@@ -403,6 +414,11 @@
     [self setUsername:[server username]];
     _shared = [server shared];
     _fullscreen = [server fullscreen];
+    if ([server respondsToSelector:@selector(useAllScreens)]) {
+        _useAllScreens = [server useAllScreens];
+    } else {
+        _useAllScreens = NO;
+    }
 
     _viewOnly = [server viewOnly];
     [self setProfile:[server profile]];
