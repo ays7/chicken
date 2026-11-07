@@ -333,6 +333,7 @@
 
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Display size (%d x %d)", self, [self fileDescriptor], (int)[info size].width, (int)[info size].height);
     [self sizeDisplay:[info size] withPixelFormat:[info pixelFormatData]];
+    [rfbProtocol setFrameBuffer:frameBuffer];
     [session setSize:[info size]];
     [rfbView setFrameBuffer:frameBuffer];
     [rfbView setDelegate:self];
@@ -340,7 +341,9 @@
     [session setDisplayName: [info name]];
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Requesting initial non-incremental update...", self, [self fileDescriptor]);
     [self requestUpdate:[rfbView bounds] incremental:NO];
-    [rfbProtocol setFrameBuffer:frameBuffer];
+    if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window]) {
+        [self writeSetDesktopSize:[[[session window] contentView] frame].size];
+    }
 
     [handshaker release];
     handshaker = nil;
@@ -383,24 +386,36 @@
     [rfbView displayIfNeededIgnoringOpacity];
     [session frameBufferUpdateComplete];
     isReceivingUpdate = NO;
+
+    if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window]) {
+        NSWindow *win = [session window];
+        if (![win inLiveResize]) {
+            NSSize winContentSize = [[win contentView] frame].size;
+            if (!NSEqualSizes([frameBuffer size], winContentSize)) {
+                NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+                if (!NSEqualSizes(lastDesktopSizeSent, winContentSize) ||
+                    (now - lastDesktopSizeSentTimestamp >= 2.0 && desktopResizeAttempts < 3)) {
+                    lastDesktopSizeSentTimestamp = now;
+                    desktopResizeAttempts++;
+                    [self writeSetDesktopSize:winContentSize];
+                }
+            }
+        }
+    }
 }
 
 /* Server has requested a resize. We process the update, then resize
  * here. */
 - (void)frameBufferUpdateCompleteWithResize:(NSSize)newSize
 {
+    desktopResizeAttempts = 0;
     [self sizeDisplay:newSize withPixelFormat:[frameBuffer pixelFormat]];
     [rfbProtocol setFrameBuffer:frameBuffer];
     [self requestUpdate:[rfbView bounds] incremental:NO];
     isReceivingUpdate = NO;
     [session frameBufferUpdateComplete];
 
-    // Only resize the session window if server doesn't support SetDesktopSize
-    // or connection is view-only.
-    // Otherwise window resizing is driven by user actions.
-    if (!_serverSupportsSetDesktopSize || [self viewOnly]) {
-        [session resize:newSize];
-    }
+    [session resize:newSize];
 }
 
 - (void)readData:(NSNotification*)aNotification
@@ -1132,6 +1147,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
 
     // Update tracking
     lastDesktopSizeSent = size;
+    lastDesktopSizeSentTimestamp = [NSDate timeIntervalSinceReferenceDate];
     [lastDesktopSizeTime release];
     lastDesktopSizeTime = [[NSDate date] retain];
 }

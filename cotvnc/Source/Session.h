@@ -50,6 +50,7 @@ ConnectionWaiterDelegate>
 
     BOOL	horizontalScroll;
     BOOL	verticalScroll;
+    BOOL	_hasRestoredFrame;
 
     id optionPanel;
     id infoField;
@@ -80,6 +81,7 @@ ConnectionWaiterDelegate>
 - (BOOL)isConnected;
 
 - (void)setSize:(NSSize)size;
+- (NSSize)preferredInitialDesktopSize;
 - (void)setDisplayName:(NSString *)aName;
 - (void)setupWindow;
 - (NSWindow *)window;
@@ -110,6 +112,7 @@ ConnectionWaiterDelegate>
 - (void)windowDidMiniaturize:(NSNotification *)aNotification;
 - (void)windowWillClose:(NSNotification *)aNotification;
 - (void)windowDidResize:(NSNotification *)aNotification;
+- (void)windowDidChangeScreen:(NSNotification *)aNotification;
 
 - (id<RemoteConnection>)connection;
 

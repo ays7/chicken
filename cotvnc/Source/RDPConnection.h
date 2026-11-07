@@ -44,6 +44,10 @@
 
     unsigned int _pressedButtons;
     NSSize currentDesktopSize;
+    NSSize pendingDesktopSize;
+    BOOL hasPendingDesktopSize;
+    NSSize lastDesktopSizeSent;
+    NSTimeInterval lastDesktopSizeSentTime;
 
     NSTrackingRectTag _mouseMovedTrackingTag;
     uint16_t lastSentMouseX;
@@ -54,6 +58,7 @@
 - (id)initWithServer:(id<IServerData>)server sshTunnel:(SshTunnel *)tunnel;
 - (Session *)session;
 
+- (void)checkAndRequestDesktopResizeIfNeeded;
 - (void)notifyDirtyRect:(NSRect)rect;
 - (void)notifyDesktopResize:(NSSize)newSize;
 - (void)notifyConnected;

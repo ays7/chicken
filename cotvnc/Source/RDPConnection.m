@@ -87,7 +87,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 @interface RDPConnection ()
 {
     NSLock *inputLock;
-    NSSize pendingDesktopSize;
 }
 - (void)threadMain:(id)arg;
 - (void)setupCliprdr:(CliprdrClientContext *)cliprdr;
@@ -230,11 +229,22 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         freerdp_settings_set_bool(settings, FreeRDP_AutoLogonEnabled, TRUE);
     }
 
-    NSRect viewRect = rfbView ? [rfbView bounds] : NSMakeRect(0, 0, 1024, 768);
-    UINT32 initWidth = ((UINT32)viewRect.size.width) & ~1;
-    UINT32 initHeight = (UINT32)viewRect.size.height;
-    if (initWidth < 640) initWidth = 1024;
-    if (initHeight < 480) initHeight = 768;
+    NSSize prefSize = session ? [session preferredInitialDesktopSize] : NSZeroSize;
+    if (prefSize.width < 200 || prefSize.height < 200)
+    {
+        NSRect viewRect = rfbView ? [rfbView bounds] : NSMakeRect(0, 0, 1024, 768);
+        prefSize = viewRect.size;
+    }
+    UINT32 initWidth = ((UINT32)prefSize.width) & ~1;
+    UINT32 initHeight = (UINT32)prefSize.height;
+    if (initWidth < 200) initWidth = 1024;
+    if (initHeight < 200) initHeight = 768;
+
+    currentDesktopSize = NSZeroSize;
+    hasPendingDesktopSize = NO;
+    lastDesktopSizeSent = NSZeroSize;
+    lastDesktopSizeSentTime = 0.0;
+    [frameBuffer setSize:NSMakeSize(initWidth, initHeight)];
 
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopWidth, initWidth);
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopHeight, initHeight);
@@ -374,6 +384,30 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
             viewRect.origin.y = bounds.size.height - NSMaxY(rect);
             [self->rfbView setNeedsDisplayInRect:viewRect];
         }
+
+        // Adaptive check: if server desktop size does not match window size
+        // (e.g. login screen transition completed and GDM had ignored previous resize)
+        if (self->dispReady && self->isConnected && self->session && ![self viewOnly])
+        {
+            NSWindow *win = [self->session window];
+            if (win && ![win inLiveResize])
+            {
+                NSSize winSize = [[win contentView] frame].size;
+                UINT32 winW = ((UINT32)winSize.width) & ~1;
+                UINT32 winH = (UINT32)winSize.height;
+                if (winW >= 200 && winH >= 200 &&
+                    (winW != (UINT32)self->currentDesktopSize.width || winH != (UINT32)self->currentDesktopSize.height))
+                {
+                    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+                    if (now - self->lastDesktopSizeSentTime >= 2.0 && !self->hasPendingDesktopSize)
+                    {
+                        NSLog(@"[RDPConnection] Desktop size (%ux%u) != window size (%ux%u); retrying SendMonitorLayout...",
+                              (UINT32)self->currentDesktopSize.width, (UINT32)self->currentDesktopSize.height, winW, winH);
+                        [self writeSetDesktopSize:winSize];
+                    }
+                }
+            }
+        }
     });
 }
 
@@ -381,6 +415,8 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         self->currentDesktopSize = newSize;
+        self->hasPendingDesktopSize = NO;
+        self->lastDesktopSizeSent = newSize;
         [self->frameBuffer setSize:newSize];
         rdpContext *ctx = (rdpContext *)self->freerdpContext;
         if (ctx && ctx->gdi)
@@ -431,6 +467,9 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         {
             [self->rfbView setNeedsDisplay:YES];
         }
+        self->isConnected = YES;
+
+        [self checkAndRequestDesktopResizeIfNeeded];
     });
 }
 
@@ -682,7 +721,35 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (BOOL)serverSupportsSetDesktopSize
 {
-    return (dispContext != NULL && dispReady);
+    return YES;
+}
+
+- (void)checkAndRequestDesktopResizeIfNeeded
+{
+    if (!session || [self viewOnly])
+        return;
+
+    NSWindow *win = [session window];
+    if (!win)
+        return;
+
+    if ([win inLiveResize])
+        return;
+
+    NSSize winContentSize = [[win contentView] frame].size;
+    UINT32 winW = ((UINT32)winContentSize.width) & ~1;
+    UINT32 winH = (UINT32)winContentSize.height;
+    if (winW < 200 || winH < 200)
+        return;
+
+    if (hasPendingDesktopSize)
+    {
+        [self performDelayedDesktopSize];
+    }
+    else if (winW != (UINT32)currentDesktopSize.width || winH != (UINT32)currentDesktopSize.height)
+    {
+        [self writeSetDesktopSize:winContentSize];
+    }
 }
 
 - (void)writeSetDesktopSize:(NSSize)newSize
@@ -696,51 +763,72 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         return;
 
     pendingDesktopSize = NSMakeSize(w, h);
+    hasPendingDesktopSize = YES;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(performDelayedDesktopSize) object:nil];
     [self performSelector:@selector(performDelayedDesktopSize) withObject:nil afterDelay:0.25];
 }
 
 - (void)performDelayedDesktopSize
 {
-    if (dispContext != NULL && dispReady && isConnected)
+    if (!hasPendingDesktopSize)
+        return;
+
+    if (dispContext == NULL || !dispReady || !isConnected)
     {
-        NSSize newSize = pendingDesktopSize;
-        if (newSize.width < 200 || newSize.height < 200)
-            return;
-
-        UINT32 w = ((UINT32)newSize.width) & ~1; // Must be even per MS-RDPEDISP § 2.2.2.2.1
-        UINT32 h = (UINT32)newSize.height;
-        if (w < 200) w = 200;
-        if (w > 8192) w = 8192;
-        if (h < 200) h = 200;
-        if (h > 8192) h = 8192;
-
-        if (w == (UINT32)currentDesktopSize.width && h == (UINT32)currentDesktopSize.height)
-            return;
-
-        NSLog(@"[RDPConnection] Sending DisplayControl monitor layout: %ux%u", w, h);
-
-        DISPLAY_CONTROL_MONITOR_LAYOUT layout;
-        ZeroMemory(&layout, sizeof(layout));
-        layout.Flags = DISPLAY_CONTROL_MONITOR_PRIMARY;
-        layout.Left = 0;
-        layout.Top = 0;
-        layout.Width = w;
-        layout.Height = h;
-        layout.Orientation = ORIENTATION_LANDSCAPE;
-        layout.PhysicalWidth = (UINT32)(w * 25.4 / 96.0);
-        layout.PhysicalHeight = (UINT32)(h * 25.4 / 96.0);
-        if (layout.PhysicalWidth < 10) layout.PhysicalWidth = 10;
-        if (layout.PhysicalHeight < 10) layout.PhysicalHeight = 10;
-
-        [inputLock lock];
-        DispClientContext *disp = (DispClientContext *)dispContext;
-        if (disp && disp->SendMonitorLayout)
-        {
-            disp->SendMonitorLayout(disp, 1, &layout);
-        }
-        [inputLock unlock];
+        // Channel or connection not ready yet; keep hasPendingDesktopSize = YES.
+        // It will be dispatched when dispReady && isConnected are true.
+        return;
     }
+
+    NSSize newSize = pendingDesktopSize;
+    if (newSize.width < 200 || newSize.height < 200)
+        return;
+
+    UINT32 w = ((UINT32)newSize.width) & ~1; // Must be even per MS-RDPEDISP § 2.2.2.2.1
+    UINT32 h = (UINT32)newSize.height;
+    if (w < 200) w = 200;
+    if (w > 8192) w = 8192;
+    if (h < 200) h = 200;
+    if (h > 8192) h = 8192;
+
+    if (w == (UINT32)currentDesktopSize.width && h == (UINT32)currentDesktopSize.height)
+    {
+        hasPendingDesktopSize = NO;
+        return;
+    }
+
+    NSLog(@"[RDPConnection] Sending DisplayControl monitor layout: %ux%u", w, h);
+
+    DISPLAY_CONTROL_MONITOR_LAYOUT layout;
+    ZeroMemory(&layout, sizeof(layout));
+    layout.Flags = DISPLAY_CONTROL_MONITOR_PRIMARY;
+    layout.Left = 0;
+    layout.Top = 0;
+    layout.Width = w;
+    layout.Height = h;
+    layout.Orientation = ORIENTATION_LANDSCAPE;
+    layout.PhysicalWidth = (UINT32)(w * 25.4 / 96.0);
+    layout.PhysicalHeight = (UINT32)(h * 25.4 / 96.0);
+    if (layout.PhysicalWidth < 10) layout.PhysicalWidth = 10;
+    if (layout.PhysicalHeight < 10) layout.PhysicalHeight = 10;
+
+    rdpSettings *settings = freerdpContext ? ((rdpContext *)freerdpContext)->settings : NULL;
+    layout.DesktopScaleFactor = settings ? freerdp_settings_get_uint32(settings, FreeRDP_DesktopScaleFactor) : 100;
+    layout.DeviceScaleFactor = settings ? freerdp_settings_get_uint32(settings, FreeRDP_DeviceScaleFactor) : 100;
+    if (layout.DesktopScaleFactor == 0) layout.DesktopScaleFactor = 100;
+    if (layout.DeviceScaleFactor == 0) layout.DeviceScaleFactor = 100;
+
+    [inputLock lock];
+    DispClientContext *disp = (DispClientContext *)dispContext;
+    if (disp && disp->SendMonitorLayout)
+    {
+        disp->SendMonitorLayout(disp, 1, &layout);
+    }
+    [inputLock unlock];
+
+    lastDesktopSizeSent = NSMakeSize(w, h);
+    lastDesktopSizeSentTime = [NSDate timeIntervalSinceReferenceDate];
+    hasPendingDesktopSize = NO;
 }
 
 - (NSString *)statisticsString
@@ -1375,6 +1463,9 @@ static UINT rdp_disp_DisplayControlCaps(DispClientContext *disp, UINT32 MaxNumMo
     {
         RDPConnection *conn = (__bridge RDPConnection *)c->connection;
         conn->dispReady = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [conn checkAndRequestDesktopResizeIfNeeded];
+        });
     }
     return CHANNEL_RC_OK;
 }

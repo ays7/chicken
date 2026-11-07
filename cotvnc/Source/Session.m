@@ -533,24 +533,99 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     return winframe.size;
 }
 
+- (NSString *)baseFrameAutosaveName
+{
+    NSString *serverName = [server_ name];
+    if (!serverName || [serverName length] == 0 ||
+        [serverName isEqualToString:NSLocalizedString(@"RFBUntitledServerName", nil)]) {
+        if (host && [host length] > 0) {
+            return host;
+        }
+    }
+    return serverName;
+}
+
+- (NSString *)frameAutosaveNameForScreen:(NSScreen *)screen
+{
+    NSString *baseName = [self baseFrameAutosaveName];
+    if (!baseName || [baseName length] == 0) {
+        return @"";
+    }
+    if (!screen) {
+        screen = [window screen] ? [window screen] : [NSScreen mainScreen];
+    }
+    if (!screen) {
+        return baseName;
+    }
+    NSSize screenSize = [screen frame].size;
+    return [NSString stringWithFormat:@"%@ (%dx%d)", baseName, (int)screenSize.width, (int)screenSize.height];
+}
+
+- (BOOL)restoreWindowFrameForScreen:(NSScreen *)screen
+{
+    NSString *perScreenName = [self frameAutosaveNameForScreen:screen];
+    if ([perScreenName length] > 0 && [window setFrameUsingName:perScreenName]) {
+        return YES;
+    }
+    NSString *baseName = [self baseFrameAutosaveName];
+    if ([baseName length] > 0 && [window setFrameUsingName:baseName]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSSize)preferredInitialDesktopSize
+{
+    if ([window isVisible]) {
+        return [[window contentView] frame].size;
+    }
+    NSScreen *screen = [NSScreen mainScreen];
+    if ([self restoreWindowFrameForScreen:screen]) {
+        _hasRestoredFrame = YES;
+        return [[window contentView] frame].size;
+    }
+
+    NSRect screenRect = screen ? [screen visibleFrame] : NSMakeRect(0, 0, 1440, 900);
+    CGFloat targetW = floor(NSWidth(screenRect) * 0.8);
+    CGFloat targetH = floor(NSHeight(screenRect) * 0.8);
+    if (targetW < 1440.0) targetW = MIN(1440.0, NSWidth(screenRect));
+    if (targetH < 900.0) targetH = MIN(900.0, NSHeight(screenRect));
+
+    NSRect contentRect = NSMakeRect(0, 0, ((int)targetW) & ~1, (int)targetH);
+    NSRect wf = [NSWindow frameRectForContentRect:contentRect styleMask:[window styleMask]];
+    if (NSWidth(wf) > NSWidth(screenRect)) wf.size.width = NSWidth(screenRect);
+    if (NSHeight(wf) > NSHeight(screenRect)) wf.size.height = NSHeight(screenRect);
+    wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf)) / 2 + NSMinX(screenRect));
+    wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf)) * 2 / 3 + NSMinY(screenRect));
+
+    [window setFrame:wf display:NO];
+    _hasRestoredFrame = YES;
+    return [[window contentView] frame].size;
+}
+
 /* Sets up window. */
 - (void)setupWindow
 {
     NSRect wf;
 	NSRect screenRect;
 	NSClipView *contentView;
-	NSString *serverName;
+	BOOL resizable = [connection serverSupportsSetDesktopSize] && ![self viewOnly];
+
+	horizontalScroll = NO;
+	verticalScroll = NO;
 
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
     wf.size = FrameSizeForContentSize(_maxSize, NO, NO);
     wf = [NSWindow frameRectForContentRect:wf styleMask:[window styleMask]];
 	if (NSWidth(wf) > NSWidth(screenRect)) {
-		horizontalScroll = YES;
+		if (!resizable)
+			horizontalScroll = YES;
 		wf.size.width = NSWidth(screenRect);
 	}
 	if (NSHeight(wf) > NSHeight(screenRect)) {
-		verticalScroll = YES;
+		if (!resizable)
+			verticalScroll = YES;
 		wf.size.height = NSHeight(screenRect);
 	}
 	
@@ -565,15 +640,23 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 	wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf))/2 + NSMinX(screenRect));
 	wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf))*2/3 + NSMinY(screenRect));
 	
-    // :TOFIX: this doesn't work for unnamed servers
-	serverName = [server_ name];
-	if(![window setFrameUsingName:serverName]) {
-		// NSLog(@"Window did NOT have an entry: %@\n", serverName);
-		[window setFrame:wf display:NO];
+	if (![window isVisible]) {
+		NSScreen *targetScreen = [NSScreen mainScreen];
+		if (!_hasRestoredFrame && ![self restoreWindowFrameForScreen:targetScreen]) {
+			[window setFrame:wf display:NO];
+		}
+		targetScreen = [window screen] ? [window screen] : targetScreen;
+		NSString *autoSaveName = [self frameAutosaveNameForScreen:targetScreen];
+		if ([autoSaveName length] > 0) {
+			[window setFrameAutosaveName:autoSaveName];
+		}
+	} else {
+		NSScreen *currScreen = [window screen] ? [window screen] : [NSScreen mainScreen];
+		NSString *autoSaveName = [self frameAutosaveNameForScreen:currScreen];
+		if ([autoSaveName length] > 0) {
+			[window setFrameAutosaveName:autoSaveName];
+		}
 	}
-	[window setFrameAutosaveName:serverName];
-
-
 
 	contentView = (NSClipView *)[scrollView contentView];
     NSPoint scrollPt = NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height);
@@ -652,6 +735,16 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setHasVerticalScroller:NO];
+
+        if (window) {
+            NSSize winSize = [[window contentView] frame].size;
+            uint32_t winW = ((uint32_t)winSize.width) & ~1;
+            uint32_t winH = (uint32_t)winSize.height;
+            if (winW >= 200 && winH >= 200 &&
+                (winW != ((uint32_t)size.width & ~1) || winH != (uint32_t)size.height)) {
+                [connection writeSetDesktopSize:winSize];
+            }
+        }
         return;
     }
 
@@ -823,8 +916,10 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowDidResize:(NSNotification *)aNotification
 {
-    if (aNotification != nil && [connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
-        // If not dragging live (e.g. zoom/maximize button), update the server immediately
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setHasVerticalScroller:NO];
+        // If not dragging live (e.g. zoom/maximize button or setupWindow), update the server immediately
         if (![window inLiveResize]) {
             [connection writeSetDesktopSize:[[window contentView] frame].size];
         }
@@ -843,10 +938,19 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     }
 }
 
+- (void)windowDidChangeScreen:(NSNotification *)aNotification
+{
+    NSScreen *screen = [window screen];
+    if (screen) {
+        NSString *autoSaveName = [self frameAutosaveNameForScreen:screen];
+        if ([autoSaveName length] > 0) {
+            [window setFrameAutosaveName:autoSaveName];
+        }
+    }
+}
+
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-
-    
     // Only install mouse tracking and update frame rate if window is actually visible
     BOOL isVisible = ([window occlusionState] & NSWindowOcclusionStateVisible) != 0;
     if (isVisible) {
@@ -858,6 +962,17 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     
     // sync server clipboard automatically
     [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
+
+    // If server supports dynamic resize, ensure remote desktop matches window frame
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
+        NSSize winSize = [[window contentView] frame].size;
+        uint32_t winW = ((uint32_t)winSize.width) & ~1;
+        uint32_t winH = (uint32_t)winSize.height;
+        if (winW >= 200 && winH >= 200 &&
+            (winW != ((uint32_t)_maxSize.width & ~1) || winH != (uint32_t)_maxSize.height)) {
+            [connection writeSetDesktopSize:winSize];
+        }
+    }
 }
 
 - (void)windowDidResignKey:(NSNotification *)aNotification

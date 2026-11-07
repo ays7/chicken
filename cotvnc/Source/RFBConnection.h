@@ -85,6 +85,8 @@
 	BOOL _serverSupportsSetDesktopSize;
 	NSSize lastDesktopSizeSent;	// Track last size sent to server
 	NSDate *lastDesktopSizeTime;	// Track when last size was sent (for debouncing)
+	NSTimeInterval lastDesktopSizeSentTimestamp;
+	int desktopResizeAttempts;
 
     unsigned char   *writeBuffer;
     int             bufferLen;

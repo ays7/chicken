@@ -107,7 +107,20 @@ freerdp_settings_set_uint32(settings, FreeRDP_TlsSecLevel, 1);    // Level 1 all
 
 ### D. Channels, Clipboard, Dynamic Resolution & Redirection Dependencies
 - **Dynamic Channels (`drdynvc`)**: Set `FreeRDP_SupportDynamicChannels = TRUE` whenever using `disp`, `rdpgfx`, `audin`, `rdpsnd` (dynamic), or `ainput`.
-- **Dynamic Display Resize (`disp`)**: Set `FreeRDP_SupportDisplayControl = TRUE` and `FreeRDP_DynamicResolutionUpdate = TRUE`. Once `DispClientContext` connects (`DISP_DVC_CHANNEL_NAME`) and receives `DisplayControlCaps`, send `DISPLAY_CONTROL_MONITOR_LAYOUT` via `disp->SendMonitorLayout(disp, 1, &layout)` (width must be even, `200..8192`).
+- **Dynamic Display Resize (`disp` / `MS-RDPEDISP`)**:
+  - Set `FreeRDP_SupportDisplayControl = TRUE` and `FreeRDP_DynamicResolutionUpdate = TRUE`.
+  - Once `DispClientContext` connects via `DISP_DVC_CHANNEL_NAME`, the server advertises caps via `DisplayControlCaps` (`pcDispCaps`).
+  - Send layout via `disp->SendMonitorLayout(disp, 1, &layout)`:
+    - `layout.Width` must be even: `w = ((UINT32)width) & ~1` (bounded to `200..8192`).
+    - `layout.Orientation = ORIENTATION_LANDSCAPE`.
+    - Physical dimensions: `PhysicalWidth = (UINT32)(w * 25.4 / 96.0)` (min 10).
+    - `layout.DesktopScaleFactor` and `layout.DeviceScaleFactor` must not be zero: set to `100` (100% scale) or value from `FreeRDP_DesktopScaleFactor`.
+  - **FreeRDP `DesktopResize` & GDI Invariant**: When the server accepts the layout, FreeRDP fires `update->DesktopResize`. You **must** call `gdi_resize(context->gdi, width, height)` before reading `gdi->primary_buffer` and `gdi->stride` (since buffer pointers are reallocated).
+  - **Linux RDP / GDM Lock-Screen Handover Gotcha**:
+    - Linux hosts (e.g. AlmaLinux / Fedora / Ubuntu running `gnome-remote-desktop`) start at a fixed login screen resolution (typically 1920×1080) and silently ignore `SendMonitorLayout` while on the lock screen.
+    - Transitioning from GDM to the user's GNOME Shell session does **not** trigger a virtual channel reconnection or send new `DisplayControlCaps`.
+    - **Rule**: Client must implement an adaptive check (e.g. in screen dirty rect notifications or window key focus with a 2-second cooldown) to detect if `currentDesktopSize != windowContentSize` and resend `SendMonitorLayout` once the desktop session is active.
+  - **Pending Size Retention**: If a window is enlarged or restored before `dispReady` or `isConnected` is true, retain `hasPendingDesktopSize = YES` and flush it immediately once the channel establishes.
 - **Clipboard (`cliprdr`)**: Set `FreeRDP_RedirectClipboard = TRUE`. In `CLIPRDR_SVC_CHANNEL_NAME`, respond to `MonitorReady` by sending `ClientCapabilities` (`CB_USE_LONG_FORMAT_NAMES`) and `ClientFormatList`. Convert between macOS `NSUTF8StringEncoding` (`\n`) and Windows `CF_UNICODETEXT` (`UTF-16LE` with `\r\n` via WinPR `wClipboard` or manual conversion).
 - **Hidden `rdpdr` / `rdpsnd` Coupling (`client/common/cmdline.c:6275–6300`)**:
   - Enabling `FreeRDP_AudioPlayback`, `FreeRDP_NetworkAutoDetect`, `FreeRDP_SupportHeartbeatPdu`, or `FreeRDP_SupportMultitransport` causes `freerdp_client_load_addins()` to automatically enable `FreeRDP_DeviceRedirection = TRUE` (`rdpdr`) and `rdpsnd`!
