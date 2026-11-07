@@ -38,6 +38,7 @@
     if (self = [super init]) {
         _rememberPassword = [[dict objectForKey:@"rememberPassword"] boolValue];
         _shared = [[dict objectForKey:@"shared"] boolValue];
+        _fullscreen = [[dict objectForKey:@"fullscreen"] boolValue];
 
         NSNumber *protoNum = [dict objectForKey:@"remoteProtocol"];
         if (protoNum) {
@@ -71,6 +72,7 @@
 	NSMutableDictionary* propertyDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithBool:_rememberPassword],	@"rememberPassword",
 		[NSNumber numberWithBool:_shared],				@"shared",
+		[NSNumber numberWithBool:_fullscreen],			@"fullscreen",
 
 		[NSNumber numberWithBool:_viewOnly],            @"viewOnly", 
 		[_profile profileName],							@"lastProfile",

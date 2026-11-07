@@ -576,30 +576,37 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (NSSize)preferredInitialDesktopSize
 {
+    NSScreen *screen = [window screen] ? [window screen] : [NSScreen mainScreen];
     if ([window isVisible]) {
+        if ([server_ fullscreen] && screen) {
+            NSSize scSize = [screen frame].size;
+            return NSMakeSize(((int)scSize.width) & ~1, (int)scSize.height);
+        }
         return [[window contentView] frame].size;
     }
-    NSScreen *screen = [NSScreen mainScreen];
-    if ([self restoreWindowFrameForScreen:screen]) {
-        _hasRestoredFrame = YES;
-        return [[window contentView] frame].size;
+
+    if (![self restoreWindowFrameForScreen:screen]) {
+        NSRect screenRect = screen ? [screen visibleFrame] : NSMakeRect(0, 0, 1440, 900);
+        CGFloat targetW = floor(NSWidth(screenRect) * 0.8);
+        CGFloat targetH = floor(NSHeight(screenRect) * 0.8);
+        if (targetW < 1440.0) targetW = MIN(1440.0, NSWidth(screenRect));
+        if (targetH < 900.0) targetH = MIN(900.0, NSHeight(screenRect));
+
+        NSRect contentRect = NSMakeRect(0, 0, ((int)targetW) & ~1, (int)targetH);
+        NSRect wf = [NSWindow frameRectForContentRect:contentRect styleMask:[window styleMask]];
+        if (NSWidth(wf) > NSWidth(screenRect)) wf.size.width = NSWidth(screenRect);
+        if (NSHeight(wf) > NSHeight(screenRect)) wf.size.height = NSHeight(screenRect);
+        wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf)) / 2 + NSMinX(screenRect));
+        wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf)) * 2 / 3 + NSMinY(screenRect));
+
+        [window setFrame:wf display:NO];
     }
-
-    NSRect screenRect = screen ? [screen visibleFrame] : NSMakeRect(0, 0, 1440, 900);
-    CGFloat targetW = floor(NSWidth(screenRect) * 0.8);
-    CGFloat targetH = floor(NSHeight(screenRect) * 0.8);
-    if (targetW < 1440.0) targetW = MIN(1440.0, NSWidth(screenRect));
-    if (targetH < 900.0) targetH = MIN(900.0, NSHeight(screenRect));
-
-    NSRect contentRect = NSMakeRect(0, 0, ((int)targetW) & ~1, (int)targetH);
-    NSRect wf = [NSWindow frameRectForContentRect:contentRect styleMask:[window styleMask]];
-    if (NSWidth(wf) > NSWidth(screenRect)) wf.size.width = NSWidth(screenRect);
-    if (NSHeight(wf) > NSHeight(screenRect)) wf.size.height = NSHeight(screenRect);
-    wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf)) / 2 + NSMinX(screenRect));
-    wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf)) * 2 / 3 + NSMinY(screenRect));
-
-    [window setFrame:wf display:NO];
     _hasRestoredFrame = YES;
+
+    if ([server_ fullscreen] && screen) {
+        NSSize scSize = [screen frame].size;
+        return NSMakeSize(((int)scSize.width) & ~1, (int)scSize.height);
+    }
     return [[window contentView] frame].size;
 }
 
@@ -610,6 +617,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 	NSRect screenRect;
 	NSClipView *contentView;
 	BOOL resizable = [connection serverSupportsSetDesktopSize] && ![self viewOnly];
+	BOOL wasVisible = [window isVisible];
+	_enteringInitialFullscreen = (!wasVisible && [server_ fullscreen] && (([window styleMask] & NSWindowStyleMaskFullScreen) == 0));
 
 	horizontalScroll = NO;
 	verticalScroll = NO;
@@ -681,7 +690,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         isAnyFullScreen = YES;
     }
 
-    if (isAnyFullScreen) {
+    if (isAnyFullScreen && !_enteringInitialFullscreen) {
         NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
         if (cmWin) {
             [cmWin makeKeyAndOrderFront:nil];
@@ -695,7 +704,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [NSApp activateIgnoringOtherApps:YES];
     [window display];
 
-    if (isAnyFullScreen) {
+    if (_enteringInitialFullscreen) {
+        [window toggleFullScreen:nil];
+    } else if (isAnyFullScreen) {
         NSWindow *cmWin = [[RFBConnectionManager sharedManager] window];
         if (cmWin) {
             [cmWin orderOut:nil];
@@ -736,7 +747,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setHasVerticalScroller:NO];
 
-        if (window) {
+        if (window && !_enteringInitialFullscreen) {
             NSSize winSize = [[window contentView] frame].size;
             uint32_t winW = ((uint32_t)winSize.width) & ~1;
             uint32_t winH = (uint32_t)winSize.height;
@@ -745,6 +756,13 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
                 [connection writeSetDesktopSize:winSize];
             }
         }
+        return;
+    }
+
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
+        _maxSize = size;
+        [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
+        [self windowDidResize:nil];
         return;
     }
 
@@ -896,6 +914,10 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
+        return proposedFrameSize;
+    }
+
     // If server supports SetDesktopSize, allow any window size
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         
@@ -920,7 +942,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setHasVerticalScroller:NO];
         // If not dragging live (e.g. zoom/maximize button or setupWindow), update the server immediately
-        if (![window inLiveResize]) {
+        if (![window inLiveResize] && !_enteringInitialFullscreen) {
             [connection writeSetDesktopSize:[[window contentView] frame].size];
         }
         return;
@@ -936,6 +958,37 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         // User finished dragging the window; send final size to server
         [connection writeSetDesktopSize:[[window contentView] frame].size];
     }
+}
+
+- (void)windowDidEnterFullScreen:(NSNotification *)aNotification
+{
+    _enteringInitialFullscreen = NO;
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
+        NSSize winSize = [[window contentView] frame].size;
+        uint32_t winW = ((uint32_t)winSize.width) & ~1;
+        uint32_t winH = (uint32_t)winSize.height;
+        if (winW >= 200 && winH >= 200) {
+            [connection writeSetDesktopSize:winSize];
+        }
+    }
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)aNotification
+{
+    _enteringInitialFullscreen = NO;
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
+        NSSize winSize = [[window contentView] frame].size;
+        uint32_t winW = ((uint32_t)winSize.width) & ~1;
+        uint32_t winH = (uint32_t)winSize.height;
+        if (winW >= 200 && winH >= 200) {
+            [connection writeSetDesktopSize:winSize];
+        }
+    }
+}
+
+- (void)windowDidFailToEnterFullScreen:(NSWindow *)aWindow
+{
+    _enteringInitialFullscreen = NO;
 }
 
 - (void)windowDidChangeScreen:(NSNotification *)aNotification
@@ -964,7 +1017,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [connection sendPasteboardToServer:[NSPasteboard generalPasteboard]];
 
     // If server supports dynamic resize, ensure remote desktop matches window frame
-    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window) {
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window && !_enteringInitialFullscreen) {
         NSSize winSize = [[window contentView] frame].size;
         uint32_t winW = ((uint32_t)winSize.width) & ~1;
         uint32_t winH = (uint32_t)winSize.height;

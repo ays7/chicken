@@ -84,6 +84,21 @@ Dynamic desktop resizing operates in two distinct phases:
   - The rest of the window to the right and above is exposed as blank clip view background.
   - Therefore, the client must ensure the remote workspace matches the window content frame as quickly as possible.
 
+### E. Native Fullscreen Spaces Integration & Dual-Frame Handover
+* **Dual-Frame Calculation in `preferredInitialDesktopSize`**:
+  - When launching directly into fullscreen (`[server fullscreen] == YES`), the initial desktop size must immediately match the target screen frame (with even width: `w & ~1`).
+  - This allows RDP (`FreeRDP_DesktopWidth` / `FreeRDP_DesktopHeight`) and VNC to connect directly at full display resolution without requiring an immediate post-connect resize handshake.
+  - Simultaneously, calculate and apply the target *windowed* frame (e.g. 80% screen or saved frame) to `window` *before* toggling fullscreen, ensuring macOS remembers the windowed geometry upon exiting fullscreen.
+* **Transition Suppression (`_enteringInitialFullscreen`)**:
+  - `[window toggleFullScreen:nil]` is asynchronous and animates across Spaces (~0.5s).
+  - During the transition, `windowDidResize:`, `windowDidBecomeKey:`, and `windowWillResize:toSize:` fire with intermediate windowed dimensions.
+  - Set a flag `_enteringInitialFullscreen = YES` before calling `toggleFullScreen:`.
+  - While `_enteringInitialFullscreen` is `YES`:
+    - Suppress dispatch in `writeSetDesktopSize:`.
+    - Do not clamp window bounds to `_maxSize` in `windowWillResize:toSize:`.
+  - In `windowDidEnterFullScreen:`, clear `_enteringInitialFullscreen = NO` and trigger a single final desktop size sync to guarantee exact alignment.
+  - In `windowDidFailToEnterFullScreen:` and `windowDidExitFullScreen:`, ensure `_enteringInitialFullscreen` is cleared.
+
 ---
 
 ## 3. Protocol Gotchas & Failure Modes
@@ -121,3 +136,11 @@ Dynamic desktop resizing operates in two distinct phases:
 * Width and height must be clamped between `200` and `8192`.
 * Physical dimensions: `PhysicalWidth = (UINT32)(w * 25.4 / 96.0)` (min 10).
 * `DesktopScaleFactor` and `DeviceScaleFactor` must not be zero: pass `100` (100% scaling) or value from `FreeRDP_DesktopScaleFactor`.
+
+### Gotcha 6: Spaces Transition Size Drops During Fullscreen Launch
+* **Symptom**: Session launches with fullscreen requested, but connects at an intermediate or reduced windowed resolution, or freezes resizing altogether.
+* **Root Cause**:
+  1. `[window toggleFullScreen:nil]` was triggered at window setup.
+  2. While macOS animated the window into its dedicated Space, `windowDidResize:` fired with the temporary pre-animation windowed content size.
+  3. The client dispatched a layout PDU for this intermediate size, clobbering the initial fullscreen negotiation and triggering `lastDesktopSizeSent` deadlocks.
+* **Rule**: Gate all dynamic resize PDU transmissions behind `!_enteringInitialFullscreen`. Only permit resize dispatch once `windowDidEnterFullScreen:` or normal windowed presentation is confirmed.

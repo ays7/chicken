@@ -299,6 +299,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
             [l listenFromCommandLineWithOptions: cmdlineServer];
         } else {
             id<IServerData> server = savedServ ? savedServ : cmdlineServer;
+            if (savedServ && [cmdlineServer fullscreen]) {
+                [savedServ setFullscreen:YES];
+            }
             CommandLineConnection   *conn;
 
             conn = [[CommandLineConnection alloc] initWithServer:server];

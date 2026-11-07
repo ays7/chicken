@@ -341,7 +341,7 @@
     [session setDisplayName: [info name]];
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Requesting initial non-incremental update...", self, [self fileDescriptor]);
     [self requestUpdate:[rfbView bounds] incremental:NO];
-    if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window]) {
+    if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window] && ![server_ fullscreen]) {
         [self writeSetDesktopSize:[[[session window] contentView] frame].size];
     }
 
@@ -389,7 +389,7 @@
 
     if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window]) {
         NSWindow *win = [session window];
-        if (![win inLiveResize]) {
+        if (![win inLiveResize] && (([win styleMask] & NSWindowStyleMaskFullScreen) != 0 || ![server_ fullscreen])) {
             NSSize winContentSize = [[win contentView] frame].size;
             if (!NSEqualSizes([frameBuffer size], winContentSize)) {
                 NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];

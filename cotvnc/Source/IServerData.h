@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, RemoteProtocol) {
 - (bool)shared;
 
 - (bool)viewOnly;
+- (bool)fullscreen;
 - (RemoteProtocol)remoteProtocol;
 - (NSString*)username;
 - (Profile *)profile;
@@ -76,6 +77,7 @@ typedef NS_ENUM(NSInteger, RemoteProtocol) {
 - (void)setDisplay: (int)display;
 - (void)setPort: (int)port;
 - (void)setShared: (bool)shared;
+- (void)setFullscreen: (bool)fullscreen;
 
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setProfile: (Profile *)profile;

@@ -51,6 +51,7 @@ ConnectionWaiterDelegate>
     BOOL	horizontalScroll;
     BOOL	verticalScroll;
     BOOL	_hasRestoredFrame;
+    BOOL	_enteringInitialFullscreen;
 
     id optionPanel;
     id infoField;
@@ -113,6 +114,9 @@ ConnectionWaiterDelegate>
 - (void)windowWillClose:(NSNotification *)aNotification;
 - (void)windowDidResize:(NSNotification *)aNotification;
 - (void)windowDidChangeScreen:(NSNotification *)aNotification;
+- (void)windowDidEnterFullScreen:(NSNotification *)aNotification;
+- (void)windowDidExitFullScreen:(NSNotification *)aNotification;
+- (void)windowDidFailToEnterFullScreen:(NSWindow *)window;
 
 - (id<RemoteConnection>)connection;
 

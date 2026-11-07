@@ -137,21 +137,22 @@
     [displayDescription setHidden:isRDP];
     [shared setHidden:isRDP];
 
-    CGFloat dy = isRDP ? 32.0 : 0.0;
     NSRect f;
-#define SET_Y(v, origY) do { if (v) { f = [v frame]; f.origin.y = (origY) + dy; [v setFrame:f]; } } while(0)
-    SET_Y(username, 275);
-    SET_Y(usernameLabel, 277);
-    SET_Y(password, 245);
-    SET_Y(passwordLabel, 248);
-    SET_Y(rememberPwd, 221);
-    SET_Y(profilePopup, 191);
-    SET_Y(profileLabel, 198);
-    SET_Y(viewOnly, 159);
-    SET_Y(useSshTunnel, 104);
-    SET_Y(sshHost, 76);
-    SET_Y(sshHostLabel, 81);
-#undef SET_Y
+#define SET_POS(v, yVal) do { if (v) { f = [v frame]; f.origin.y = (yVal); [v setFrame:f]; } } while(0)
+    SET_POS(username, isRDP ? 307 : 275);
+    SET_POS(usernameLabel, isRDP ? 309 : 277);
+    SET_POS(password, isRDP ? 277 : 245);
+    SET_POS(passwordLabel, isRDP ? 280 : 248);
+    SET_POS(rememberPwd, isRDP ? 253 : 221);
+    SET_POS(profilePopup, isRDP ? 223 : 191);
+    SET_POS(profileLabel, isRDP ? 230 : 198);
+    SET_POS(viewOnly, isRDP ? 191 : 159);
+    SET_POS(shared, 138);
+    SET_POS(fullscreen, isRDP ? 164 : 117);
+    SET_POS(useSshTunnel, isRDP ? 136 : 92);
+    SET_POS(sshHost, isRDP ? 108 : 64);
+    SET_POS(sshHostLabel, isRDP ? 113 : 69);
+#undef SET_POS
 
     [hostName setNextKeyView: isRDP ? username : display];
     [display setNextKeyView: username];
@@ -159,8 +160,9 @@
     [password setNextKeyView: rememberPwd];
     [rememberPwd setNextKeyView: profilePopup];
     [profilePopup setNextKeyView: viewOnly];
-    [viewOnly setNextKeyView: isRDP ? useSshTunnel : shared];
-    [shared setNextKeyView: useSshTunnel];
+    [viewOnly setNextKeyView: isRDP ? fullscreen : shared];
+    [shared setNextKeyView: fullscreen];
+    [fullscreen setNextKeyView: useSshTunnel];
     [useSshTunnel setNextKeyView: [useSshTunnel state] ? sshHost : connectBtn];
     [sshHost setNextKeyView: connectBtn];
 }
@@ -246,6 +248,7 @@
         [shared setIntValue:[mServer shared]];
 
 		[viewOnly setIntValue:[mServer viewOnly]];
+		[fullscreen setIntValue:[mServer fullscreen]];
 		[self setProfilePopupToProfile: [mServer profile]];
         if ([mServer sshHost] == nil) {
             [useSshTunnel setIntValue:NO];
@@ -263,6 +266,7 @@
 		[connectBtn  setEnabled: [mServer doYouSupport:CONNECT]];
 
         [viewOnly setEnabled: YES];
+        [fullscreen setEnabled: YES];
 
     }
 	else
@@ -274,6 +278,7 @@
 		[rememberPwd setEnabled: NO];
 		[display setEnabled: NO];
 		[shared setEnabled: NO];
+		[fullscreen setEnabled: NO];
 		[profilePopup setEnabled: NO];
 		[connectBtn setEnabled: NO];
         [useSshTunnel setEnabled: NO];
@@ -285,6 +290,7 @@
 		[rememberPwd setIntValue:0];
 		[display setStringValue:@""];
 		[shared setIntValue:0];
+		[fullscreen setIntValue:0];
 
 		[viewOnly setIntValue:0];
         [useSshTunnel setIntValue:0];
@@ -534,6 +540,14 @@
 	}
 }
 
+- (IBAction)fullscreenChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		[mServer setFullscreen:![mServer fullscreen]];
+	}
+}
+
 - (IBAction)useSshTunnelChanged:(id)sender
 {
     [mServer setSshTunnel:[sender state]];
@@ -666,6 +680,7 @@
 
     [shared setEnabled: NO];
     [viewOnly setEnabled: NO];
+    [fullscreen setEnabled: NO];
     [useSshTunnel setEnabled: NO];
     [sshHost setEnabled: NO];
     [superController setControlsEnabled: NO];

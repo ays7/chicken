@@ -32,6 +32,7 @@
 #define RFB_DISPLAY		  @"Display"
 #define RFB_DISPLAYMAX    @"DisplayMax"
 #define RFB_SHARED		  @"Shared"
+#define RFB_FULLSCREEN    @"Fullscreen"
 
 #define RFB_VIEWONLY      @"ViewOnly"
 #define RFB_LAST_DISPLAY  @"Display"
@@ -57,6 +58,7 @@
 		[self setDisplay:         [[prefDict objectForKey:RFB_DISPLAY] intValue]];
 		[self setProfileName:      [prefDict objectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [[prefDict objectForKey:RFB_SHARED] intValue]];
+		[self setFullscreen:      [[prefDict objectForKey:RFB_FULLSCREEN] boolValue]];
 
 		[self setViewOnly:        [[prefDict objectForKey:RFB_VIEWONLY] intValue]];
 	}
@@ -126,6 +128,7 @@
 
         [self setProfileName:     [coder decodeObjectForKey:RFB_LAST_PROFILE]];
 		[self setShared:          [coder decodeBoolForKey:RFB_SHARED]];
+		[self setFullscreen:      [coder decodeBoolForKey:RFB_FULLSCREEN]];
 
 		[self setViewOnly:  	  [coder decodeBoolForKey:RFB_VIEWONLY]];
 	}

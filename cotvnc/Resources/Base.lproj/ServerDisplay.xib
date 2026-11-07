@@ -15,6 +15,7 @@
                 <outlet property="display" destination="18" id="80"/>
                 <outlet property="displayDescription" destination="127" id="130"/>
                 <outlet property="displayLabel" destination="15" id="164"/>
+                <outlet property="fullscreen" destination="92" id="93"/>
                 <outlet property="hostName" destination="11" id="39"/>
                 <outlet property="password" destination="7" id="81"/>
                 <outlet property="passwordLabel" destination="10" id="165"/>
@@ -235,7 +236,7 @@
                                     </connections>
                                 </button>
                                 <button toolTip="Other clients can connect to the server at the same time as you." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="26">
-                                    <rect key="frame" x="103" y="139" width="222" height="18"/>
+                                    <rect key="frame" x="103" y="138" width="222" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <buttonCell key="cell" type="check" title="Allow other clients to connect" imagePosition="leading" alignment="left" inset="2" id="123">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -243,11 +244,23 @@
                                     </buttonCell>
                                     <connections>
                                         <action selector="sharedChanged:" target="-2" id="75"/>
-                                        <outlet property="nextKeyView" destination="131" id="84"/>
+                                        <outlet property="nextKeyView" destination="92" id="84"/>
+                                    </connections>
+                                </button>
+                                <button toolTip="Hide your menubar and Dock and use the entire screen." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92">
+                                    <rect key="frame" x="103" y="117" width="222" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Fullscreen display" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="124">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="fullscreenChanged:" target="-2" id="94"/>
+                                        <outlet property="nextKeyView" destination="131" id="91"/>
                                     </connections>
                                 </button>
                                 <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="131">
-                                    <rect key="frame" x="103" y="104" width="222" height="18"/>
+                                    <rect key="frame" x="103" y="92" width="222" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <buttonCell key="cell" type="check" title="Tunnel over SSH" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="132">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -258,7 +271,7 @@
                                     </connections>
                                 </button>
                                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="135">
-                                    <rect key="frame" x="38" y="81" width="64" height="17"/>
+                                    <rect key="frame" x="38" y="69" width="64" height="17"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="SSH host:" id="136">
                                         <font key="font" metaFont="system"/>
@@ -267,7 +280,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="133">
-                                    <rect key="frame" x="105" y="76" width="218" height="22"/>
+                                    <rect key="frame" x="105" y="64" width="218" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="134">
                                         <font key="font" metaFont="system"/>

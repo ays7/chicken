@@ -43,6 +43,7 @@
         _password = nil;
         _port = 5900;
         _shared = NO;
+        _fullscreen = NO;
 
         _remoteProtocol = RemoteProtocolVNC;
         _username = nil;
@@ -401,6 +402,7 @@
     [self setRemoteProtocol:[server remoteProtocol]];
     [self setUsername:[server username]];
     _shared = [server shared];
+    _fullscreen = [server fullscreen];
 
     _viewOnly = [server viewOnly];
     [self setProfile:[server profile]];

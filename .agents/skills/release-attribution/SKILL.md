@@ -51,6 +51,7 @@ When introducing changes or dependency bumps, update the following files in acco
   - **User-Centric Capabilities & Benefits**: Focus on how the change impacts the user (e.g., "instant cursor shape changes", "fluid pointer navigation", "reduced CPU usage during video playback").
   - **High-Level Protocol & Technology Names**: Use recognized platform and industry terms (e.g., "Apple VideoToolbox Hardware H.264 Decoding", "Modern RDPEGFX Display Pipelines", "Network Level Authentication (NLA)").
   - **Action-Oriented, Concise Phrasing**: Bold topic title followed by a clear, benefit-driven summary matching the style of previous releases (`2026.11.md`, `2026.9.md`).
+  - **Historical Accuracy & Re-introduced Capabilities**: When re-introducing, exposing again, or reviving a feature that previously existed in earlier releases, forks, or legacy Chicken/CoTVNC versions (e.g., full-screen session launch option), explicitly use verbs like **"Restored"** or **"Re-introduced"** rather than **"Added"**. This preserves historical accuracy for long-time users and avoids misrepresenting restored legacy capabilities as novel additions.
 
 ### 2. Project Metadata & Build Settings
 - **`cotvnc/Resources/Info.plist`**:

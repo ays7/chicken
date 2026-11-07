@@ -244,6 +244,7 @@
         NSString *user = nil;
         NSString *domain = nil;
         int audioMode = 0; // Default: 0 = play on this computer
+        BOOL fullscreen = NO;
 
         if (content)
         {
@@ -276,12 +277,19 @@
                     NSString *modeStr = [line substringFromIndex:[@"audiomode:i:" length]];
                     audioMode = [modeStr intValue];
                 }
+                else if ([line hasPrefix:@"screen mode id:i:"])
+                {
+                    NSString *modeStr = [line substringFromIndex:[@"screen mode id:i:" length]];
+                    if ([modeStr intValue] == 2)
+                        fullscreen = YES;
+                }
             }
         }
 
         ServerStandAlone *server = [[ServerStandAlone alloc] init];
         [server setRemoteProtocol:RemoteProtocolRDP];
         [server setRdpAudioMode:audioMode];
+        [server setFullscreen:fullscreen];
         if (host)
         {
             [server setHostAndPort:host];
