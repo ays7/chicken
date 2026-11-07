@@ -2,11 +2,8 @@ name: Deploy Documentation to GitHub Pages
 
 on:
   push:
-    branches:
-      - moe
-    paths:
-      - 'docs/**'
-      - '.github/workflows/pages.yml'
+    tags:
+      - '*'
   workflow_dispatch:
 
 permissions:
