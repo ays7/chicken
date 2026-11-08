@@ -588,6 +588,24 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     return NO;
 }
 
+- (void)saveCurrentWindowFrame
+{
+    if (!window || ([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
+        return;
+    }
+    NSScreen *screen = [window screen];
+    if (screen) {
+        NSString *autoSaveName = [self frameAutosaveNameForScreen:screen];
+        if ([autoSaveName length] > 0) {
+            [window saveFrameUsingName:autoSaveName];
+        }
+        NSString *baseName = [self baseFrameAutosaveName];
+        if ([baseName length] > 0) {
+            [window saveFrameUsingName:baseName];
+        }
+    }
+}
+
 - (BOOL)useAllScreensActive
 {
     return ([server_ remoteProtocol] == RemoteProtocolRDP) &&
@@ -951,18 +969,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 		if (!_hasRestoredFrame && ![self restoreWindowFrameForScreen:targetScreen]) {
 			[window setFrame:wf display:NO];
 		}
-		targetScreen = [window screen] ? [window screen] : targetScreen;
-		NSString *autoSaveName = [self frameAutosaveNameForScreen:targetScreen];
-		if ([autoSaveName length] > 0) {
-			[window setFrameAutosaveName:autoSaveName];
-		}
-	} else {
-		NSScreen *currScreen = [window screen] ? [window screen] : [NSScreen mainScreen];
-		NSString *autoSaveName = [self frameAutosaveNameForScreen:currScreen];
-		if ([autoSaveName length] > 0) {
-			[window setFrameAutosaveName:autoSaveName];
-		}
 	}
+	[self saveCurrentWindowFrame];
 
 	contentView = (NSClipView *)[scrollView contentView];
     NSPoint scrollPt = NSMakePoint(0.0, _maxSize.height - [scrollView contentSize].height);
@@ -1225,6 +1233,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
+    [self saveCurrentWindowFrame];
     [self hideCompanionWindows];
     // dealloc closes the window, so we have to null it out here
     // The window will autorelease itself when closed.  If we allow terminateConnection
@@ -1280,6 +1289,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowDidEndLiveResize:(NSNotification *)aNotification
 {
+    [self saveCurrentWindowFrame];
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
         // User finished dragging the window; send final size to server
         if ([self isInMultiMonitorFullScreen]) {
@@ -1288,6 +1298,11 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
             [connection writeSetDesktopSize:[[window contentView] frame].size];
         }
     }
+}
+
+- (void)windowDidMove:(NSNotification *)aNotification
+{
+    [self saveCurrentWindowFrame];
 }
 
 - (void)windowDidEnterFullScreen:(NSNotification *)aNotification
@@ -1332,13 +1347,11 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)windowDidChangeScreen:(NSNotification *)aNotification
 {
-    NSScreen *screen = [window screen];
-    if (screen) {
-        NSString *autoSaveName = [self frameAutosaveNameForScreen:screen];
-        if ([autoSaveName length] > 0) {
-            [window setFrameAutosaveName:autoSaveName];
-        }
-    }
+    // Do NOT call setFrameAutosaveName: here! In AppKit, setFrameAutosaveName:
+    // reloads the target screen's saved frame from user defaults, snapping the window
+    // and causing it to hit a wall when dragged across monitors.
+    // Instead, save the current frame for the new screen.
+    [self saveCurrentWindowFrame];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification

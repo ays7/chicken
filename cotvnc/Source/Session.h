@@ -114,6 +114,7 @@ ConnectionWaiterDelegate>
 - (void)windowDidMiniaturize:(NSNotification *)aNotification;
 - (void)windowWillClose:(NSNotification *)aNotification;
 - (void)windowDidResize:(NSNotification *)aNotification;
+- (void)windowDidMove:(NSNotification *)aNotification;
 - (void)windowDidChangeScreen:(NSNotification *)aNotification;
 - (void)windowDidEnterFullScreen:(NSNotification *)aNotification;
 - (void)windowDidExitFullScreen:(NSNotification *)aNotification;
