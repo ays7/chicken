@@ -235,8 +235,12 @@
         NSString *content = [NSString stringWithContentsOfFile:filename usedEncoding:&encoding error:&error];
         if (!content && error)
         {
-            // Fallback to UTF-8 or ASCII if usedEncoding could not detect
+            // Fallback to UTF-8 or UTF-16LE if usedEncoding could not detect
             content = [NSString stringWithContentsOfFile:filename encoding:NSUTF8StringEncoding error:nil];
+            if (!content)
+            {
+                content = [NSString stringWithContentsOfFile:filename encoding:NSUTF16LittleEndianStringEncoding error:nil];
+            }
         }
 
         NSString *host = nil;
@@ -323,11 +327,32 @@
 
         [server setProfileName:@"Windows"];
 
+        // Look up saved server in ServerDataManager to see if credentials or profile exist
+        ServerDataManager *sdm = [ServerDataManager sharedInstance];
+        for (NSString *name in [sdm sortedServerNames])
+        {
+            id<IServerData> s = [sdm getServerWithName:name];
+            if ([s remoteProtocol] == RemoteProtocolRDP && [[s host] isEqualToString:[server host]])
+            {
+                if (!user || [user length] == 0 || [[s username] isEqualToString:[server username]])
+                {
+                    if ([s password] && [[s password] length] > 0)
+                    {
+                        [server setPassword:[s password]];
+                    }
+                    if ([s profile])
+                    {
+                        [server setProfileName:[[s profile] profileName]];
+                    }
+                    break;
+                }
+            }
+        }
+
         ServerDataViewController *viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
         [viewCtrlr setServer:server];
         [[viewCtrlr window] makeKeyAndOrderFront:self];
         [server release];
-        [viewCtrlr release];
         return YES;
     }
     return NO;

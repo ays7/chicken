@@ -378,7 +378,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	
 	[viewCtrlr setServer:server];
 	[[viewCtrlr window] makeKeyAndOrderFront:self];
-    [viewCtrlr release];
 }
 
 - (void)showConnectionDialog: (id)sender

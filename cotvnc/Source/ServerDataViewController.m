@@ -618,6 +618,20 @@
     // needed so that any changes being made now are reflected in server
     [window makeFirstResponder:nil];
 
+    if ([mServer doYouSupport:EDIT_ADDRESS]) {
+        [mServer setHostAndPort:[hostName stringValue]];
+    }
+    if ([username stringValue]) {
+        [mServer setUsername:[username stringValue]];
+    }
+    if ([mServer doYouSupport:EDIT_PASSWORD]) {
+        NSString *pwd = [password stringValue];
+        if ([pwd length] > 0 || [rememberPwd state])
+            [mServer setPassword:pwd];
+        else
+            [mServer setPassword:nil];
+    }
+
     saveCheckboxWasVisible = !removedSaveCheckbox;
     [self setSaveCheckboxIsVisible: NO];
 	[connectIndicator startAnimation:self];
@@ -656,7 +670,7 @@
 
 - (void)connectionSucceeded: (id<RemoteConnection>)theConnection
 {
-    if (![mServer rememberPassword])
+    if ([mServer remoteProtocol] != RemoteProtocolRDP && ![mServer rememberPassword])
         [mServer setPassword: nil];
     [[RFBConnectionManager sharedManager] successfulConnection:theConnection];
 
@@ -665,8 +679,7 @@
 
     if( YES == selfTerminate )
     {
-        // shouldCloseDocument will trigger the autorelease
-        [[self window] performClose:self];
+        [[self window] close];
     }
 }
 
@@ -720,6 +733,7 @@
 	{
 		if( YES == selfTerminate )
 		{
+			selfTerminate = NO;
 			[self autorelease];
 		}
 	}

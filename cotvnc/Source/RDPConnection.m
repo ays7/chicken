@@ -15,6 +15,7 @@
 #import "ProfileDataManager.h"
 #import "PrefController.h"
 #import "ServerBase.h"
+#import "ServerDataManager.h"
 #define XK_MISCELLANY
 #include "keysymdef.h"
 
@@ -102,6 +103,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     if ((self = [super init]))
     {
         server_ = [server retain];
+        if ([server password])
+            password = [[server password] copy];
+        if ([server username])
+            username = [[server username] copy];
         socketHandler = [file retain];
         _eventFilter = [[EventFilter alloc] initWithConnection:(id<RemoteConnection>)self];
         frameBuffer = [[RDPFrameBuffer alloc] initWithSize:NSMakeSize(1024, 768)];
@@ -119,6 +124,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     if ((self = [super init]))
     {
         server_ = [server retain];
+        if ([server password])
+            password = [[server password] copy];
+        if ([server username])
+            username = [[server username] copy];
         sshTunnel = [tunnel retain];
         _eventFilter = [[EventFilter alloc] initWithConnection:(id<RemoteConnection>)self];
         frameBuffer = [[RDPFrameBuffer alloc] initWithSize:NSMakeSize(1024, 768)];
@@ -223,6 +232,25 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     }
 
     NSString *pwdStr = password ? password : [server_ password];
+    if ((!pwdStr || [pwdStr length] == 0) && [server_ host])
+    {
+        ServerDataManager *sdm = [ServerDataManager sharedInstance];
+        for (NSString *name in [sdm sortedServerNames])
+        {
+            id<IServerData> s = [sdm getServerWithName:name];
+            if ([s remoteProtocol] == RemoteProtocolRDP && [[s host] isEqualToString:[server_ host]])
+            {
+                if (!userStr || [userStr length] == 0 || [[s username] isEqualToString:userStr])
+                {
+                    if ([s password] && [[s password] length] > 0)
+                    {
+                        pwdStr = [s password];
+                        break;
+                    }
+                }
+            }
+        }
+    }
     if (pwdStr && [pwdStr length] > 0)
     {
         freerdp_settings_set_string(settings, FreeRDP_Password, [pwdStr UTF8String]);
@@ -564,6 +592,26 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     if (userStr && [userStr length] > 0)
     {
         [server_ getParsedDomain:&domainStr username:&cleanUser];
+    }
+
+    if ((!pwdStr || [pwdStr length] == 0) && [server_ host])
+    {
+        ServerDataManager *sdm = [ServerDataManager sharedInstance];
+        for (NSString *name in [sdm sortedServerNames])
+        {
+            id<IServerData> s = [sdm getServerWithName:name];
+            if ([s remoteProtocol] == RemoteProtocolRDP && [[s host] isEqualToString:[server_ host]])
+            {
+                if (!cleanUser || [cleanUser length] == 0 || [[s username] isEqualToString:cleanUser] || [[s username] isEqualToString:userStr])
+                {
+                    if ([s password] && [[s password] length] > 0)
+                    {
+                        pwdStr = [s password];
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     if (outUser && cleanUser && [cleanUser length] > 0)
