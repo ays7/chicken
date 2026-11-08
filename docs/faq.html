@@ -129,9 +129,9 @@
       <div class="ui-card-header">
         <span>Why did my SSH connection fail with a passphrase-protected private key?</span>
       </div>
-      <p class="ui-card-desc">Chicken Fork detects passphrase-protected SSH keys and prompts for input. To avoid repetitive passphrase requests, store your key in the macOS Keychain by running the following command once in Terminal:</p>
+      <p class="ui-card-desc">By design, Chicken Fork <strong>never asks for your SSH private key passphrase</strong>&mdash;your keys and passphrases stay strictly with macOS OpenSSH. If your key requires a passphrase, unlock it in <code>ssh-agent</code> before connecting by running the following command in Terminal:</p>
       <pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519</code></pre>
-      <p class="ui-card-desc">macOS will securely remember your passphrase and unlock the tunnel automatically.</p>
+      <p class="ui-card-desc">Once unlocked in the system SSH agent, macOS OpenSSH handles authentication automatically without Chicken Fork ever seeing your passphrase.</p>
     </div>
 
     <div class="ui-card">

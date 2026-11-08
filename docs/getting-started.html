@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <h2>Tunneling Over SSH</h2>
+    <h2 id="ssh">Tunneling Over SSH</h2>
     <p>Chicken Fork features built-in SSH tunneling, allowing you to securely connect to remote VNC and RDP servers across untrusted networks or through corporate firewalls.</p>
 
     <div class="ui-card">
@@ -168,9 +168,9 @@
 
     <div class="callout callout-tip">
       <div class="callout-title">🔑 Passphrase-Protected SSH Keys</div>
-      <p>If your SSH private key requires a passphrase, Chicken Fork detects this and prompts for entry. To avoid entering passphrases repeatedly, add your key to the macOS Keychain using Terminal:</p>
+      <p>For your security, Chicken Fork <strong>never</strong> prompts for or handles SSH private key passphrases. Instead, it relies directly on macOS OpenSSH and <code>ssh-agent</code>. If your private key is passphrase-protected, unlock it beforehand in Terminal using <code>ssh-add</code> (or let macOS OpenSSH manage it):</p>
       <pre><code>ssh-add --apple-use-keychain ~/.ssh/id_ed25519</code></pre>
-      <p>Once added, macOS unlocks the key automatically when Chicken Fork establishes the tunnel.</p>
+      <p>Once loaded into <code>ssh-agent</code>, OpenSSH establishes the tunnel automatically without Chicken Fork ever touching your key or passphrase.</p>
     </div>
 
     <h2>Protocol Security Comparison</h2>
