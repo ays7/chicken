@@ -69,7 +69,11 @@ typedef int NSInteger;
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-    return NO;
+    if (_delegate && [_delegate respondsToSelector:@selector(viewOnly)] && [_delegate viewOnly])
+    {
+        return NO;
+    }
+    return YES;
 }
 
 - (BOOL)acceptsFirstResponder
