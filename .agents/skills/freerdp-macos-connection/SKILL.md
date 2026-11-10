@@ -103,7 +103,7 @@ freerdp_settings_set_uint32(settings, FreeRDP_TlsSecLevel, 1);    // Level 1 all
   ```c
   freerdp_settings_set_string(settings, FreeRDP_AuthenticationPackageList, "!kerberos,!u2u");
   ```
-- **Nuance 4 — OpenSSL 3.x MD4/RC4 for NTLM**: NTLM requires MD4 and RC4. Ensure FreeRDP/WinPR on macOS is compiled with `-DWITH_INTERNAL_MD4=ON -DWITH_INTERNAL_RC4=ON` (or that OpenSSL 3's `legacy` provider is available).
+- **Nuance 4 — OpenSSL 3.x/4.x MD4/RC4 for NTLM**: NTLM requires MD4 and RC4. Ensure FreeRDP/WinPR on macOS is compiled with `-DWITH_INTERNAL_MD4=ON -DWITH_INTERNAL_RC4=ON` (or that OpenSSL's `legacy` provider is available).
 
 ### D. Channels, Clipboard, Dynamic Resolution & Redirection Dependencies
 - **Dynamic Channels (`drdynvc`)**: Set `FreeRDP_SupportDynamicChannels = TRUE` whenever using `disp`, `rdpgfx`, `audin`, `rdpsnd` (dynamic), or `ainput`.

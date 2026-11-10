@@ -2,7 +2,7 @@
 # ==============================================================================
 # build_freerdp_mac.sh
 # 
-# Builds universal (arm64 + x86_64) static libraries for FreeRDP 3.x and OpenSSL 3.x
+# Builds universal (arm64 + x86_64) static libraries for FreeRDP 3.x and OpenSSL 4.x
 # for Chicken Fork on macOS.
 #
 # Output:
@@ -19,7 +19,7 @@ OUTPUT_DIR="${ROOT_DIR}/cotvnc/freerdp"
 WORK_DIR="${WORK_DIR:-/tmp/chicken_rdp_build}"
 
 OPENSSL_VERSION="${OPENSSL_VERSION:-4.1.0}"
-FREERDP_TAG="${FREERDP_TAG:-3.33.0}"
+FREERDP_TAG="${FREERDP_TAG:-3.33.1}"
 
 export MACOSX_DEPLOYMENT_TARGET="11.0"
 
@@ -42,65 +42,16 @@ mkdir -p "${OUTPUT_DIR}/include"
 mkdir -p "${OUTPUT_DIR}/lib"
 
 # ==============================================================================
-# 1. Build Universal OpenSSL 3.x
+# 1. Ensure Universal OpenSSL Static Libraries
 # ==============================================================================
-OPENSSL_SRC_DIR="${WORK_DIR}/openssl-${OPENSSL_VERSION}"
-OPENSSL_TAR="${WORK_DIR}/openssl-${OPENSSL_VERSION}.tar.gz"
-OPENSSL_INSTALL_ARM64="${WORK_DIR}/openssl-install-arm64"
-OPENSSL_INSTALL_X86_64="${WORK_DIR}/openssl-install-x86_64"
-OPENSSL_UNIVERSAL="${WORK_DIR}/openssl-universal"
+OPENSSL_SCRIPT="${SCRIPT_DIR}/build_openssl_mac.sh"
 
-if [ ! -f "${OUTPUT_DIR}/lib/libssl.a" ] || [ ! -f "${OUTPUT_DIR}/lib/libcrypto.a" ]; then
-    if [ ! -d "${OPENSSL_SRC_DIR}" ]; then
-        if [ ! -f "${OPENSSL_TAR}" ]; then
-            echo "Downloading OpenSSL ${OPENSSL_VERSION}..."
-            curl -fsSL "https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz" -o "${OPENSSL_TAR}" \
-              || curl -fsSL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" -o "${OPENSSL_TAR}"
-        fi
-        echo "Extracting OpenSSL ${OPENSSL_VERSION}..."
-        tar -xzf "${OPENSSL_TAR}" -C "${WORK_DIR}"
-    fi
-
-    echo "Building OpenSSL for arm64..."
-    mkdir -p "${WORK_DIR}/openssl-build-arm64"
-    pushd "${WORK_DIR}/openssl-build-arm64" >/dev/null
-    "${OPENSSL_SRC_DIR}/Configure" darwin64-arm64-cc no-shared no-tests no-unit-test no-docs \
-        --prefix="${OPENSSL_INSTALL_ARM64}" \
-        --openssldir="${OPENSSL_INSTALL_ARM64}" \
-        -mmacosx-version-min=11.0 -fPIC
-    make -j"$(sysctl -n hw.ncpu)"
-    make install_sw
-    popd >/dev/null
-
-    echo "Building OpenSSL for x86_64..."
-    mkdir -p "${WORK_DIR}/openssl-build-x86_64"
-    pushd "${WORK_DIR}/openssl-build-x86_64" >/dev/null
-    "${OPENSSL_SRC_DIR}/Configure" darwin64-x86_64-cc no-shared no-tests no-unit-test no-docs \
-        --prefix="${OPENSSL_INSTALL_X86_64}" \
-        --openssldir="${OPENSSL_INSTALL_X86_64}" \
-        -mmacosx-version-min=11.0 -fPIC
-    make -j"$(sysctl -n hw.ncpu)"
-    make install_sw
-    popd >/dev/null
-
-    echo "Creating Universal OpenSSL libraries..."
-    mkdir -p "${OPENSSL_UNIVERSAL}/lib"
-    mkdir -p "${OPENSSL_UNIVERSAL}/include"
-    rm -rf "${OUTPUT_DIR}/include/openssl" "${OUTPUT_DIR}/lib/libssl.a" "${OUTPUT_DIR}/lib/libcrypto.a"
-    cp -R "${OPENSSL_INSTALL_ARM64}/include/"* "${OPENSSL_UNIVERSAL}/include/"
-    lipo -create "${OPENSSL_INSTALL_ARM64}/lib/libssl.a" "${OPENSSL_INSTALL_X86_64}/lib/libssl.a" -output "${OUTPUT_DIR}/lib/libssl.a"
-    lipo -create "${OPENSSL_INSTALL_ARM64}/lib/libcrypto.a" "${OPENSSL_INSTALL_X86_64}/lib/libcrypto.a" -output "${OUTPUT_DIR}/lib/libcrypto.a"
-    cp "${OUTPUT_DIR}/lib/libssl.a" "${OPENSSL_UNIVERSAL}/lib/"
-    cp "${OUTPUT_DIR}/lib/libcrypto.a" "${OPENSSL_UNIVERSAL}/lib/"
-
-    cp -R "${OPENSSL_UNIVERSAL}/include/"* "${OUTPUT_DIR}/include/"
-    echo "Universal OpenSSL built successfully."
+if [ ! -f "${OUTPUT_DIR}/lib/libssl.a" ] || [ ! -f "${OUTPUT_DIR}/lib/libcrypto.a" ] || [ ! -d "${OUTPUT_DIR}/include/openssl" ]; then
+    echo "OpenSSL static libraries or headers not found in ${OUTPUT_DIR}."
+    echo "Invoking ${OPENSSL_SCRIPT}..."
+    OUTPUT_DIR="${OUTPUT_DIR}" WORK_DIR="${WORK_DIR}" OPENSSL_VERSION="${OPENSSL_VERSION}" bash "${OPENSSL_SCRIPT}"
 else
     echo "Using existing OpenSSL static libraries in ${OUTPUT_DIR}/lib."
-    mkdir -p "${OPENSSL_UNIVERSAL}/lib" "${OPENSSL_UNIVERSAL}/include"
-    cp "${OUTPUT_DIR}/lib/libssl.a" "${OPENSSL_UNIVERSAL}/lib/"
-    cp "${OUTPUT_DIR}/lib/libcrypto.a" "${OPENSSL_UNIVERSAL}/lib/"
-    cp -R "${OUTPUT_DIR}/include/"* "${OPENSSL_UNIVERSAL}/include/"
 fi
 
 # ==============================================================================
@@ -207,8 +158,8 @@ pushd "${FREERDP_BUILD_DIR}" >/dev/null
     -DWITH_WINPR_TOOLS=OFF \
     -DWITH_MANPAGES=OFF \
     -DWITH_OPENSSL=ON \
-    -DOPENSSL_ROOT_DIR="${OPENSSL_UNIVERSAL}" \
-    -DOPENSSL_INCLUDE_DIR="${OPENSSL_UNIVERSAL}/include" \
+    -DOPENSSL_ROOT_DIR="${OUTPUT_DIR}" \
+    -DOPENSSL_INCLUDE_DIR="${OUTPUT_DIR}/include" \
     -DOPENSSL_CRYPTO_LIBRARY="${OUTPUT_DIR}/lib/libcrypto.a" \
     -DOPENSSL_SSL_LIBRARY="${OUTPUT_DIR}/lib/libssl.a" \
     -DWITH_JPEG=OFF \
@@ -246,7 +197,7 @@ echo "Checking output libraries:"
 lipo -info "${OUTPUT_DIR}/lib/libfreerdp"*.a "${OUTPUT_DIR}/lib/libwinpr"*.a "${OUTPUT_DIR}/lib/libssl.a" "${OUTPUT_DIR}/lib/libcrypto.a"
 
 echo "=============================================================================="
-echo "FreeRDP 3.x and OpenSSL 3.x universal static libraries successfully built!"
+echo "FreeRDP 3.x and OpenSSL 4.x universal static libraries successfully built!"
 echo "Headers: ${OUTPUT_DIR}/include"
 echo "Libs:    ${OUTPUT_DIR}/lib"
 echo "=============================================================================="
