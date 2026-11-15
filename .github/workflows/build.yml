@@ -58,24 +58,8 @@ jobs:
           DMG_NAME="Chicken-Fork-${VERSION}.dmg"
           DMG_PATH="dist/${DMG_NAME}"
 
-          # Create a clean staging directory for the DMG
-          STAGING_DIR="dmg_staging"
-          rm -rf "$STAGING_DIR"
-          mkdir -p "$STAGING_DIR"
-
-          # Copy Chicken Fork.app and create Applications symlink for drag-and-drop install
-          cp -R "$APP_PATH" "$STAGING_DIR/"
-          ln -s /Applications "$STAGING_DIR/Applications"
-
-          echo "Creating compressed UDZO DMG at $DMG_PATH..."
-          hdiutil create \
-            -volname "Chicken Fork" \
-            -srcfolder "$STAGING_DIR" \
-            -ov \
-            -format UDZO \
-            "$DMG_PATH"
-
-          sync
+          echo "Creating styled UDZO DMG at $DMG_PATH..."
+          ./scripts/package_dmg.sh "$APP_PATH" "$DMG_PATH"
 
           # Apply ad-hoc code signature to the DMG image
           echo "=== Applying Ad-Hoc Code Signature to DMG ==="
