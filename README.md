@@ -55,7 +55,7 @@ Chicken Fork has undergone significant modernization to enhance stability, displ
 * Xcode 12.0 or later
 
 ### Build Instructions
-1. Clone the repository and initialize submodules:
+1. Clone the repository:
    ```bash
    git clone https://github.com/ays7/chicken.git
    cd chicken
@@ -65,6 +65,12 @@ Chicken Fork has undergone significant modernization to enhance stability, displ
    open cotvnc/ChickenFork.xcodeproj
    ```
 3. Select the scheme (e.g., **Chicken Fork**) and build/run (`Cmd + R`) or archive it to build the Universal release application.
+
+### Updating Vendored Dependencies
+`CryptoSwift` is vendored via `git subtree` at `cotvnc/Source/CryptoSwift`. To pull a newer upstream release:
+```bash
+git subtree pull --prefix=cotvnc/Source/CryptoSwift https://github.com/krzyzanowskim/CryptoSwift.git <tag> --squash
+```
 
 ### Distribution & Code Signing
 For packaging signed and notarized `.dmg` releases for direct macOS distribution via GitHub Releases, refer to the [Apple Developer ID Code Signing & Notarization Guide](docs/developer-id-signing.md).
