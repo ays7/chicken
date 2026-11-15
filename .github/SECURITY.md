@@ -6,7 +6,7 @@ Only the latest release track of Chicken Fork receives active security updates a
 
 | Version | Supported          | Notes                                     |
 | ------- | ------------------ | ----------------------------------------- |
-| 2026.x  | :white_check_mark: | Active support (current release: 2026.11) |
+| 2026.x  | :white_check_mark: | Active support (current release: 2026.12) |
 | < 2026  | :x:                | Unsupported legacy releases               |
 
 Users are strongly encouraged to keep their Chicken Fork installation up to date with the latest release.

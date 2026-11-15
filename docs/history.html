@@ -33,7 +33,7 @@
           <svg class="github-icon" width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
           <span>GitHub</span>
         </a>
-        <a href="https://github.com/ays7/chicken/releases" target="_blank" rel="noopener noreferrer" class="version-pill" title="View releases on GitHub">v2026.11</a>
+        <a href="https://github.com/ays7/chicken/releases" target="_blank" rel="noopener noreferrer" class="version-pill" title="View releases on GitHub">v2026.12</a>
       </div>
     </div>
 
@@ -93,15 +93,17 @@
     <div class="release-card">
       <div class="release-header">
         <h3 class="release-title">Version 2026.12</h3>
-        <span class="release-date">December 2026 &bull; In Development</span>
+        <span class="release-date">November 15, 2026 &bull; Latest Release</span>
       </div>
       <ul class="release-features">
-        <li><strong>FreeRDP 3.33.1 &amp; OpenSSL 4.1 Upgrade</strong>: Upgraded bundled universal static FreeRDP and WinPR libraries to version 3.33.1 with latest stability and CVE security fixes, and upgraded the bundled static cryptography engine to OpenSSL 4.1.</li>
+        <li><strong>FreeRDP 3.33.1 &amp; OpenSSL 4.1.0 Upgrade</strong>: Upgraded bundled universal static FreeRDP and WinPR libraries to version 3.33.1 with latest stability and CVE security fixes, and upgraded the bundled static cryptography engine to OpenSSL 4.1.0.</li>
         <li><strong>Apple VideoToolbox Hardware H.264 Acceleration</strong>: Hardware-accelerated AVC420 / AVC444 decoding on Apple Silicon and Intel Macs, significantly reducing CPU usage and latency.</li>
         <li><strong>Modern RDPEGFX Codecs</strong>: Enabled modern H.264 and AVC444 graphics pipelines in RDP connection profiles for higher fidelity and responsive rendering.</li>
+        <li><strong>Multi-Monitor Full-Screen RDP &amp; Restored Fullscreen Launch</strong>: Added a "Use all screens" option for RDP connections spanning all connected monitors, and restored the full-screen session launch option for both VNC and RDP connections using native macOS Spaces.</li>
         <li><strong>Fluid Remote Cursor &amp; Mouse Motion</strong>: Dynamic cursor shapes (I-beams, resize arrows, pointing hands) update instantly without lag or flickering, with optimized mouse event delivery.</li>
         <li><strong>One-Click Window Activation &amp; Click-Through</strong>: Inactive and background session windows now pass the initial click directly through to the remote desktop, activating the window and executing remote clicks in a single action.</li>
-        <li><strong>Intelligent Window Sizing &amp; Display Memory</strong>: Session windows remember size and layout independently per monitor resolution, preventing smaller screens from overwriting large-monitor layouts. Resizable VNC and RDP remote desktops automatically adapt on connect and reconnect without scrollbars, and dynamically synchronize to fit enlarged windows upon login and workspace transitions.</li>
+        <li><strong>Intelligent Window Sizing &amp; Multi-Monitor Memory</strong>: Session windows remember size and layout independently per monitor resolution, support smooth cross-screen dragging without unwanted snapping, and dynamically synchronize resizable VNC and RDP desktops on connect, reconnect, login, and workspace transitions.</li>
+        <li><strong>Connection Dialog Reliability &amp; Styled Retina DMG</strong>: Fixed Connect button responsiveness when launching from <code>.rdp</code> files or URLs, vendored CryptoSwift 1.10.0 for self-contained source builds, and added a styled Retina DMG installer layout and volume icon.</li>
       </ul>
     </div>
 

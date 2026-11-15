@@ -16,7 +16,7 @@ Use this skill when attributing new code changes, feature additions, dependency 
 
 | Role | Version | Status | Release Date |
 | :--- | :--- | :--- | :--- |
-| **Active Target** | **`2026.12`** | **In Development (Target for all new changes)** | December 2026 |
+| **Latest Shipped** | **`2026.12`** | **Shipped (IMMUTABLE)** | November 15, 2026 |
 | Shipped Release | `2026.11` | Shipped (IMMUTABLE) | November 2026 |
 | Shipped Release | `2026.9` | Shipped (IMMUTABLE) | August 2026 |
 | Shipped Release | `2026.6` | Shipped (IMMUTABLE) | June 2026 |
