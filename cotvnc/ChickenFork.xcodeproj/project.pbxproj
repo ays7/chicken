@@ -61,6 +61,7 @@
 		7F7A941405E71B5C00E20416 /* ServerFromPrefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC6DF6705C31AF50028A970 /* ServerFromPrefs.h */; };
 		7F7A941605E71B5C00E20416 /* ServerDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F088F2405E1D81100336456 /* ServerDataManager.h */; };
 		7F7A941B05E71B5C00E20416 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7177033DB40D01A8010C /* icon.icns */; };
+		A1B2C3D42F00000200000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42F00000100000001 /* Assets.xcassets */; };
 		7F7A941C05E71B5C00E20416 /* rfbCursor3.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */; };
 		7F7A941F05E71B5C00E20416 /* rfbCursor2.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */; };
 		7F7A942005E71B5C00E20416 /* rfbCursor.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F5DC717C033DB40D01A8010C /* rfbCursor.tiff */; };
@@ -386,6 +387,7 @@
 		F564F4B60392E07E01303550 /* ZlibEncodingReader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ZlibEncodingReader.m; sourceTree = "<group>"; };
 		F564F4B70392E07E01303550 /* ZlibEncodingReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ZlibEncodingReader.h; sourceTree = "<group>"; };
 		F5DC7177033DB40D01A8010C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = "<group>"; };
+		A1B2C3D42F00000100000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		F5DC7178033DB40D01A8010C /* rfbCursor3.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor3.tiff; path = Resources/rfbCursor3.tiff; sourceTree = "<group>"; };
 		F5DC717B033DB40D01A8010C /* rfbCursor2.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor2.tiff; path = Resources/rfbCursor2.tiff; sourceTree = "<group>"; };
 		F5DC717C033DB40D01A8010C /* rfbCursor.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = rfbCursor.tiff; path = Resources/rfbCursor.tiff; sourceTree = "<group>"; };
@@ -539,6 +541,7 @@
 				DAC8077D12FEC38400C4ADB6 /* ssh-helper.sh */,
 				E291FAD4088161DA0061216E /* cursors.plist */,
 				F5DC7177033DB40D01A8010C /* icon.icns */,
+				A1B2C3D42F00000100000001 /* Assets.xcassets */,
 				E21FE256062B6C8D0059585C /* Info.plist */,
 				8A5828452FAA24D700A4E226 /* Localizable.xcstrings */,
 				F5DC717C033DB40D01A8010C /* rfbCursor.tiff */,
@@ -989,6 +992,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F7A941B05E71B5C00E20416 /* icon.icns in Resources */,
+				A1B2C3D42F00000200000001 /* Assets.xcassets in Resources */,
 				7F7A941C05E71B5C00E20416 /* rfbCursor3.tiff in Resources */,
 				7F7A941F05E71B5C00E20416 /* rfbCursor2.tiff in Resources */,
 				7F7A942005E71B5C00E20416 /* rfbCursor.tiff in Resources */,

@@ -57,8 +57,6 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 	NSArray *dragTypes = [NSArray arrayWithObject: kProfileDragEntry];
 	[mEncodingTableView registerForDraggedTypes: dragTypes];
-
-    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
 
@@ -67,10 +65,14 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 
 - (IBAction)showWindow: (id)sender
-{  [[self window] makeKeyAndOrderFront: nil];  }
+{
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+    [[self window] makeKeyAndOrderFront: nil];
+}
 
 - (void)showWindowWithProfile: (NSString *)profileName
 {
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
     [self _selectProfileNamed: profileName];
     [[self window] makeKeyAndOrderFront:nil];
 }
@@ -231,7 +233,9 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 
 - (void)windowWillClose:(NSNotification *)notif
 {
-    [[NSColorPanel sharedColorPanel] close];
+    if ([NSColorPanel sharedColorPanelExists]) {
+        [[NSColorPanel sharedColorPanel] close];
+    }
 }
 
 
@@ -326,28 +330,20 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 }
 
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (BOOL)tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
+- (id <NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row
 {
 	if ( mEncodingTableView == tableView )
 	{
-		NSParameterAssert( [rowIndexes count] == 1 );
-		NSUInteger rowIndex = [rowIndexes firstIndex];
-		int rIdx = (int)rowIndex;
-		
-        NSData *data = [[NSData alloc] initWithBytes:&rIdx
-                                              length:sizeof(int)];
-		[pboard declareTypes: [NSArray arrayWithObject: kProfileDragEntry] owner: nil];
-		[pboard setData: data forType: kProfileDragEntry];
-        [data release];
-		
+		int rIdx = (int)row;
+		NSData *data = [NSData dataWithBytes:&rIdx length:sizeof(int)];
+		NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+		[item setData:data forType:kProfileDragEntry];
+
 		mEncodingDragRow = rIdx;
-		
-		return YES;
+
+		return item;
 	}
-	return NO;
+	return nil;
 }
-#pragma clang diagnostic pop
 
 @end
