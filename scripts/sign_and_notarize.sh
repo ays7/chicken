@@ -172,31 +172,39 @@ info "DMG signature verified."
 
 # --- Step 5: Apple Notarization with notarytool ---
 info "Configuring App Store Connect API Key for notarytool..."
+APPLE_API_KEY_ID=$(printf '%s' "$APPLE_API_KEY_ID" | tr -d '[:space:]')
+APPLE_API_ISSUER=$(printf '%s' "$APPLE_API_ISSUER" | tr -d '[:space:]')
 API_KEY_DIR="$HOME/.appstoreconnect/private_keys"
 mkdir -p "$API_KEY_DIR"
 API_KEY_FILE="$API_KEY_DIR/AuthKey_${APPLE_API_KEY_ID}.p8"
 
-if echo "$APPLE_API_KEY_CONTENT" | grep -q "BEGIN PRIVATE KEY"; then
-  echo "$APPLE_API_KEY_CONTENT" > "$API_KEY_FILE"
+if printf '%s' "$APPLE_API_KEY_CONTENT" | grep -q "BEGIN PRIVATE KEY"; then
+  printf '%s\n' "$APPLE_API_KEY_CONTENT" > "$API_KEY_FILE"
 else
-  echo "$APPLE_API_KEY_CONTENT" | base64 -d > "$API_KEY_FILE"
+  printf '%s' "$APPLE_API_KEY_CONTENT" | tr -d '[:space:]' | base64 -d > "$API_KEY_FILE"
 fi
 chmod 600 "$API_KEY_FILE"
 
+if [ ! -s "$API_KEY_FILE" ] || ! grep -q "BEGIN PRIVATE KEY" "$API_KEY_FILE"; then
+  error "Configured App Store Connect API key file is empty or invalid PEM format."
+  exit 1
+fi
+
 info "Submitting $DMG_NAME to Apple Notary Service (this may take 1-3 minutes)..."
+NOTARY_EXIT=0
 NOTARY_OUTPUT=$(xcrun notarytool submit "$DMG_PATH" \
   --key "$API_KEY_FILE" \
   --key-id "$APPLE_API_KEY_ID" \
   --issuer "$APPLE_API_ISSUER" \
-  --wait 2>&1)
+  --wait 2>&1) || NOTARY_EXIT=$?
 
 echo "$NOTARY_OUTPUT"
 
 SUBMISSION_ID=$(echo "$NOTARY_OUTPUT" | grep -E "^\s*id:" | awk '{print $2}' | head -n 1 || true)
 STATUS=$(echo "$NOTARY_OUTPUT" | grep -E "^\s*status:" | awk '{print $2}' | head -n 1 || true)
 
-if [ "$STATUS" != "Accepted" ]; then
-  error "Notarization failed with status: '$STATUS'"
+if [ "$NOTARY_EXIT" -ne 0 ] || [ "$STATUS" != "Accepted" ]; then
+  error "Notarization failed (exit=$NOTARY_EXIT, status='$STATUS')"
   if [ -n "$SUBMISSION_ID" ]; then
     echo "=== Notarization Log ($SUBMISSION_ID) ==="
     xcrun notarytool log "$SUBMISSION_ID" \
