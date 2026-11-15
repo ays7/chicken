@@ -23,6 +23,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.tag_name }}
           submodules: recursive
 
       - name: Build Chicken Fork App
@@ -51,12 +52,11 @@ jobs:
         run: |
           ./scripts/sign_and_notarize.sh
 
-      - name: Publish GitHub Release
+      - name: Resolve Release Metadata
+        id: release_meta
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_TAG: ${{ github.ref_name }}
           INPUT_TAG: ${{ github.event.inputs.tag_name }}
-          DMG_PATH: ${{ steps.package.outputs.dmg_path }}
           VERSION: ${{ steps.package.outputs.version }}
         run: |
           TAG_NAME="${INPUT_TAG}"
@@ -67,8 +67,24 @@ jobs:
               TAG_NAME="v${VERSION}"
             fi
           fi
-
           CLEAN_VERSION="${TAG_NAME#v}"
+
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "clean_version=$CLEAN_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Package Source Tarball (with Submodules)
+        id: source_tarball
+        run: |
+          ./scripts/package_source_tarball.sh "${{ steps.release_meta.outputs.clean_version }}" dist
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ steps.release_meta.outputs.tag_name }}
+          CLEAN_VERSION: ${{ steps.release_meta.outputs.clean_version }}
+          DMG_PATH: ${{ steps.package.outputs.dmg_path }}
+          SRC_TARBALL: ${{ steps.source_tarball.outputs.src_tarball }}
+        run: |
           NOTES_FILE=""
           if [ -f "release-notes/${CLEAN_VERSION}.md" ]; then
             NOTES_FILE="release-notes/${CLEAN_VERSION}.md"
@@ -78,17 +94,17 @@ jobs:
 
           echo "Publishing release for tag: $TAG_NAME"
           if gh release view "$TAG_NAME" >/dev/null 2>&1; then
-            echo "Release for $TAG_NAME already exists, uploading asset..."
-            gh release upload "$TAG_NAME" "$DMG_PATH" --clobber
+            echo "Release for $TAG_NAME already exists, uploading assets..."
+            gh release upload "$TAG_NAME" "$DMG_PATH" "$SRC_TARBALL" --clobber
           else
             if [ -n "$NOTES_FILE" ]; then
               echo "Using release notes file: $NOTES_FILE"
-              gh release create "$TAG_NAME" "$DMG_PATH" \
+              gh release create "$TAG_NAME" "$DMG_PATH" "$SRC_TARBALL" \
                 --title "${TAG_NAME}" \
                 --notes-file "$NOTES_FILE"
             else
               echo "Generating release notes automatically"
-              gh release create "$TAG_NAME" "$DMG_PATH" \
+              gh release create "$TAG_NAME" "$DMG_PATH" "$SRC_TARBALL" \
                 --title "${TAG_NAME}" \
                 --generate-notes
             fi
