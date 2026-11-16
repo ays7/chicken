@@ -132,6 +132,8 @@ enum {
                                                  name:NSWindowDidChangeOcclusionStateNotification
                                                object:nil];
 
+    [self prepareInitialWindowFrame];
+
     return self;
 }
 
@@ -562,9 +564,41 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     return NO;
 }
 
+- (NSRect)defaultWindowFrameForScreen:(NSScreen *)screen
+{
+    NSRect screenRect = screen ? [screen visibleFrame] : NSMakeRect(0, 0, 1440, 900);
+    CGFloat targetW = floor(NSWidth(screenRect) * 0.8);
+    CGFloat targetH = floor(NSHeight(screenRect) * 0.8);
+    if (targetW < 1440.0) targetW = MIN(1440.0, NSWidth(screenRect));
+    if (targetH < 900.0) targetH = MIN(900.0, NSHeight(screenRect));
+
+    NSRect contentRect = NSMakeRect(0, 0, ((int)targetW) & ~1, (int)targetH);
+    NSRect wf = [NSWindow frameRectForContentRect:contentRect styleMask:[window styleMask]];
+    if (NSWidth(wf) > NSWidth(screenRect)) wf.size.width = NSWidth(screenRect);
+    if (NSHeight(wf) > NSHeight(screenRect)) wf.size.height = NSHeight(screenRect);
+    wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf)) / 2 + NSMinX(screenRect));
+    wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf)) * 2 / 3 + NSMinY(screenRect));
+    return wf;
+}
+
+- (void)prepareInitialWindowFrame
+{
+    if (!window || _hasRestoredFrame) {
+        return;
+    }
+    NSScreen *screen = [NSScreen mainScreen] ? [NSScreen mainScreen] : [window screen];
+    if ([self restoreWindowFrameForScreen:screen]) {
+        _hasRestoredFrame = YES;
+    } else {
+        // Avoid leaving the window at the XIB's tiny bottom-left frame if a sheet
+        // (e.g. password/SSH prompt) orders it front before setupWindow runs.
+        [window setFrame:[self defaultWindowFrameForScreen:screen] display:NO];
+    }
+}
+
 - (void)saveCurrentWindowFrame
 {
-    if (!window || ([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
+    if (!window || !_hasSetupWindow || ([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
         return;
     }
     NSScreen *screen = [window screen];
@@ -864,7 +898,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     }
 
     NSScreen *screen = [window screen] ? [window screen] : [NSScreen mainScreen];
-    if ([window isVisible]) {
+    if (_hasSetupWindow) {
         if ([server_ fullscreen] && screen) {
             NSSize scSize = [screen frame].size;
             return NSMakeSize(((int)scSize.width) & ~1, (int)scSize.height);
@@ -872,23 +906,12 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         return [[window contentView] frame].size;
     }
 
-    if (![self restoreWindowFrameForScreen:screen]) {
-        NSRect screenRect = screen ? [screen visibleFrame] : NSMakeRect(0, 0, 1440, 900);
-        CGFloat targetW = floor(NSWidth(screenRect) * 0.8);
-        CGFloat targetH = floor(NSHeight(screenRect) * 0.8);
-        if (targetW < 1440.0) targetW = MIN(1440.0, NSWidth(screenRect));
-        if (targetH < 900.0) targetH = MIN(900.0, NSHeight(screenRect));
-
-        NSRect contentRect = NSMakeRect(0, 0, ((int)targetW) & ~1, (int)targetH);
-        NSRect wf = [NSWindow frameRectForContentRect:contentRect styleMask:[window styleMask]];
-        if (NSWidth(wf) > NSWidth(screenRect)) wf.size.width = NSWidth(screenRect);
-        if (NSHeight(wf) > NSHeight(screenRect)) wf.size.height = NSHeight(screenRect);
-        wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf)) / 2 + NSMinX(screenRect));
-        wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf)) * 2 / 3 + NSMinY(screenRect));
-
-        [window setFrame:wf display:NO];
+    if (!_hasRestoredFrame) {
+        if (![self restoreWindowFrameForScreen:screen]) {
+            [window setFrame:[self defaultWindowFrameForScreen:screen] display:NO];
+        }
+        _hasRestoredFrame = YES;
     }
-    _hasRestoredFrame = YES;
 
     if ([server_ fullscreen] && screen) {
         NSSize scSize = [screen frame].size;
@@ -904,8 +927,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 	NSRect screenRect;
 	NSClipView *contentView;
 	BOOL resizable = [connection serverSupportsSetDesktopSize] && ![self viewOnly];
-	BOOL wasVisible = [window isVisible];
-	_enteringInitialFullscreen = (!wasVisible && [server_ fullscreen] && (([window styleMask] & NSWindowStyleMaskFullScreen) == 0));
+	_enteringInitialFullscreen = (!_hasSetupWindow && [server_ fullscreen] && (([window styleMask] & NSWindowStyleMaskFullScreen) == 0));
 
 	horizontalScroll = NO;
 	verticalScroll = NO;
@@ -936,11 +958,30 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 	wf.origin.x = floor((NSWidth(screenRect) - NSWidth(wf))/2 + NSMinX(screenRect));
 	wf.origin.y = floor((NSHeight(screenRect) - NSHeight(wf))*2/3 + NSMinY(screenRect));
 	
-	if (![window isVisible]) {
-		NSScreen *targetScreen = [NSScreen mainScreen];
+	if (!_hasSetupWindow) {
+		NSScreen *targetScreen = [window screen] ? [window screen] : [NSScreen mainScreen];
 		if (!_hasRestoredFrame && ![self restoreWindowFrameForScreen:targetScreen]) {
 			[window setFrame:wf display:NO];
+		} else if (_hasRestoredFrame && !resizable && !_enteringInitialFullscreen &&
+		           (([window styleMask] & NSWindowStyleMaskFullScreen) == 0)) {
+			NSSize maxSize = [self _maxSizeForWindowSize:[[window contentView] frame].size];
+			NSRect frame = [window frame];
+			BOOL needsClamp = NO;
+			if (frame.size.width > maxSize.width) {
+				frame.size.width = maxSize.width;
+				needsClamp = YES;
+			}
+			if (frame.size.height > maxSize.height) {
+				frame.origin.y += frame.size.height - maxSize.height;
+				frame.size.height = maxSize.height;
+				needsClamp = YES;
+			}
+			if (needsClamp) {
+				[window setFrame:frame display:NO];
+			}
 		}
+		_hasRestoredFrame = YES;
+		_hasSetupWindow = YES;
 	}
 	[self saveCurrentWindowFrame];
 
@@ -1214,7 +1255,10 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)proposedFrameSize
 {
-    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
+    // Do not clamp before setupWindow runs: rfbView still has its small XIB placeholder
+    // frame and VNC handshake may not have determined SetDesktopSize support yet, so
+    // restoreWindowFrameForScreen: in prepareInitialWindowFrame would shrink to 454x413.
+    if (!_hasSetupWindow || ([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
         return proposedFrameSize;
     }
 

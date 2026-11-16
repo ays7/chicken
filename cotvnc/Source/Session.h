@@ -51,6 +51,7 @@ ConnectionWaiterDelegate>
     BOOL	horizontalScroll;
     BOOL	verticalScroll;
     BOOL	_hasRestoredFrame;
+    BOOL	_hasSetupWindow;
     BOOL	_enteringInitialFullscreen;
 
     id optionPanel;
