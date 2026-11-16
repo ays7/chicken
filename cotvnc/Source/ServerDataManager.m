@@ -26,6 +26,8 @@
 #import "ServerFromDiscovery.h"
 #import "ChickenFork-Swift.h"
 #import <AppKit/AppKit.h>
+#import <arpa/inet.h>
+#import <netinet/in.h>
 
 #define RFB_PREFS_LOCATION  @"Library/Preferences/cotvnc.prefs"
 #define RFB_SERVER_LIST     @"ServerList"
@@ -33,7 +35,7 @@
 #define RFB_SAVED_SERVERS   @"SavedServers"
 #define RFB_SAVED_SERVERS2  @"SavedServers2"
 
-@interface ServerDataManager () <NetworkDiscoveryDelegate>
+@interface ServerDataManager () <NetworkDiscoveryDelegate, NSNetServiceDelegate>
 @end
 
 @implementation ServerDataManager
@@ -54,6 +56,9 @@ static ServerDataManager* gInstance = nil;
 		mGroups                  = [[NSMutableDictionary alloc] init];
 		mRendezvousNameToServer  = [[NSMutableDictionary alloc] init];
 		mDiscoveredKeyToServer   = [[NSMutableDictionary alloc] init];
+		mExcludedVncEndpoints    = [[NSMutableSet alloc] init];
+		mExcludedVncNames        = [[NSMutableSet alloc] init];
+		mResolvingBonjourServices = [[NSMutableSet alloc] init];
 		
 		[mGroups setObject:mServers forKey:@"All"];
 		[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Standard"];
@@ -557,6 +562,11 @@ static ServerDataManager* gInstance = nil;
 		   didFindService:(NSNetService *)aNetService
 			   moreComing:(BOOL)moreComing
 {
+	NSString *normalizedServiceName = [self _normalizedHostKey:[aNetService name]];
+	if (normalizedServiceName.length > 0 && [mExcludedVncNames containsObject:normalizedServiceName]) {
+		return;
+	}
+
 	ServerFromRendezvous* newServer = [ServerFromRendezvous createWithNetService:aNetService];
 	
 	// store a quick lookup list that connects the rendezvous name to the server class
@@ -577,6 +587,27 @@ static ServerDataManager* gInstance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];
 	}
+
+	[mResolvingBonjourServices addObject:aNetService];
+	[aNetService setDelegate:self];
+	[aNetService resolveWithTimeout:2.0];
+}
+
+- (void)netServiceDidResolveAddress:(NSNetService *)sender
+{
+	[sender stop];
+	[sender setDelegate:nil];
+	[mResolvingBonjourServices removeObject:sender];
+
+	if ([self _shouldExcludeBonjourService:sender]) {
+		[self _removeBonjourServiceNamed:[sender name]];
+	}
+}
+
+- (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary<NSString *,NSNumber *> *)errorDict
+{
+	[sender setDelegate:nil];
+	[mResolvingBonjourServices removeObject:sender];
 }
 
 // Sent when a service disappears
@@ -613,8 +644,92 @@ static ServerDataManager* gInstance = nil;
     return [[NetworkDiscoveryManager shared] localSubnetsInfo];
 }
 
+- (NSString *)_normalizedHostKey:(NSString *)raw
+{
+    if (!raw || raw.length == 0) return @"";
+    NSString *s = [[raw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
+    while ([s hasSuffix:@"."]) {
+        s = [s substringToIndex:s.length - 1];
+    }
+    if ([s hasSuffix:@".local"]) {
+        s = [s substringToIndex:s.length - 6];
+    }
+    return s;
+}
+
+- (BOOL)_shouldExcludeBonjourService:(NSNetService *)service
+{
+    NSString *normName = [self _normalizedHostKey:[service name]];
+    if (normName.length > 0 && [mExcludedVncNames containsObject:normName]) {
+        return YES;
+    }
+    NSString *normHost = [self _normalizedHostKey:[service hostName]];
+    if (normHost.length > 0 && [mExcludedVncNames containsObject:normHost]) {
+        return YES;
+    }
+    for (NSData *addrData in [service addresses]) {
+        if (addrData.length < sizeof(struct sockaddr_in)) continue;
+        const struct sockaddr *sa = (const struct sockaddr *)addrData.bytes;
+        if (sa->sa_family == AF_INET) {
+            const struct sockaddr_in *sin = (const struct sockaddr_in *)sa;
+            char buf[INET_ADDRSTRLEN] = {0};
+            if (inet_ntop(AF_INET, &sin->sin_addr, buf, sizeof(buf))) {
+                int port = ntohs(sin->sin_port);
+                NSString *ep = [NSString stringWithFormat:@"%s:%d", buf, port];
+                if ([mExcludedVncEndpoints containsObject:ep]) {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
+}
+
+- (void)_removeBonjourServiceNamed:(NSString *)serviceName
+{
+    ServerFromRendezvous *serverToRemove = [mRendezvousNameToServer objectForKey:serviceName];
+    if (!serverToRemove) return;
+    [mRendezvousNameToServer removeObjectForKey:serviceName];
+    [[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
+    [mServers removeObjectForKey:[serverToRemove name]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
+}
+
+- (void)_prepareExcludedVncServers
+{
+    [mExcludedVncEndpoints removeAllObjects];
+    [mExcludedVncNames removeAllObjects];
+
+    NSMutableArray<id<IServerData>> *vncSaved = [NSMutableArray array];
+    for (id<IServerData> saved in [[mGroups objectForKey:@"Standard"] allValues]) {
+        if ([saved remoteProtocol] == RemoteProtocolVNC) {
+            [vncSaved addObject:saved];
+            NSString *normName = [self _normalizedHostKey:[saved name]];
+            if (normName.length > 0) [mExcludedVncNames addObject:normName];
+            NSString *normHost = [self _normalizedHostKey:[saved host]];
+            if (normHost.length > 0) [mExcludedVncNames addObject:normHost];
+        }
+    }
+
+    for (id<IServerData> saved in vncSaved) {
+        NSString *h = [saved host];
+        if (h.length == 0) continue;
+        int port = ([saved port] > 0) ? [saved port] : 5900;
+        [[NetworkDiscoveryManager shared] resolveIPv4AddressesFor:@[h] completion:^(NSArray<NSString *> *ips) {
+            for (NSString *ip in ips) {
+                [self->mExcludedVncEndpoints addObject:[NSString stringWithFormat:@"%@:%d", ip, port]];
+            }
+        }];
+    }
+}
+
 - (void)stopBonjourBrowsers
 {
+    for (NSNetService *s in mResolvingBonjourServices) {
+        [s stop];
+        [s setDelegate:nil];
+    }
+    [mResolvingBonjourServices removeAllObjects];
     [mServiceBrowser_VNC stop];
     mServiceBrowser_VNC = nil;
     [mServiceBrowser_RFB stop];
@@ -634,19 +749,20 @@ static ServerDataManager* gInstance = nil;
     [discoveredDict removeAllObjects];
     [mDiscoveredKeyToServer removeAllObjects];
 
-    NSMutableArray *excludedHosts = [NSMutableArray array];
+    NSMutableArray *excludedRdpHosts = [NSMutableArray array];
     for (id<IServerData> saved in [[mGroups objectForKey:@"Standard"] allValues]) {
         if ([saved remoteProtocol] == RemoteProtocolRDP && ([saved port] == 3389 || [saved port] <= 0)) {
             NSString *h = [saved host];
             if (h.length > 0) {
-                [excludedHosts addObject:h];
+                [excludedRdpHosts addObject:h];
             }
         }
     }
+    [self _prepareExcludedVncServers];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
     [self useRendezvous:YES];
-    [[NetworkDiscoveryManager shared] startScanWithDelegate:self excludedHosts:excludedHosts];
+    [[NetworkDiscoveryManager shared] startScanWithDelegate:self excludedHosts:excludedRdpHosts];
     [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg object:self];
 }
 

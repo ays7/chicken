@@ -168,6 +168,15 @@ public final class NetworkDiscoveryManager: NSObject {
         setScanning(false)
     }
 
+    public func resolveIPv4Addresses(for hosts: [String], completion: @escaping ([String]) -> Void) {
+        DispatchQueue.global(qos: .utility).async {
+            let ips = Self.resolveIPv4Addresses(for: hosts).map { SubnetScanner.ipString($0) }
+            DispatchQueue.main.async {
+                completion(ips)
+            }
+        }
+    }
+
     private static func resolveIPv4Addresses(for hosts: [String]) -> Set<UInt32> {
         var result = Set<UInt32>()
         for rawHost in hosts {

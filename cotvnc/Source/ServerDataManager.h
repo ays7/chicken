@@ -46,6 +46,9 @@
 	NSMutableDictionary* mGroups;
 	NSMutableDictionary* mRendezvousNameToServer;
 	NSMutableDictionary* mDiscoveredKeyToServer;
+	NSMutableSet* mExcludedVncEndpoints;
+	NSMutableSet* mExcludedVncNames;
+	NSMutableSet* mResolvingBonjourServices;
 	
 	bool mPostMessages;
 	
