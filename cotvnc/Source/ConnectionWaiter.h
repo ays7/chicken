@@ -63,7 +63,7 @@
                                      // currentSock during cancellation
     NSWindow            *window; // for displaying error panels
 
-    id<ConnectionWaiterDelegate>    delegate;
+    __weak id<ConnectionWaiterDelegate>    delegate;
     NSString            *errorStr; // error header, if not the default
 };
 

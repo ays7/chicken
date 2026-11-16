@@ -40,13 +40,9 @@
 
 - (void)dealloc
 {
-    [numColorReader release];
-    [paletteReader release];
-    [filterData release];
     if(src) {
 		free(src);
     }
-    [super dealloc];
 }
 
 - (void)resetFilterForRect:(NSRect)rect

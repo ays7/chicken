@@ -22,6 +22,9 @@
 
 @implementation AppDelegate
 
+@synthesize mRendezvousMenuItem;
+@synthesize mInfoVersionNumber;
+
 - (id) init
 {
     if (self = [super init])
@@ -173,7 +176,7 @@
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender
 {
-	NSMenu              *dockMenu = [[[NSMenu alloc] init] autorelease];
+	NSMenu              *dockMenu = [[NSMenu alloc] init];
     ServerDataManager   *serverManager = [ServerDataManager sharedInstance];
 	NSEnumerator        *enumerator;
 	NSString            *s;
@@ -209,7 +212,6 @@
 
     conn = [[DockConnection alloc] initWithServer:[sender representedObject]];
     [dockConnections addObject:conn];
-    [conn release];
 }
 
 - (void)addDockConnection:(DockConnection *)conn
@@ -222,7 +224,8 @@
     /* This selector is called by the object conn itself. We want to make sure
      * that the object continues to exist, even though we're about to remove it
      * from our array. */
-    [[conn retain] autorelease];
+    DockConnection *retainedConn = conn;
+    (void)retainedConn;
     [dockConnections removeObject:conn];
 }
 
@@ -352,7 +355,6 @@
         ServerDataViewController *viewCtrlr = [[ServerDataViewController alloc] initWithReleaseOnCloseOrConnect];
         [viewCtrlr setServer:server];
         [[viewCtrlr window] makeKeyAndOrderFront:self];
-        [server release];
         return YES;
     }
     return NO;

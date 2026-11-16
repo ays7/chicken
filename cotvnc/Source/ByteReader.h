@@ -26,8 +26,8 @@
  * received enough data, it will send action to target. */
 @interface ByteReader : NSObject
 {
-    id		target;
-    SEL		action;
+    __weak id   target;
+    SEL         action;
 }
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction;
@@ -35,5 +35,6 @@
 - (void)setReader:(ByteReader*)aReader;
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength;
 - (id)topTarget;
+- (void)notifyTargetWithObject:(id)object;
 
 @end

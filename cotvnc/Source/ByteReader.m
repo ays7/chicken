@@ -19,6 +19,7 @@
  */
 
 #import "ByteReader.h"
+#import <objc/message.h>
 
 @implementation ByteReader
 
@@ -52,6 +53,14 @@
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
 {
     return 0;
+}
+
+- (void)notifyTargetWithObject:(id)object
+{
+    id strongTarget = target;
+    if (strongTarget && action) {
+        ((void (*)(id, SEL, id))objc_msgSend)(strongTarget, action, object);
+    }
 }
 
 @end

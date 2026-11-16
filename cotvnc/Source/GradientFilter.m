@@ -42,11 +42,9 @@ static void _free(void* p) {
 
 - (void)dealloc
 {
-    [filterData release];
     _free(prevRow);
     _free(thisRow);
     _free(src);
-    [super dealloc];
 }
 
 - (void)resetFilterForRect:(NSRect)rect

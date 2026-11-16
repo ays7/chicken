@@ -44,7 +44,6 @@ typedef unsigned int NSUInteger;
 {
     NSIndexSet  *set = [[NSIndexSet alloc] initWithIndex: index];
     [mProfileTable selectRowIndexes: set byExtendingSelection: NO];
-    [set release];
 	
 	NSArray *profileNames = [self _sortedProfileNames];
 	[mProfileNameField setStringValue: [profileNames objectAtIndex: index]];
@@ -68,7 +67,7 @@ typedef unsigned int NSUInteger;
 - (NSArray*)_sortedProfileNames
 {
 	ProfileDataManager *profiles = [ProfileDataManager sharedInstance];
-    NSMutableArray* n = [[[profiles sortedKeyArray] mutableCopy] autorelease];
+    NSMutableArray* n = [[profiles sortedKeyArray] mutableCopy];
 	NSString *defaultProfileName = [profiles defaultProfileName];
 	
 	NSUInteger idx = [n indexOfObject: defaultProfileName];

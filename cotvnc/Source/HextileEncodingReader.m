@@ -19,6 +19,7 @@
  */
 
 #import "HextileEncodingReader.h"
+#import "RFBConnection.h"
 #import "CARD8Reader.h"
 #import "ByteBlockReader.h"
 #import "FrameBufferUpdateReader.h"
@@ -35,16 +36,6 @@
 		subRectReader = [[ByteBlockReader alloc] initTarget:self action:@selector(drawSubRects:)];
 	}
 	return self;
-}
-
-- (void)dealloc
-{
-    [rawReader release];
-    [tileHeaderReader release];
-    [subColorRectReader release];
-    [subRectReader release];
-    [subEncodingReader release];
-    [super dealloc];
 }
 
 - (void)readEncoding

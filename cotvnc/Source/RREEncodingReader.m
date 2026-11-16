@@ -36,14 +36,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [numOfReader release];
-    [backPixReader release];
-    [subRectReader release];
-    [super dealloc];
-}
-
 - (void)setFrameBuffer:(id)aBuffer
 {
     [super setFrameBuffer:aBuffer];

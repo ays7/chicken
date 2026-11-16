@@ -27,14 +27,14 @@
 
 @interface RFBConnectionManager : NSWindowController
 {
-	IBOutlet NSTableView *serverList;
-	IBOutlet NSTableView *groupList;
-	IBOutlet NSBox *serverDataBoxLocal;
+	IBOutlet __weak NSTableView *serverList;
+	IBOutlet __weak NSTableView *groupList;
+	IBOutlet __weak NSBox *serverDataBoxLocal;
 	IBOutlet NSBox *serverListBox;
 	IBOutlet NSBox *serverGroupBox;
-	IBOutlet NSSplitView *splitView;
-    IBOutlet NSButton *serverDeleteBtn;
-    IBOutlet NSButton *serverAddBtn;
+	IBOutlet __weak NSSplitView *splitView;
+    IBOutlet __weak NSButton *serverDeleteBtn;
+    IBOutlet __weak NSButton *serverAddBtn;
     NSMutableArray*	sessions;
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;

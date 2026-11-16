@@ -50,22 +50,14 @@
         _username = [[dict objectForKey:@"username"] copy];
 
         _viewOnly = [[dict objectForKey:@"viewOnly"] boolValue];
-        [_profile autorelease];
         _profile = [[ProfileDataManager sharedInstance]
                             profileForKey:[dict objectForKey:@"lastProfile"]];
-        [_profile retain];
 
-        _sshHost = [[dict objectForKey:@"sshHost"] retain];
+        _sshHost = [dict objectForKey:@"sshHost"];
         _sshPort = (in_port_t)[[dict objectForKey:@"sshPort"] intValue];
-        _sshUser = [[dict objectForKey:@"sshUser"] retain];
+        _sshUser = [dict objectForKey:@"sshUser"];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [_name release];
-    [super dealloc];
 }
 
 - (NSMutableDictionary *)propertyDict
@@ -135,15 +127,13 @@
     BOOL    rememberPassword = _rememberPassword;
     [self setRememberPassword:NO];
 
-	[_name autorelease];
-
 	if (name) {
 		NSMutableString *nameHelper = [NSMutableString stringWithString:name];
 		
 		[[ServerDataManager sharedInstance] validateNameChange:nameHelper
                                                      forServer:self];
 		
-		_name = [nameHelper retain];
+		_name = nameHelper;
 	} else {
 		_name = @"localhost";
 	}
@@ -172,12 +162,11 @@
         if ([[KeyChain defaultKeyChain] setGenericPassword:_password
                                         forService:[self keychainServiceName]
                                            account:[self saveName]]) {
-            [_password release];
             _password = nil;
             _rememberPassword = YES;
         }
 	} else if (!rememberPassword && _rememberPassword) {
-        _password = [[self password] retain];
+        _password = [self password];
 		[[KeyChain defaultKeyChain] removeGenericPasswordForService:[self keychainServiceName]
                             account:[self saveName]];
         _rememberPassword = NO;

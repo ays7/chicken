@@ -44,35 +44,25 @@
 
     cw = [aServer sshHost] ? [SshWaiter alloc] : [ConnectionWaiter alloc];
     cw = [cw initWithServer:aServer delegate:aDelegate window:aWind];
-    return [cw autorelease];
+    return cw;
 }
 
 - (id)initWithServer:(id<IServerData>)aServer
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWindow
 {
     if (self = [super init]) {
-        server = [aServer retain];
+        server = aServer;
         host = nil;
         port = 0;
         lock = [[NSLock alloc] init];
         currentSock = -1;
-        window = [aWindow retain];
+        window = aWindow;
 
         delegate = aDelegate;
 
         [server resolveWithDelegate: self];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [server release];
-    [host release];
-    [lock release];
-    [window release];
-    [errorStr release];
-    [super dealloc];
 }
 
 - (void)serverResolvedWithHost: (NSString *)aHost port: (int)aPort
@@ -95,8 +85,7 @@
 
 - (void)setErrorStr:(NSString *)str
 {
-    [errorStr autorelease];
-    errorStr = [str retain];
+    errorStr = str;
 }
 
 /* Cancels the connection attempt. This prevents any future messages to the
@@ -110,7 +99,6 @@
         currentSock = -1;
     }
     [lock unlock];
-    [window release];
     window = nil;
 }
 
@@ -123,25 +111,24 @@
     NSString        *cause = @"unknown";
     int             causeErr = 0;
     NSString        *errMsg = nil;
-    NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    NSString    *portStr = [NSString stringWithFormat:@"%d", port];
+    @autoreleasepool {
+        NSString    *portStr = [NSString stringWithFormat:@"%d", port];
 
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = PF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_ADDRCONFIG; // getaddrinfo will only do IPv6 lookup
-                                    // if host has an IPv6 address
-    hints.ai_flags = 0;
-    hints.ai_protocol = IPPROTO_TCP;
+        memset(&hints, 0, sizeof(hints));
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_flags = AI_ADDRCONFIG; // getaddrinfo will only do IPv6 lookup
+                                        // if host has an IPv6 address
+        hints.ai_flags = 0;
+        hints.ai_protocol = IPPROTO_TCP;
 
-    error = getaddrinfo([host UTF8String], [portStr UTF8String], &hints, &res0);
-    [pool release];
+        error = getaddrinfo([host UTF8String], [portStr UTF8String], &hints, &res0);
+    }
 
     if (error) {
         NSNumber    *errnum = [[NSNumber alloc] initWithInt: error];
         [self performSelectorOnMainThread: @selector(lookupFailed:)
                                withObject: errnum waitUntilDone: NO];
-        [errnum release];
 
         return;
     }
@@ -200,14 +187,14 @@
 
     freeaddrinfo(res0);
     // exhausted all possible addresses -> failure
-    pool = [[NSAutoreleasePool alloc] init];
-    if (errMsg == nil) {
-        errMsg = [NSString stringWithFormat:@"%s: %@", strerror(causeErr),
-                                        cause];
+    @autoreleasepool {
+        if (errMsg == nil) {
+            errMsg = [NSString stringWithFormat:@"%s: %@", strerror(causeErr),
+                                            cause];
+        }
+        [self performSelectorOnMainThread: @selector(connectionFailed:)
+                               withObject: errMsg waitUntilDone: NO];
     }
-    [self performSelectorOnMainThread: @selector(connectionFailed:)
-                           withObject: errMsg waitUntilDone: NO];
-    [pool release];
 }
 
 - (void)waitForDataOn:(int)sock
@@ -249,8 +236,6 @@
                     server:server];
         }
         [delegate connectionSucceeded: theConnection];
-        [fh release];
-        [(id)theConnection release];
         currentSock = -1;
     }
 }
@@ -310,7 +295,7 @@
 
 	NSString *ok = NSLocalizedString( @"Okay", nil );
     if (window) {
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:theAction];
         [alert setInformativeText:message ? message : @""];
         [alert addButtonWithTitle:ok];
@@ -318,7 +303,7 @@
             [self errorDidEnd:window returnCode:(int)returnCode contextInfo:nil];
         }];
     } else {
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:theAction];
         [alert setInformativeText:message ? message : @""];
         [alert addButtonWithTitle:ok];

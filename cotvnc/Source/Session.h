@@ -33,7 +33,7 @@ NSNetServiceDelegate,NSWindowDelegate,
 ConnectionWaiterDelegate>
 {
     id<RemoteConnection> connection;
-    IBOutlet RFBView *rfbView;
+    IBOutlet __weak RFBView *rfbView;
     IBOutlet NSWindow    *window;
     id<IServerData> server_;
     NSString        *username;
@@ -60,15 +60,15 @@ ConnectionWaiterDelegate>
     NSString *host;
 
     IBOutlet NSPanel *passwordSheet;
-    IBOutlet NSTextField *passwordField;
-    IBOutlet NSTextField *authHeader;
-    IBOutlet NSTextField *authMessage;
-    IBOutlet NSButton *rememberNewPassword;
+    IBOutlet __weak NSTextField *passwordField;
+    IBOutlet __weak NSTextField *authHeader;
+    IBOutlet __weak NSTextField *authMessage;
+    IBOutlet __weak NSButton *rememberNewPassword;
 
         // for reconnection attempts
     IBOutlet NSPanel                *_reconnectPanel;
-    IBOutlet NSProgressIndicator    *_reconnectIndicator;
-    IBOutlet NSTextField            *_reconnectReason;
+    IBOutlet __weak NSProgressIndicator    *_reconnectIndicator;
+    IBOutlet __weak NSTextField            *_reconnectReason;
     NSDate                          *_connectionStartDate;
     NSTimer                         *_reconnectSheetTimer;
     ConnectionWaiter                *_reconnectWaiter;
@@ -121,6 +121,8 @@ ConnectionWaiterDelegate>
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)window;
 
 - (id<RemoteConnection>)connection;
+- (BOOL)hasKeyWindow;
+- (void)setFrameBufferUpdateSeconds:(float)seconds;
 
 - (BOOL)useAllScreensActive;
 - (BOOL)isInMultiMonitorFullScreen;

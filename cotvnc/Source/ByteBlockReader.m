@@ -42,7 +42,6 @@
     if(buffer) {
         free(buffer);
     }
-    [super dealloc];
 }
 
 - (void)setBufferSize:(unsigned)aSize
@@ -70,8 +69,7 @@
         NSData  *data = [[NSData alloc] initWithBytesNoCopy:theBytes length:size
                             freeWhenDone: NO];
         bytesRead = size;
-        [target performSelector:action withObject:data];
-        [data release];
+        [self notifyTargetWithObject:data];
     } else {
         if (size > capacity) {
             /* We lazy allocate the storage for our buffer because if all of the
@@ -93,8 +91,7 @@
             NSData  *data = [[NSData alloc] initWithBytesNoCopy:buffer
                                                          length:size
                                                    freeWhenDone:NO];
-            [target performSelector:action withObject:data];
-            [data release];
+            [self notifyTargetWithObject:data];
         }
     }
     return canConsume;

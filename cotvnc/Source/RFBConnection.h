@@ -52,8 +52,8 @@
 
 @interface RFBConnection : NSObject <RemoteConnection>
 {
-    Session     *session;
-    IBOutlet RFBView *rfbView;
+    __weak Session     *session;
+    IBOutlet __weak RFBView *rfbView;
     FrameBuffer *frameBuffer;
     NSFileHandle    *socketHandler;
 	EventFilter     *_eventFilter;

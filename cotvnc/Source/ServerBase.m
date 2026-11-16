@@ -51,7 +51,7 @@
         _rdpAudioMode = 0;
 
         _viewOnly = NO;
-        _profile = [[[ProfileDataManager sharedInstance] defaultProfile]retain];
+        _profile = [[ProfileDataManager sharedInstance] defaultProfile];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(profileListUpdate:)
@@ -64,13 +64,7 @@
 
 - (void)dealloc
 {
-	[_host release];
-	[_password release];
-    [_username release];
-    [_profile release];
-    [_sshHost release];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super dealloc];
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
@@ -117,7 +111,6 @@
 
 - (void)setUsername:(NSString*)username
 {
-    [_username autorelease];
     _username = [username copy];
 }
 
@@ -225,10 +218,9 @@
 
 - (void)setHost: (NSString*)host
 {
-	[_host autorelease];
 	if( nil != host )
 	{
-        _host = [host retain];
+        _host = host;
 	}
 	else
 	{
@@ -288,8 +280,7 @@
 
 - (void)setPassword: (NSString*)password
 {
-    [_password autorelease];
-    _password = [password retain];
+    _password = password;
 }
 
 - (void)setDisplay: (int)display
@@ -316,8 +307,7 @@
 
 - (void)setProfile: (Profile *)profile
 {
-    [_profile autorelease];
-    _profile = [profile retain];
+    _profile = profile;
 }
 
 - (void)setProfileName: (NSString*)profileName
@@ -327,23 +317,18 @@
 	
     if (prof)
 	{
-		[_profile autorelease];
-		_profile = [prof retain];
+		_profile = prof;
 	}
 }
 
 - (void)setSshHost:(NSString *)sshHost
 {
-    [_sshHost autorelease];
-    _sshHost = [sshHost retain];
+    _sshHost = sshHost;
 }
 
 - (void)setSshString:(NSString *)str
 {
     NSRange sep;
-
-    [_sshHost release];
-    [_sshUser release];
 
     if (str == nil) {
         _sshHost = nil;
@@ -354,7 +339,7 @@
 
     sep = [str rangeOfString:@"@"];
     if (sep.location != NSNotFound) {
-        _sshUser = [[str substringToIndex:sep.location] retain];
+        _sshUser = [str substringToIndex:sep.location];
         str = [str substringFromIndex:sep.location + 1];
     } else
         _sshUser = nil;
@@ -366,20 +351,17 @@
     } else
         _sshPort = 0;
 
-    _sshHost = [str retain];
+    _sshHost = str;
 }
 
 - (void)setSshTunnel:(BOOL)enable
 {
     if (!enable) {
-        [_sshHost release];
-        [_sshUser release];
-
         _sshHost = nil;
         _sshUser = nil;
         _sshPort = 0;
     } else if (_sshHost == nil) {
-        _sshHost = [_host retain];
+        _sshHost = _host;
     }
 }
 

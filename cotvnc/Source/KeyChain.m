@@ -45,7 +45,6 @@ static KeyChain* defaultKeyChain = nil;
         NSMutableDictionary *newItem = [query mutableCopy];
         newItem[(__bridge id)kSecValueData] = passwordData;
         status = SecItemAdd((__bridge CFDictionaryRef)newItem, NULL);
-        [newItem release];
     }
     
     if (status != errSecSuccess) {
@@ -72,8 +71,8 @@ static KeyChain* defaultKeyChain = nil;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &dataTypeRef);
     
     if (status == errSecSuccess && dataTypeRef != NULL) {
-        NSData *passwordData = (NSData *)dataTypeRef;
-        NSString *result = [[[NSString alloc] initWithData:passwordData encoding:NSUTF8StringEncoding] autorelease];
+        NSData *passwordData = CFBridgingRelease(dataTypeRef);
+        NSString *result = [[NSString alloc] initWithData:passwordData encoding:NSUTF8StringEncoding];
         return result ? result : @"";
     }
     

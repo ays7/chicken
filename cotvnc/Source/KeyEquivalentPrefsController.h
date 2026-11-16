@@ -15,12 +15,13 @@
 <NSWindowDelegate>
 #endif
 {
-	IBOutlet NSPopUpButton *mConnectionType;
-	IBOutlet NSOutlineView *mOutlineView;
 	NSMutableArray *mSelectedScenario;
 	KeyEquivalentTextView *mTextView;
-	id mOriginalDelegate;
+	__weak id mOriginalDelegate;
 }
+
+@property (nonatomic, weak) IBOutlet NSPopUpButton *mConnectionType;
+@property (nonatomic, weak) IBOutlet NSOutlineView *mOutlineView;
 
 + (KeyEquivalentPrefsController *)sharedController;
 

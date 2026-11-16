@@ -33,7 +33,7 @@
  * type, except for rfbBell, which is handled internally. */
 @interface RFBProtocol : NSObject
 {
-    RFBConnection   *connection;
+    __weak RFBConnection   *connection;
 
     CARD8Reader     *typeReader;
     id              msgTypeReader[MAX_MSGTYPE + 1];

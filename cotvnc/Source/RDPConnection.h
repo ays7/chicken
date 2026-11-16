@@ -18,8 +18,8 @@
 @interface RDPConnection : NSObject <RemoteConnection>
 {
     id<IServerData> server_;
-    Session *session;
-    RFBView *rfbView;
+    __weak Session *session;
+    __weak RFBView *rfbView;
     RDPFrameBuffer *frameBuffer;
     EventFilter *_eventFilter;
     SshTunnel *sshTunnel;

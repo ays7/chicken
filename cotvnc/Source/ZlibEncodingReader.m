@@ -27,13 +27,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-	[numBytesReader release];
-    [zlibReader release];
-    [super dealloc];
-}
-
 - (void)readEncoding
 {
     [connection setReader:numBytesReader];

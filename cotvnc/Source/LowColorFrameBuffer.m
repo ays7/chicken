@@ -43,7 +43,6 @@ typedef	unsigned char			FBColor;
 - (void)dealloc
 {
     free(pixels);
-    [super dealloc];
 }
 
 + (void)getPixelFormat:(rfbPixelFormat*)aFormat

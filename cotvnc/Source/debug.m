@@ -34,7 +34,6 @@ void DiagnosticLog(DiagnosticLogLevel level, NSString *format, ...) {
     NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
     NSLog(@"[Chicken Fork] %@", msg);
-    [msg release];
 }
 
 void DoNothing(NSString *format, ...) {

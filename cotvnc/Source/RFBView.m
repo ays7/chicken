@@ -31,6 +31,10 @@ typedef int NSInteger;
 #endif
 #endif
 
+@interface FrameBuffer (MonitorOffset)
+- (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint monitorOrigin:(NSPoint)origin viewHeight:(CGFloat)viewHeight;
+@end
+
 @implementation RFBView
 
 /* One-time initializer to read the cursors into memory. */
@@ -59,8 +63,6 @@ typedef int NSInteger;
 			
 			NSCursor *cursor = [[NSCursor alloc] initWithImage: image hotSpot: hotspot];
 			[(NSMutableDictionary *)sMapping setObject: cursor forKey: cursorName];
-            [cursor release];
-            [image release];
 		}
 	}
 	
@@ -85,8 +87,7 @@ typedef int NSInteger;
 {
     NSRect f = [self frame];
     
-    [fbuf release];
-    fbuf = [aBuffer retain];
+    fbuf = aBuffer;
     f.size = [aBuffer size];
     [self setFrame:f];
 }
@@ -96,7 +97,6 @@ typedef int NSInteger;
     if (_cursorTrackingArea)
     {
         [self removeTrackingArea:_cursorTrackingArea];
-        [_cursorTrackingArea release];
         _cursorTrackingArea = nil;
     }
     if (_delegate)
@@ -105,16 +105,11 @@ typedef int NSInteger;
         _delegate = nil;
     }
     _eventFilter = nil;
-    [fbuf release];
     fbuf = nil;
-    [_serverCursor release];
     _serverCursor = nil;
-    [_modifierCursor release];
     _modifierCursor = nil;
-    [tint release];
     tint = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 - (void)updateTrackingAreas
@@ -123,7 +118,6 @@ typedef int NSInteger;
     if (_cursorTrackingArea)
     {
         [self removeTrackingArea:_cursorTrackingArea];
-        [_cursorTrackingArea release];
         _cursorTrackingArea = nil;
     }
     _cursorTrackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
@@ -149,11 +143,10 @@ typedef int NSInteger;
 
 - (void)setCursorTo: (NSString *)name
 {
-    [_modifierCursor release];
 	if (name == nil)
         _modifierCursor = nil;
     else
-        _modifierCursor = [[[self class] _cursorForName: name] retain];
+        _modifierCursor = [[self class] _cursorForName: name];
 
     if (_modifierCursor)
         [_modifierCursor set];
@@ -168,8 +161,7 @@ typedef int NSInteger;
     if (_serverCursor == aCursor)
         return;
 
-    [_serverCursor release];
-    _serverCursor = [aCursor retain];
+    _serverCursor = aCursor;
     if (!_modifierCursor) {
         [[self window] invalidateCursorRectsForView: self];
         if (aCursor)
@@ -182,8 +174,7 @@ typedef int NSInteger;
 - (void)setTint: (NSColor *)aTint
 {
     if (![tint isEqual:aTint]) {
-        [tint release];
-        tint = [aTint retain];
+        tint = aTint;
         drawTint = [tint alphaComponent] != 0.0;
         [self setNeedsDisplay:YES];
     }

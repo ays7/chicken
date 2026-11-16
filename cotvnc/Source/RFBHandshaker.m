@@ -43,19 +43,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [connFailedReader release];
-    [challengeReader release];
-    [authResultReader release];
-    [serverInitReader release];
-    [vncAuthChallenge release];
-    [ardGenerator release];
-    [ardPrime release];
-    [ardPeerKey release];
-    [super dealloc];
-}
-
 - (void)handshake
 {
     char clientData[sz_rfbProtocolVersionMsg + 1];
@@ -69,13 +56,11 @@
 
 		authCountReader = [[CARD8Reader alloc] initTarget:self action:@selector(setAuthCount:)];
 		[connection setReader:authCountReader];
-        [authCountReader release];
     } else {
         CARD32Reader    *authTypeReader;
 
 		authTypeReader = [[CARD32Reader alloc] initTarget:self action:@selector(setAuthType:)];
 		[connection setReader:authTypeReader];
-        [authTypeReader release];
     }
 }
 
@@ -85,7 +70,6 @@
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Sending ClientInit byte (shared=%d)...", connection, [connection fileDescriptor], shared);
 
     [connection writeBytes:&shared length:1];
-    [serverInitReader release];
     serverInitReader = [[RFBServerInitReader alloc] initWithConnection: connection andHandshaker: self];
     [serverInitReader readServerInit];
 }
@@ -99,7 +83,6 @@
         ByteBlockReader *authTypeArrayReader;
 		authTypeArrayReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setAuthArray:) size:[authCount intValue]];
 		[connection setReader:authTypeArrayReader];
-        [authTypeArrayReader release];
 	}
 }
 
@@ -173,17 +156,14 @@
 	[connection writeBytes:&typeByte length:1];
 	ByteBlockReader *genReader = [[ByteBlockReader alloc] initTarget:self action:@selector(gotArdGenerator:) size:2];
 	[connection setReader:genReader];
-	[genReader release];
 }
 
 - (void)gotArdGenerator:(NSData *)data
 {
     DiagnosticLog(DiagnosticLogLevelBasic, @"Got ARD generator (%lu bytes)", (unsigned long)[data length]);
-    [ardGenerator release];
-    ardGenerator = [[NSData dataWithData:data] retain];
+    ardGenerator = [NSData dataWithData:data];
     CARD16Reader *sizeReader = [[CARD16Reader alloc] initTarget:self action:@selector(gotArdKeySize:)];
     [connection setReader:sizeReader];
-    [sizeReader release];
 }
 
 - (void)gotArdKeySize:(NSNumber *)size
@@ -192,24 +172,20 @@
     DiagnosticLog(DiagnosticLogLevelBasic, @"Got ARD keySize: %d bytes (%d bits)", ardKeySize, ardKeySize * 8);
     ByteBlockReader *primeReader = [[ByteBlockReader alloc] initTarget:self action:@selector(gotArdPrime:) size:ardKeySize];
     [connection setReader:primeReader];
-    [primeReader release];
 }
 
 - (void)gotArdPrime:(NSData *)data
 {
     DiagnosticLog(DiagnosticLogLevelBasic, @"Got ARD prime (%lu bytes)", (unsigned long)[data length]);
-    [ardPrime release];
-    ardPrime = [[NSData dataWithData:data] retain];
+    ardPrime = [NSData dataWithData:data];
     ByteBlockReader *peerKeyReader = [[ByteBlockReader alloc] initTarget:self action:@selector(gotArdPeerKey:) size:ardKeySize];
     [connection setReader:peerKeyReader];
-    [peerKeyReader release];
 }
 
 - (void)gotArdPeerKey:(NSData *)data
 {
     DiagnosticLog(DiagnosticLogLevelBasic, @"Got ARD peerKey (%lu bytes)", (unsigned long)[data length]);
-    [ardPeerKey release];
-    ardPeerKey = [[NSData dataWithData:data] retain];
+    ardPeerKey = [NSData dataWithData:data];
     [self performArdAuth];
 }
 
@@ -277,10 +253,9 @@
 
     if ([connection password] == nil) {
         [connection promptForPassword];
-        [vncAuthChallenge autorelease];
         /* Note that theChallenge uses strictly temporary memory, so we can't
          * just retain, we have to copy. */
-        vncAuthChallenge = [[NSData dataWithData:theChallenge] retain];
+        vncAuthChallenge = [NSData dataWithData:theChallenge];
         return;
     }
 
@@ -295,7 +270,6 @@
 {
     if (vncAuthChallenge) {
         [self challenge:vncAuthChallenge];
-        [vncAuthChallenge release];
         vncAuthChallenge = nil;
     } else if (waitingForArdCredentials) {
         waitingForArdCredentials = NO;

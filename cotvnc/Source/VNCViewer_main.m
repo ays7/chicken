@@ -11,8 +11,6 @@ int main(int argc, const char *argv[]) {
     NSZombieEnabled = YES;
     NSDebugEnabled = YES;
     NSDeallocateZombies = NO;
-	[NSAutoreleasePool setPoolCountHighWaterMark: 2000];
-	[NSAutoreleasePool setPoolCountHighWaterResolution: 2000];
 #endif
     return NSApplicationMain(argc, argv);
 }

@@ -31,16 +31,9 @@
     if (self = [super init]) {
         waiter = [ConnectionWaiter waiterForServer:server delegate:self
                     window:nil];
-        [waiter retain];
     }
 
     return self;
-}
-
-- (void)dealloc
-{
-    [waiter release];
-    [super dealloc];
 }
 
 - (void)connectionSucceeded:(id<RemoteConnection>)conn

@@ -79,7 +79,6 @@ if (!(condition)) return [self scriptError: (errno) description: \
 	
 	[viewCtrlr setServer:server];
 	[[viewCtrlr window] makeKeyAndOrderFront:self];
-    [server release];
 	
 	// XXX CFURLCreateStringByAddingPercentEscapes is more permissive
     // wrt URL formats; may want to use it instead (see release notes)

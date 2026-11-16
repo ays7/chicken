@@ -121,7 +121,7 @@ NSString *kPrefs_IntervalBeforeReconnect_Key = @"IntervalBeforeReconnect";
 		if ([obj isKindOfClass:[NSWindow class]])
 			[(NSWindow *)obj setReleasedWhenClosed:NO];
 	}
-	mTopLevelObjects = [tlo retain];
+	mTopLevelObjects = tlo;
 	
 	// set our controls' default values
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

@@ -27,10 +27,10 @@
 /* This represents a reader for a single encoding type of rectangles. */
 @interface EncodingReader : NSObject
 {
-    FrameBufferUpdateReader *updater;
-    RFBConnection           *connection;
-    NSRect                  frame; // rectangle into which we should write
-    FrameBuffer			    *frameBuffer;
+    __weak FrameBufferUpdateReader *updater;
+    __weak RFBConnection           *connection;
+    NSRect                          frame; // rectangle into which we should write
+    __weak FrameBuffer             *frameBuffer;
 }
 
 - (id)initWithUpdater: (FrameBufferUpdateReader *)aUpdater

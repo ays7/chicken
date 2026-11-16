@@ -24,22 +24,16 @@
 - (id)initWithDelegate:(id<AuthPromptDelegate>)aDelegate
 {
     if (self = [super init]) {
-        delegate = aDelegate;
+        _delegate = aDelegate;
         NSArray *tlo = nil;
         [NSBundle.mainBundle loadNibNamed:@"AuthPrompt" owner:self topLevelObjects:&tlo];
         for (id obj in tlo) {
             if ([obj isKindOfClass:[NSWindow class]])
                 [(NSWindow *)obj setReleasedWhenClosed:NO];
         }
-        topLevelObjects = [tlo retain];
+        topLevelObjects = tlo;
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [topLevelObjects release];
-    [super dealloc];
 }
 
 - (void)runSheetOnWindow:(NSWindow *)window
@@ -56,14 +50,14 @@
 
 - (IBAction)enterPassword:(id)sender
 {
-    [delegate authPasswordEntered:[passwordField stringValue]];
+    [self.delegate authPasswordEntered:[passwordField stringValue]];
     [panel.sheetParent endSheet:panel returnCode:NSModalResponseOK];
 }
 
 - (IBAction)cancel:(id)sender
 {
     [panel.sheetParent endSheet:panel returnCode:NSModalResponseCancel];
-    [delegate authCancelled];
+    [self.delegate authCancelled];
 }
 
 - (IBAction)passwordEnteredFor:(NSWindow *)wind returnCode:(int)retCode

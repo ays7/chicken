@@ -65,14 +65,7 @@
 
 - (void)dealloc
 {
-    int i;
-
-    [typeReader release];
-    for(i=0; i<=MAX_MSGTYPE; i++) {
-        [msgTypeReader[i] release];
-    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 /* Sends the list of supported encodings to the server. Note that it only

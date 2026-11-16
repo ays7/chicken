@@ -54,14 +54,11 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [mCurrentTouchBar release];
-    [mScrubber release];
-    [super dealloc];
 }
 
 - (NSTouchBar *)makeTouchBar
 {
-    NSTouchBar *touchBar = [[[NSTouchBar alloc] init] autorelease];
+    NSTouchBar *touchBar = [[NSTouchBar alloc] init];
     touchBar.customizationIdentifier = cotvncTouchBarCustomization;
     touchBar.delegate = self;
     touchBar.defaultItemIdentifiers = @[
@@ -70,8 +67,7 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
     ];
     touchBar.customizationAllowedItemIdentifiers = touchBar.defaultItemIdentifiers;
     
-    [mCurrentTouchBar release];
-    mCurrentTouchBar = [touchBar retain];
+    mCurrentTouchBar = touchBar;
     
     return touchBar;
 }
@@ -112,7 +108,7 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 - (nullable NSTouchBarItem *)touchBar:(NSTouchBar *)touchBar makeItemForIdentifier:(NSTouchBarItemIdentifier)identifier
 {
     if ([identifier isEqualToString:cotvncTouchBarShowConnections]) {
-        NSCustomTouchBarItem *item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        NSCustomTouchBarItem *item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         item.customizationLabel = @"Connection Window";
         
         NSImage *icon = nil;
@@ -129,10 +125,10 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
         return item;
     }
     else if ([identifier isEqualToString:cotvncTouchBarServerScrubber]) {
-        NSCustomTouchBarItem *item = [[[NSCustomTouchBarItem alloc] initWithIdentifier:identifier] autorelease];
+        NSCustomTouchBarItem *item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
         item.customizationLabel = @"Server Connections";
         
-        NSScrubber *scrubber = [[[NSScrubber alloc] initWithFrame:NSMakeRect(0, 0, 400, 30)] autorelease];
+        NSScrubber *scrubber = [[NSScrubber alloc] initWithFrame:NSMakeRect(0, 0, 400, 30)];
         scrubber.dataSource = self;
         scrubber.delegate = self;
         scrubber.mode = NSScrubberModeFree;
@@ -140,14 +136,13 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
         scrubber.selectionBackgroundStyle = nil;
         scrubber.selectionOverlayStyle = nil;
         
-        NSScrubberFlowLayout *layout = [[[NSScrubberFlowLayout alloc] init] autorelease];
+        NSScrubberFlowLayout *layout = [[NSScrubberFlowLayout alloc] init];
         layout.itemSpacing = 6.0;
         scrubber.scrubberLayout = layout;
         
         [scrubber registerClass:[NSScrubberTextItemView class] forItemIdentifier:@"ServerItem"];
         
-        [mScrubber release];
-        mScrubber = [scrubber retain];
+        mScrubber = scrubber;
         
         item.view = scrubber;
         return item;
@@ -168,7 +163,7 @@ static NSTouchBarItemIdentifier cotvncTouchBarServerScrubber = @"net.sourceforge
 {
     NSScrubberTextItemView *itemView = [scrubber makeItemWithIdentifier:@"ServerItem" owner:nil];
     if (!itemView) {
-        itemView = [[[NSScrubberTextItemView alloc] initWithFrame:NSMakeRect(0, 0, 100, 30)] autorelease];
+        itemView = [[NSScrubberTextItemView alloc] initWithFrame:NSMakeRect(0, 0, 100, 30)];
         itemView.identifier = @"ServerItem";
     }
     

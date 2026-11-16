@@ -23,12 +23,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [cursorReader release];
-    [super dealloc];
-}
-
 - (void)readEncoding
 {
     bytesPixels = frame.size.height * frame.size.width * [frameBuffer bytesPerPixel];
@@ -56,7 +50,6 @@
     if (image) {
         NSCursor    *cursor = [[NSCursor alloc] initWithImage:image hotSpot:frame.origin];
         [connection setCursor: cursor];
-        [cursor release];
     } else
         [connection setCursor: nil];
 
@@ -123,7 +116,6 @@
                     pixel = PIX32LITTLE(buff + sourcePos);
             } else {
                 NSLog(@"Illegal number of bits per pixel");
-                [bitmap release];
                 return nil;
             }
 
@@ -141,8 +133,7 @@
 
     NSImage *image = [[NSImage alloc] initWithSize:frame.size];
     [image addRepresentation:bitmap];
-    [bitmap release];
-    return [image autorelease];
+    return image;
 }
 
 @end

@@ -31,7 +31,7 @@
 #endif
 {
 	NSNetService* service_;
-    id<ServerDelegate> delegate_;
+    __weak id<ServerDelegate> delegate_;
 }
 
 + (ServerFromRendezvous *)createWithNetService:(NSNetService*)service;

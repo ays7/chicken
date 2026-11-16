@@ -76,29 +76,6 @@ NSString *encodingNames[] = { // names indexed by RFB encoding numbers
     return self;
 }
 
-- (void)dealloc
-{
-    [headerReader release];
-    [rectHeaderReader release];
-
-    [rawEncodingReader release];
-    [copyRectangleEncodingReader release];
-    [rreEncodingReader release];
-    [coRreEncodingReader release];
-    [hextileEncodingReader release];
-    [tightEncodingReader release];
-	[zlibEncodingReader release];
-	[zrleEncodingReader release];
-	[zlibHexEncodingReader release];
-
-    [desktopNameReader release];
-    [cursorReader release];
-
-    [invalidRects release];
-
-    [super dealloc];
-}
-
 - (void)setFrameBuffer:(id)aBuffer
 {
     bytesPerPixel = [aBuffer bytesPerPixel];

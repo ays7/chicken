@@ -26,8 +26,8 @@
 
 @interface SetColorMapEntriesReader : NSObject
 {
-    RFBProtocol *protocol;
-    RFBConnection   *connection;
+    __weak RFBProtocol      *protocol;
+    __weak RFBConnection    *connection;
 
     id		headerReader;
     id		colorReader;

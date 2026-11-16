@@ -48,7 +48,6 @@
         CGColorSpaceRelease(_colorSpace);
         _colorSpace = NULL;
     }
-    [super dealloc];
 }
 
 - (void)setSize:(NSSize)aSize

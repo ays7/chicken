@@ -11,12 +11,11 @@
 @class DockConnection;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuItemValidation> {
-	IBOutlet NSMenuItem *mRendezvousMenuItem;
-	IBOutlet NSTextField *mInfoVersionNumber;
-
-	
     NSMutableArray      *dockConnections;
 }
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *mRendezvousMenuItem;
+@property (nonatomic, weak) IBOutlet NSTextField *mInfoVersionNumber;
 
 - (IBAction)showPreferences: (id)sender;
 - (IBAction)changeRendezvousUse:(id)sender;

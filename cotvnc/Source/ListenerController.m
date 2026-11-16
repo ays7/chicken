@@ -95,13 +95,8 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [self savePrefs];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [fileHandles release];
     [closeTimer invalidate];
-    [closeTimer release];
     [resetErrorTimer invalidate];
-    [resetErrorTimer release];
-	
-	[super dealloc];
 }
 
 - (void)windowDidLoad
@@ -222,7 +217,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         
     [handle acceptConnectionInBackgroundAndNotify];
 
-    return [handle autorelease];
+    return handle;
 }
 
 - (void)stopListeningForNdx:(int)ndx
@@ -234,7 +229,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         name:NSFileHandleConnectionAcceptedNotification
         object:listeningSockets[ndx]];
     
-    [listeningSockets[ndx] release]; listeningSockets[ndx] = nil;
+    listeningSockets[ndx] = nil;
 }
 
 - (BOOL)startListenerOnPort:(int)port withProfile:(Profile*)profile localOnly:(BOOL)local;
@@ -251,7 +246,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     listenAddress.sin_port = htons(port);
     listeningSockets[0] = [self listenAtAddress: (struct sockaddr *)&listenAddress
                                        ofLength:sizeof(listenAddress)];
-    [listeningSockets[0] retain];
     if (!listeningSockets[0])
         return NO;
 
@@ -261,13 +255,12 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     listenAddress6.sin6_port = htons(port);
     listeningSockets[1] = [self listenAtAddress:(struct sockaddr *)&listenAddress6
                                        ofLength:sizeof(listenAddress6)];
-    [listeningSockets[1] retain];
     if (!listeningSockets[1]) {
         [self stopListeningForNdx: 0];
         return NO;
     }
 
-    listeningProfile = [profile retain];
+    listeningProfile = profile;
 
     [self updateUI];
     [self setStatus: NSLocalizedString(@"listenRunning", nil)];
@@ -284,7 +277,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
             [self stopListeningForNdx: i];
     }
 
-    [listeningProfile release]; listeningProfile = nil;
+    listeningProfile = nil;
     
     [self updateUI];
     [self setStatus: NSLocalizedString(@"listenStopped", nil)];
@@ -295,7 +288,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [statusText setStringValue:str];
 
     [resetErrorTimer invalidate];
-    [resetErrorTimer release];
     resetErrorTimer = nil;
 }
 
@@ -354,7 +346,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         resetErrorTimer = [NSTimer scheduledTimerWithTimeInterval:3*60
                                 target:self selector:@selector(clearError:)
                                 userInfo:nil repeats:NO];
-        [resetErrorTimer retain];
         return;
     }
 
@@ -362,7 +353,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 
     [server setProfile:listeningProfile];
     [cm createConnectionWithFileHandle:fh server:server];
-    [server release];
 
     [self stopListener];
     if (closeTimer == nil && [fileHandles count] > 0) {
@@ -372,7 +362,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
         closeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self
                                 selector:@selector(closeLingering:)
                                 userInfo:nil repeats:NO];
-        [closeTimer retain];
     }
 }
 
@@ -386,7 +375,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [fileHandles removeAllObjects];
 
     [closeTimer invalidate];
-    [closeTimer release];
     closeTimer = nil;
 }
 
@@ -461,7 +449,7 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
 // Loads the list of profiles into the popup
 - (void)loadProfileIntoView
 {
-    NSString* lastProfile = [[profilePopup titleOfSelectedItem] retain];
+    NSString* lastProfile = [profilePopup titleOfSelectedItem];
 
 	[profilePopup removeAllItems];
 	[profilePopup addItemsWithTitles:
@@ -470,7 +458,6 @@ NSString *kPrefs_ListenerProfile_Key    = @"ListenerProfile";
     [profilePopup addItemWithTitle:NSLocalizedString(@"EditProfiles", nil)];
 	
 	[self setProfilePopupToProfile: lastProfile];
-    [lastProfile release];
 }
 
 - (IBAction)showProfileManager:(id)sender

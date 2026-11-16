@@ -32,34 +32,34 @@
 @interface ServerDataViewController : NSWindowController
                                             <ConnectionWaiterDelegate, NSControlTextEditingDelegate>
 {
-    IBOutlet NSSegmentedControl *protocolControl;
-    IBOutlet NSTextField *protocolLabel;
-    IBOutlet NSTextField *displayLabel;
-    IBOutlet NSTextField *display;
-    IBOutlet NSTextField *displayDescription;
-    IBOutlet NSTextField *hostName;
-    IBOutlet NSTextField *username;
-    IBOutlet NSTextField *usernameLabel;
-    IBOutlet NSTextField *password;
-    IBOutlet NSTextField *passwordLabel;
-    IBOutlet NSPopUpButton *profilePopup;
-    IBOutlet NSTextField *profileLabel;
-    IBOutlet NSButton *rememberPwd;
+    IBOutlet __weak NSSegmentedControl *protocolControl;
+    IBOutlet __weak NSTextField *protocolLabel;
+    IBOutlet __weak NSTextField *displayLabel;
+    IBOutlet __weak NSTextField *display;
+    IBOutlet __weak NSTextField *displayDescription;
+    IBOutlet __weak NSTextField *hostName;
+    IBOutlet __weak NSTextField *username;
+    IBOutlet __weak NSTextField *usernameLabel;
+    IBOutlet __weak NSTextField *password;
+    IBOutlet __weak NSTextField *passwordLabel;
+    IBOutlet __weak NSPopUpButton *profilePopup;
+    IBOutlet __weak NSTextField *profileLabel;
+    IBOutlet __weak NSButton *rememberPwd;
 
-    IBOutlet NSButton *shared;
-	IBOutlet NSButton *viewOnly;
-	IBOutlet NSButton *fullscreen;
-	IBOutlet NSButton *useAllScreens;
+    IBOutlet __weak NSButton *shared;
+	IBOutlet __weak NSButton *viewOnly;
+	IBOutlet __weak NSButton *fullscreen;
+	IBOutlet __weak NSButton *useAllScreens;
 	IBOutlet NSButton *save;
-    IBOutlet NSButton *useSshTunnel;
-    IBOutlet NSTextField *sshHost;
-    IBOutlet NSTextField *sshHostLabel;
+    IBOutlet __weak NSButton *useSshTunnel;
+    IBOutlet __weak NSTextField *sshHost;
+    IBOutlet __weak NSTextField *sshHostLabel;
 
-	IBOutlet NSBox *box;
-	IBOutlet NSButton *connectBtn;
+	IBOutlet __weak NSBox *box;
+	IBOutlet __weak NSButton *connectBtn;
 	
-	IBOutlet NSProgressIndicator *connectIndicator;
-	IBOutlet NSTextField *connectIndicatorText;
+	IBOutlet __weak NSProgressIndicator *connectIndicator;
+	IBOutlet __weak NSTextField *connectIndicatorText;
 	
 	ServerBase  *mServer;
 	
@@ -69,7 +69,7 @@
     ConnectionWaiter    *connectionWaiter;
     BOOL saveCheckboxWasVisible;
     NSArray             *topLevelObjects;
-    RFBConnectionManager *superController;
+    __weak RFBConnectionManager *superController;
 }
 
 - (id)initWithReleaseOnCloseOrConnect;

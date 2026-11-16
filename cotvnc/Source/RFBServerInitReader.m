@@ -40,16 +40,9 @@
     return &fixed.format;
 }
 
-- (void)dealloc
-{
-    [name release];
-    [super dealloc];
-}
-
 - (void)setName:(NSString*)aName
 {
-    [name release];
-    name = [aName retain];
+    name = aName;
 }
 
 - (NSString*)name
@@ -83,13 +76,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [nameReader release];
-    [msg release];
-    [super dealloc];
-}
-
 - (void)readServerInit
 {
     ByteBlockReader *blockReader;
@@ -97,7 +83,6 @@
     blockReader = [[ByteBlockReader alloc] initTarget:self
             action:@selector(setBlock:) size:20];
     [connection setReader:blockReader];
-    [blockReader release];
 }
 
 - (void)setBlock:(NSData*)theBlock

@@ -33,7 +33,7 @@
 
     NSString    *fifo; // path of fifo where helper will read
 
-    SshWaiter   *delegate; // only used while in the process of connecting
+    __weak SshWaiter   *delegate; // only used while in the process of connecting
     in_port_t   localPort;
     int         state;
     

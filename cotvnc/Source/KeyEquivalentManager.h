@@ -20,8 +20,8 @@ extern NSString *kConnectionWindowFrontmostScenario;
     KeyEquivalentScenario *standardKeyEquivalents;
 	NSMutableDictionary *mScenarioDict;		// Scenario -> KeyEquivalentScenario
 	NSString *mCurrentScenarioName;
-	KeyEquivalentScenario *mCurrentScenario;
-	RFBView *mKeyRFBView;
+	__weak KeyEquivalentScenario *mCurrentScenario;
+	__weak RFBView *mKeyRFBView;
 }
 
 // Obtaining An Instance

@@ -36,7 +36,7 @@
     memcpy(value.card8 + (sizeof(value) - bytesToRead), theBytes, canConsume);
     if((bytesToRead -= canConsume) == 0) {
         value.card32 = ntohl(value.card32);
-        [target performSelector:action withObject:[NSNumber numberWithUnsignedInt:value.card32]];
+        [self notifyTargetWithObject:[NSNumber numberWithUnsignedInt:value.card32]];
     }
     return canConsume;
 }

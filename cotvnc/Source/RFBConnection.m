@@ -74,14 +74,14 @@
     if (self = [super init]) {
         ByteBlockReader *versionReader;
 
-        _profile = [[server profile] retain];
+        _profile = [server profile];
 
         currentReader = nil;
 
-        server_ = [(id)server retain];
-        password = [[server password] retain];
+        server_ = server;
+        password = [server password];
         if ([server respondsToSelector:@selector(username)] && [[server username] length] > 0)
-            username = [[server username] retain];
+            username = [server username];
         
         _eventFilter = [[EventFilter alloc] init];
         [_eventFilter setConnection: self];
@@ -89,9 +89,8 @@
         versionReader = [[ByteBlockReader alloc] initTarget:self action:@selector(setServerVersion:)];
         [versionReader setBufferSize: 12];
         [self setReader:versionReader];
-        [versionReader release];
 
-        socketHandler = [file retain];
+        socketHandler = file;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readData:) 	name:NSFileHandleDataAvailableNotification object:socketHandler];
         [socketHandler waitForDataInBackgroundAndNotify];
 
@@ -139,25 +138,9 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [_frameUpdateTimer release];
     [socketHandler closeFile]; // release is not sufficient because the
                                // asynchronous reading seems to keep a retain
-	[socketHandler release];
-    [sshTunnel release];
-    [currentReader release];
-	[_eventFilter release];
-	[handshaker release];
-    [server_ release];
-    [password release];
-    [username release];
-	[rfbProtocol release];
-	[frameBuffer release];
-    [lastMouseMovement release];
-    [_lastUpdateRequestDate release];
-    [lastDesktopSizeTime release];
     free(writeBuffer);
-
-    [super dealloc];
 }
 
 - (int)fileDescriptor
@@ -169,7 +152,6 @@
 {
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection closeConnection called.", self, [self fileDescriptor]);
     [_frameUpdateTimer invalidate];
-    [_frameUpdateTimer release];
     _frameUpdateTimer = nil;
     [self removeMouseMovedTrackingRect];
     [rfbView setDelegate:nil];
@@ -192,16 +174,14 @@
 
 - (void)setPassword:(NSString *)aPassword
 {
-    [password release];
-    password = [aPassword retain];
+    password = aPassword;
     
     [handshaker gotPassword];
 }
 
 - (void)setUsername:(NSString *)aUsername
 {
-    [username release];
-    username = [aUsername retain];
+    username = aUsername;
 }
 
 - (NSString *)username
@@ -216,8 +196,7 @@
 
 - (void)setSshTunnel:(SshTunnel *)tunnel
 {
-    [sshTunnel autorelease];
-    sshTunnel = [tunnel retain];
+    sshTunnel = tunnel;
 }
 
 - (id<IServerData>)server
@@ -243,8 +222,7 @@
 
 - (void)setReader:(ByteReader*)aReader
 {
-    [currentReader release];
-    currentReader = [aReader retain];
+    currentReader = aReader;
     [aReader resetReader];
 }
 
@@ -311,7 +289,6 @@
 {
     id frameBufferClass;
 
-	[frameBuffer release];
     frameBufferClass = [[PrefController sharedController] defaultFrameBufferClass];
     frameBuffer = [[frameBufferClass alloc] initWithSize:aSize andFormat:pixf];
 	[frameBuffer setServerMajorVersion: serverMajorVersion minorVersion: serverMinorVersion];
@@ -328,7 +305,6 @@
 - (void)start:(ServerInitMessage*)info
 {
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Starting RFB session post-handshake...", self, [self fileDescriptor]);
-    [rfbProtocol release];
     rfbProtocol = [[RFBProtocol alloc] initWithConnection:self serverInfo:info];
 
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Display size (%d x %d)", self, [self fileDescriptor], (int)[info size].width, (int)[info size].height);
@@ -345,7 +321,6 @@
         [self writeSetDesktopSize:[[[session window] contentView] frame].size];
     }
 
-    [handshaker release];
     handshaker = nil;
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Handshaker released.", self, [self fileDescriptor]);
 }
@@ -421,65 +396,62 @@
 - (void)readData:(NSNotification*)aNotification
 {
     unsigned char   *buf = malloc(READ_BUF_SIZE);
-	NSAutoreleasePool *pool;
     NSDate          *startTime = [NSDate date];
 
-    [[self retain] autorelease];
-    pool = [[NSAutoreleasePool alloc] init]; // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
+    RFBConnection   *strongSelf = self;
+    (void)strongSelf;
+    @autoreleasepool { // if we process slower than our requests, we don't autorelease until we get a break, which could be never.
+        do {
+            unsigned char   *bytes = buf;
+            unsigned        consumed;
+            ssize_t         length;
 
-    do {
-        unsigned char   *bytes = buf;
-        unsigned        consumed;
-        ssize_t         length;
+            length = read([socketHandler fileDescriptor], buf, READ_BUF_SIZE);
 
-        length = read([socketHandler fileDescriptor], buf, READ_BUF_SIZE);
+            if (length == -1 && errno == EAGAIN)
+                break; // no data
 
-        if (length == -1 && errno == EAGAIN)
-            break; // no data
-
-        if(length <= 0) {	// server closed socket
-            DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Socket read returned %ld (errno %d: %s). Server closed socket during reader: %@", self, [self fileDescriptor], (long)length, errno, strerror(errno), NSStringFromClass([currentReader class]));
-            NSString *reason = NSLocalizedString( @"ServerClosed", nil );
-            [self terminateConnection:reason];
-            [pool release];
-            free(buf);
-            return;
-        }
-
-        if (IsDiagnosticLoggingEnabled(DiagnosticLogLevelVerbose)) {
-            NSMutableString *hexStr = [NSMutableString string];
-            NSUInteger dumpLen = length < 32 ? (NSUInteger)length : 32;
-            for (NSUInteger i = 0; i < dumpLen; i++) {
-                [hexStr appendFormat:@"%02X ", bytes[i]];
-            }
-            if (length > 32) [hexStr appendString:@"..."];
-            DiagnosticLog(DiagnosticLogLevelVerbose, @"Socket read received %ld bytes during reader %@: %@", (long)length, NSStringFromClass([currentReader class]), hexStr);
-        }
-        
-        while(length) {
-            consumed = (unsigned int)[currentReader readBytes:bytes length:(unsigned int)length];
-
-            if (consumed == 0) {
-                DiagnosticLog(DiagnosticLogLevelBasic, @"Reader %@ consumed 0 bytes of %ld bytes remaining. Protocol error terminating connection.", NSStringFromClass([currentReader class]), (long)length);
-                [self terminateConnection: NSLocalizedString(@"ProtocolError", nil)];
-                [pool release];
-                return;
-            }
-
-            length -= consumed;
-            bytes += consumed;
-            if (isReceivingUpdate)
-                bytesReceived += consumed;
-            if (currentReader == nil) {
-                [pool release];
+            if(length <= 0) {	// server closed socket
+                DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] Socket read returned %ld (errno %d: %s). Server closed socket during reader: %@", self, [self fileDescriptor], (long)length, errno, strerror(errno), NSStringFromClass([currentReader class]));
+                NSString *reason = NSLocalizedString( @"ServerClosed", nil );
+                [self terminateConnection:reason];
                 free(buf);
                 return;
             }
-        }
-    } while (-[startTime timeIntervalSinceNow] < 0.05);
 
-    [socketHandler waitForDataInBackgroundAndNotify];
-	[pool release];
+            if (IsDiagnosticLoggingEnabled(DiagnosticLogLevelVerbose)) {
+                NSMutableString *hexStr = [NSMutableString string];
+                NSUInteger dumpLen = length < 32 ? (NSUInteger)length : 32;
+                for (NSUInteger i = 0; i < dumpLen; i++) {
+                    [hexStr appendFormat:@"%02X ", bytes[i]];
+                }
+                if (length > 32) [hexStr appendString:@"..."];
+                DiagnosticLog(DiagnosticLogLevelVerbose, @"Socket read received %ld bytes during reader %@: %@", (long)length, NSStringFromClass([currentReader class]), hexStr);
+            }
+            
+            while(length) {
+                consumed = (unsigned int)[currentReader readBytes:bytes length:(unsigned int)length];
+
+                if (consumed == 0) {
+                    DiagnosticLog(DiagnosticLogLevelBasic, @"Reader %@ consumed 0 bytes of %ld bytes remaining. Protocol error terminating connection.", NSStringFromClass([currentReader class]), (long)length);
+                    [self terminateConnection: NSLocalizedString(@"ProtocolError", nil)];
+                    free(buf);
+                    return;
+                }
+
+                length -= consumed;
+                bytes += consumed;
+                if (isReceivingUpdate)
+                    bytesReceived += consumed;
+                if (currentReader == nil) {
+                    free(buf);
+                    return;
+                }
+            }
+        } while (-[startTime timeIntervalSinceNow] < 0.05);
+
+        [socketHandler waitForDataInBackgroundAndNotify];
+    }
     free(buf);
 }
 
@@ -487,7 +459,7 @@
 - (void)queueUpdateRequest {
     if (_frameBufferUpdateSeconds > 0.0) {
         if (_frameUpdateTimer == nil) {
-            _frameUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval: _frameBufferUpdateSeconds target: self selector: @selector(requestFrameBufferUpdate:) userInfo: nil repeats: NO] retain];
+            _frameUpdateTimer = [NSTimer scheduledTimerWithTimeInterval: _frameBufferUpdateSeconds target: self selector: @selector(requestFrameBufferUpdate:) userInfo: nil repeats: NO];
         }
     } else {
         NSTimeInterval delay;
@@ -511,7 +483,6 @@
 /* Send incremental update request for whole framebuffer */
 - (void)requestFrameBufferUpdate:(id)sender {
 	[_frameUpdateTimer invalidate];
-	[_frameUpdateTimer release];
 	_frameUpdateTimer = nil;
 
     [self requestUpdate:[rfbView bounds] incremental:YES];
@@ -539,7 +510,6 @@
     msg.h = frame.size.height; msg.h = htons(msg.h);
     [self writeBytes:(unsigned char*)&msg length:sz_rfbFramebufferUpdateRequestMsg];
 
-    [_lastUpdateRequestDate release];
     _lastUpdateRequestDate = [[NSDate alloc] init];
 }
 
@@ -579,7 +549,6 @@
     msg->x = htons((CARD16) thePoint.x);
     msg->y = htons((CARD16) (b.size.height - thePoint.y));
 
-    [lastMouseMovement release];
     lastMouseMovement = [[NSDate alloc] init];
 }
 
@@ -968,8 +937,8 @@ static NSData *compressZlib(NSData *uncompressedData) {
                           NSLocalizedString(@"Cancel", nil), nil,
                           [rfbView window], self,
                           @selector(pasteConfirmation:returnCode:contextInfo:),
-                          nil, [str retain], /* This retain is balanced by the
-                                              * release in pasteConfirmation: */
+                          nil, (__bridge_retained void *)str, /* Balanced by __bridge_transfer
+                                                               * in pasteConfirmation: */
                           NSLocalizedString(@"PasteConversionBody", nil));
     } else
 #else
@@ -1000,14 +969,14 @@ static NSData *compressZlib(NSData *uncompressedData) {
 }
 
 - (void)pasteConfirmation:(NSWindow *)sheet returnCode:(int)code
-              contextInfo:(NSString *)str
+              contextInfo:(void *)contextInfo
 {
+    NSString *str = (__bridge_transfer NSString *)contextInfo;
     if (code == NSAlertFirstButtonReturn) {
         NSData  *data = [str dataUsingEncoding:NSISOLatin1StringEncoding
                           allowLossyConversion:YES];
         [self sendStringToServersClipboard:[data bytes] length:(unsigned int)[data length]];
     }
-    [str release]; // balances retain in sendPasteboardToServer:
 }
 
 - (EventFilter *)eventFilter
@@ -1148,8 +1117,7 @@ static NSData *compressZlib(NSData *uncompressedData) {
     // Update tracking
     lastDesktopSizeSent = size;
     lastDesktopSizeSentTimestamp = [NSDate timeIntervalSinceReferenceDate];
-    [lastDesktopSizeTime release];
-    lastDesktopSizeTime = [[NSDate date] retain];
+    lastDesktopSizeTime = [NSDate date];
 }
 
 - (void)viewFrameDidChange:(NSNotification *)aNotification

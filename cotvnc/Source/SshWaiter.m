@@ -39,9 +39,9 @@
     delegate:(id<ConnectionWaiterDelegate>)aDelegate window:(NSWindow *)aWind
 {
     if (self = [super init]) {
-        server = [aServer retain];
+        server = aServer;
         delegate = aDelegate;
-        window = [aWind retain];
+        window = aWind;
         currentSock = -1;
 
         tunnel = [[SshTunnel alloc] initWithServer:server delegate:self];
@@ -56,10 +56,10 @@
               window:(NSWindow *)aWind sshTunnel:(SshTunnel *)aTunnel
 {
     if (self = [super init]) {
-        server = [aServer retain];
+        server = aServer;
         delegate = aDelegate;
-        window = [aWind retain];
-        tunnel = [aTunnel retain];
+        window = aWind;
+        tunnel = aTunnel;
 
         [self tunnelEstablishedAtPort:[tunnel localPort]];
     }
@@ -72,10 +72,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [tunnel close];
-    [tunnel release];
-    [auth release];
-
-    [super dealloc];
 }
 
 - (void)cancel
@@ -90,7 +86,7 @@
      * that the user wants to add the unauthenticated server key to the hosts
      * file. */
 
-    NSAlert     *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert     *alert = [[NSAlert alloc] init];
     NSString    *msg = NSLocalizedString(@"FirstTimeMessage", nil);
 
     if ([delegate respondsToSelector:@selector(connectionPrepareForSheet)])
@@ -124,7 +120,6 @@
 {
     if (auth) {
         [auth stopSheet];
-        [auth release];
         auth = nil;
     }
 
@@ -137,17 +132,17 @@
     NSString *learnMore = NSLocalizedString(@"LearnMore", nil);
     NSString *urlStr = @"https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent";
 
-    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    NSAlert *alert = [[NSAlert alloc] init];
     [alert setMessageText:header];
     [alert setInformativeText:msg];
     [alert addButtonWithTitle:ok];
     [alert addButtonWithTitle:learnMore];
 
-    NSTextView *accessory = [[[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 420, 22)] autorelease];
+    NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 420, 22)];
     [accessory setEditable:NO];
     [accessory setDrawsBackground:NO];
 
-    NSMutableAttributedString *attrStr = [[[NSMutableAttributedString alloc] initWithString:urlStr] autorelease];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:urlStr];
     NSRange range = NSMakeRange(0, [attrStr length]);
     [attrStr addAttribute:NSLinkAttributeName value:urlStr range:range];
     [attrStr addAttribute:NSForegroundColorAttributeName value:[NSColor linkColor] range:range];
@@ -244,10 +239,7 @@
     [delegate connectionSucceeded:conn];
     [tunnel sshTunnelConnected];
 
-    [fh release];
-    [tunnel release];
     tunnel = nil;
-    [(id)conn release];
     currentSock = -1;
 }
 
@@ -279,7 +271,6 @@
 
     if (auth) {
         [auth stopSheet];
-        [auth release];
         auth = nil;
     }
     [self error:header message:err];
@@ -302,7 +293,6 @@
 
 - (void)authCancelled
 {
-    [auth release];
     auth = nil;
     [tunnel close];
     [delegate connectionFailed];
@@ -310,7 +300,6 @@
 
 - (void)authPasswordEntered:(NSString *)password
 {
-    [auth release];
     auth = nil;
     [tunnel usePassword:password];
     if ([delegate respondsToSelector:@selector(connectionSheetOver)])

@@ -44,7 +44,7 @@ static const unsigned int _shift[3] = {
         canConsume++;
         value |= ((int)(*theBytes) & _mask[bytenr]) << _shift[bytenr];
         if((++bytenr >= 3) || ((*theBytes & 0x80) == 0)) {
-            [target performSelector:action withObject:[NSNumber numberWithUnsignedInt:value]];
+            [self notifyTargetWithObject:[NSNumber numberWithUnsignedInt:value]];
             return canConsume;
         }
         aLength--;

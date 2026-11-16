@@ -29,7 +29,7 @@
 
 + (ServerFromRendezvous *)createWithNetService:(NSNetService*)service
 {
-	return [[[ServerFromRendezvous alloc] initWithNetService:service] autorelease];
+	return [[ServerFromRendezvous alloc] initWithNetService:service];
 }
 
 - (id)initWithNetService:(NSNetService*)service
@@ -44,14 +44,12 @@
 
 	if (self)
 	{
-        [_host autorelease];
-        _host = [[service name] retain];
+        _host = [service name];
         _port = -1;
 		
-		service_ = [service retain];
+		service_ = service;
 		
-        [_name release];
-        _name = [[service_ name] retain];
+        _name = [service_ name];
 	}
 	
 	return self;
@@ -60,8 +58,6 @@
 - (void)dealloc
 {
     [service_ setDelegate:nil];
-	[service_ release];
-	[super dealloc];
 }
 
 - (bool)doYouSupport: (SUPPORT_TYPE)type
@@ -92,8 +88,7 @@
 {
     [delegate_ serverDidNotResolve];
     delegate_ = nil;
-    [_host autorelease];
-	_host = [NSLocalizedString(@"AddressResolveFailed", nil) retain];
+	_host = NSLocalizedString(@"AddressResolveFailed", nil);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:ServerChangeMsg
 														object:self];

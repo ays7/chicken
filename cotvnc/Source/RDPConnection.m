@@ -44,7 +44,7 @@ typedef struct rdp_chicken_context rdpChickenContext;
 struct rdp_chicken_pointer
 {
     rdpPointer pointer;
-    NSCursor *cursor;
+    void *cursor;
 };
 typedef struct rdp_chicken_pointer rdpChickenPointer;
 
@@ -102,12 +102,12 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     if ((self = [super init]))
     {
-        server_ = [server retain];
+        server_ = server;
         if ([server password])
             password = [[server password] copy];
         if ([server username])
             username = [[server username] copy];
-        socketHandler = [file retain];
+        socketHandler = file;
         _eventFilter = [[EventFilter alloc] initWithConnection:(id<RemoteConnection>)self];
         frameBuffer = [[RDPFrameBuffer alloc] initWithSize:NSMakeSize(1024, 768)];
         currentDesktopSize = NSMakeSize(1024, 768);
@@ -123,12 +123,12 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     if ((self = [super init]))
     {
-        server_ = [server retain];
+        server_ = server;
         if ([server password])
             password = [[server password] copy];
         if ([server username])
             username = [[server username] copy];
-        sshTunnel = [tunnel retain];
+        sshTunnel = tunnel;
         _eventFilter = [[EventFilter alloc] initWithConnection:(id<RemoteConnection>)self];
         frameBuffer = [[RDPFrameBuffer alloc] initWithSize:NSMakeSize(1024, 768)];
         currentDesktopSize = NSMakeSize(1024, 768);
@@ -144,22 +144,12 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     [self removeMouseMovedTrackingRect];
     [self closeConnection];
-    [server_ release];
-    [socketHandler release];
-    [_eventFilter release];
-    [frameBuffer release];
-    [sshTunnel release];
-    [password release];
-    [username release];
 
     if (stopEvent)
     {
         CloseHandle(stopEvent);
         stopEvent = NULL;
     }
-    [inputLock release];
-    inputLock = nil;
-    [super dealloc];
 }
 
 #pragma mark - FreeRDP Initialization & Thread
@@ -224,7 +214,7 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     {
         NSString *domain = nil;
         NSString *cleanUser = nil;
-        [server_ getParsedDomain:&domain username:&cleanUser];
+        [(ServerBase *)server_ getParsedDomain:&domain username:&cleanUser];
         if (domain && [domain length] > 0)
             freerdp_settings_set_string(settings, FreeRDP_Domain, [domain UTF8String]);
         if (cleanUser && [cleanUser length] > 0)
@@ -591,7 +581,7 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     NSString *cleanUser = nil;
     if (userStr && [userStr length] > 0)
     {
-        [server_ getParsedDomain:&domainStr username:&cleanUser];
+        [(ServerBase *)server_ getParsedDomain:&domainStr username:&cleanUser];
     }
 
     if ((!pwdStr || [pwdStr length] == 0) && [server_ host])
@@ -688,7 +678,7 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         NSPasteboard *pb = [NSPasteboard generalPasteboard];
         NSString *str = [pb stringForType:NSPasteboardTypeString];
         if (str)
-            data = [[str dataUsingEncoding:NSUTF16LittleEndianStringEncoding] retain];
+            data = [str dataUsingEncoding:NSUTF16LittleEndianStringEncoding];
     }
     else
     {
@@ -696,10 +686,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
             NSPasteboard *pb = [NSPasteboard generalPasteboard];
             NSString *str = [pb stringForType:NSPasteboardTypeString];
             if (str)
-                data = [[str dataUsingEncoding:NSUTF16LittleEndianStringEncoding] retain];
+                data = [str dataUsingEncoding:NSUTF16LittleEndianStringEncoding];
         });
     }
-    return [data autorelease];
+    return data;
 }
 
 - (void)handleServerClipboardData:(NSData *)data
@@ -714,7 +704,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
             NSPasteboard *pb = [NSPasteboard generalPasteboard];
             [pb clearContents];
             [pb setString:text forType:NSPasteboardTypeString];
-            [text release];
         });
     }
 }
@@ -762,20 +751,17 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)setUsername:(NSString *)aUsername
 {
-    [username autorelease];
     username = [aUsername copy];
 }
 
 - (void)setPassword:(NSString *)aPassword
 {
-    [password autorelease];
     password = [aPassword copy];
 }
 
 - (void)setSshTunnel:(SshTunnel *)tunnel
 {
-    [sshTunnel autorelease];
-    sshTunnel = [tunnel retain];
+    sshTunnel = tunnel;
 }
 
 - (void)closeConnection
@@ -811,7 +797,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     {
         while ([workerThread isExecuting])
             [NSThread sleepForTimeInterval:0.01];
-        [workerThread release];
         workerThread = nil;
     }
 
@@ -1541,11 +1526,10 @@ static BOOL rdp_Pointer_New(rdpContext *context, rdpPointer *pointer)
 
         NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(pointer->width, pointer->height)];
         [image addRepresentation:bmiRep];
-        [bmiRep release];
 
         NSPoint hotSpot = NSMakePoint(pointer->xPos, pointer->yPos);
-        cPtr->cursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
-        [image release];
+        NSCursor *cursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
+        cPtr->cursor = (__bridge_retained void *)cursor;
     }
     else
     {
@@ -1560,8 +1544,9 @@ static void rdp_Pointer_Free(rdpContext *context, rdpPointer *pointer)
     rdpChickenPointer *cPtr = (rdpChickenPointer *)pointer;
     if (cPtr && cPtr->cursor)
     {
-        [cPtr->cursor release];
-        cPtr->cursor = nil;
+        NSCursor *cursor = (__bridge_transfer NSCursor *)cPtr->cursor;
+        (void)cursor;
+        cPtr->cursor = NULL;
     }
 }
 
@@ -1572,7 +1557,7 @@ static BOOL rdp_Pointer_Set(rdpContext *context, rdpPointer *pointer)
     RDPConnection *conn = (__bridge RDPConnection *)c->connection;
     rdpChickenPointer *cPtr = (rdpChickenPointer *)pointer;
     if (!cPtr || !cPtr->cursor) return TRUE;
-    [conn notifyServerCursor:cPtr->cursor];
+    [conn notifyServerCursor:(__bridge NSCursor *)cPtr->cursor];
     return TRUE;
 }
 

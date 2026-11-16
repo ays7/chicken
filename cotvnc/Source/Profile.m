@@ -125,7 +125,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
     if (self = [super init]) {
         int     i;
 
-        name = [aName retain];
+        name = aName;
 
         if (info) {
             NSArray* enc;
@@ -229,16 +229,14 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 
         obj = [info objectForKey: kProfile_TintBack_Key];
         if (obj)
-            tintBack = [[NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil]
-                                retain];
+            tintBack = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil];
         if (tintBack == nil)
-            tintBack = [[NSColor clearColor] retain];
+            tintBack = [NSColor clearColor];
 
         if ((obj = [info objectForKey:kProfile_TintFront_Key]) != nil)
-            tintFront = [[NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil]
-                                retain];
+            tintFront = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class] fromData:obj error:nil];
         if (tintFront == nil)
-            tintFront = [tintBack retain];
+            tintFront = tintBack;
 	}
     return self;
 }
@@ -249,7 +247,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
     if (self = [super init]) {
         int     i;
 
-        name = [aName retain];
+        name = aName;
         isDefault = NO;
         pixelFormatIndex = profile->pixelFormatIndex;
 
@@ -276,21 +274,17 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
             _tapAndClickTimeout[i] = profile->_tapAndClickTimeout[i];
         }
 
-        tintFront = [profile->tintFront retain];
-        tintBack = [profile->tintBack retain];
+        tintFront = profile->tintFront;
+        tintBack = profile->tintBack;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [name release];
     free(encodings);
     if (enabledEncodings)
         free(enabledEncodings);
-    [tintFront release];
-    [tintBack release];
-    [super dealloc];
 }
 
 #define NUM_INTERACTIVE_PSEUDOS 2
@@ -367,10 +361,8 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
         [e setObject:[NSNumber numberWithBool:encodings[i].enabled]
               forKey:kProfile_EncodingEnabled_Key];
         [enc addObject:e];
-        [e release];
     }
     [dict setObject:enc forKey:kProfile_Encodings_Key];
-    [enc release];
     
     // mouse emulation
     [dict setObject:[NSNumber numberWithInt:_buttonEmulationScenario[0]]
@@ -413,7 +405,7 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
     [dict setObject:[NSKeyedArchiver archivedDataWithRootObject:tintBack requiringSecureCoding:NO error:nil]
              forKey:kProfile_TintBack_Key];
 
-    return [dict autorelease];
+    return dict;
 }
 
 
@@ -770,11 +762,9 @@ ButtonNumberToArrayIndex( NSInteger buttonNumber )
 - (void)setTint:(NSColor *)aTint whenFront:(BOOL)front
 {
     if (front) {
-        [tintFront autorelease];
-        tintFront = [aTint retain];
+        tintFront = aTint;
     } else {
-        [tintBack autorelease];
-        tintBack = [aTint retain];
+        tintBack = aTint;
     }
     [[NSNotificationCenter defaultCenter]
         postNotificationName:ProfileTintChangedMsg object:self];

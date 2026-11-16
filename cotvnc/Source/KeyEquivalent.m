@@ -24,16 +24,10 @@ typedef unsigned int NSUInteger;
 {
 	if ( self = [super init] )
 	{
-		mCharacters = [characters retain];
+		mCharacters = characters;
 		mModifiers = modifiers;
 	}
 	return self;
-}
-
-- (void)dealloc
-{
-	[mCharacters release];
-	[super dealloc];
 }
 
 - (BOOL)isEqual:(id)anObject
@@ -52,7 +46,7 @@ typedef unsigned int NSUInteger;
 }
 
 - (id)copyWithZone:(NSZone *)zone
-{  return [[KeyEquivalent allocWithZone: zone] initWithCharacters: mCharacters modifiers: mModifiers];  }
+{  return [[KeyEquivalent alloc] initWithCharacters: mCharacters modifiers: mModifiers];  }
 
 - (NSString *)description
 {  return [NSString stringWithFormat: @"0x%0.8lx (%@)", (unsigned long)mModifiers, mCharacters];  }
@@ -67,7 +61,7 @@ typedef unsigned int NSUInteger;
 - (NSAttributedString *)userString
 {
 	if ( ! mCharacters || [mCharacters length] == 0 ) 
-		return [[[NSAttributedString alloc] initWithString: @""] autorelease];
+		return [[NSAttributedString alloc] initWithString: @""];
 	NSMutableString *string = [NSMutableString string];
 	NSRange foundRange = [mCharacters rangeOfCharacterFromSet: [NSCharacterSet uppercaseLetterCharacterSet]];
     if (mModifiers & NSEventModifierFlagShift || foundRange.location != NSNotFound)
@@ -79,7 +73,7 @@ typedef unsigned int NSUInteger;
     if (mModifiers & NSEventModifierFlagCommand)
 		[string appendString: [NSString stringWithUTF8String: "⌘"]];
 	
-	NSMutableAttributedString *attrString = [[[NSMutableAttributedString alloc] initWithString: string] autorelease];
+	NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString: string];
 	
 	NSString *chars = [mCharacters uppercaseString];
     NSUInteger i, length = [chars length];
@@ -88,48 +82,48 @@ typedef unsigned int NSUInteger;
 		unichar c = [chars characterAtIndex: i];
 		NSMutableAttributedString *newAttrString = nil;
 		if ( c == kBackspaceCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌫"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌫"]];
 		else if ( c == kTabCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇥"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇥"]];
 		else if ( c == kEnterCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌅"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌅"]];
 		else if ( c == NSHomeFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↖"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↖"]];
 		else if ( c == NSEndFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↘"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↘"]];
 		else if ( c == NSPageUpFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇞"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇞"]];
 		else if ( c == NSPageDownFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇟"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⇟"]];
 		else if ( c == kReturnCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↩"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↩"]];
 		else if ( c == kEscapeCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⎋"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⎋"]];
 		else if ( c == kClearCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌧"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌧"]];
 		else if ( c == NSLeftArrowFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "←"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "←"]];
 		else if ( c == NSRightArrowFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "→"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "→"]];
 		else if ( c == NSUpArrowFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↑"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↑"]];
 		else if ( c == NSDownArrowFunctionKey )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↓"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "↓"]];
 		else if ( c == kSpaceCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "␣"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "␣"]];
 		else if ( c == kDeleteCharCode )
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌦"]] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: [NSString stringWithUTF8String: "⌦"]];
 		else if ( c == NSDeleteFunctionKey )
-			return [[[NSAttributedString alloc] initWithString: @""] autorelease];
+			return [[NSAttributedString alloc] initWithString: @""];
 		else if (c >= NSF1FunctionKey && c <= NSF15FunctionKey)
 		{
 			NSString *fKeyStr = [NSString stringWithFormat:@"F%d", c - NSF1FunctionKey + 1];
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: fKeyStr] autorelease];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: fKeyStr];
 		}
 		if (newAttrString == nil)
 		{
-			NSString *newString = [[[NSString alloc] initWithBytes: &c length: sizeof(c) encoding: [mCharacters fastestEncoding]] autorelease];
-			newAttrString = [[[NSMutableAttributedString alloc] initWithString: newString] autorelease];
+			NSString *newString = [[NSString alloc] initWithBytes: &c length: sizeof(c) encoding: [mCharacters fastestEncoding]];
+			newAttrString = [[NSMutableAttributedString alloc] initWithString: newString];
 		}
 		[attrString appendAttributedString: newAttrString];
 	}

@@ -87,17 +87,6 @@ static void JpegSetSrcManager(j_decompress_ptr cinfo, CARD8* compressedData, int
     for(streamID=0; streamID<NUM_ZSTREAMS; streamID++) {
 		[self uninitializeStream: streamID];
     }
-    [controlReader release];
-    [backPixReader release];
-    [filterIdReader release];
-    [unzippedDataReader release];
-    [zippedDataReader release];
-    [zipLengthReader release];
-    [copyFilter release];
-    [paletteFilter release];
-    [gradientFilter release];
-    [zBuffer release];
-    [super dealloc];
 }
 
 - (void)setFrameBuffer:(id)aBuffer

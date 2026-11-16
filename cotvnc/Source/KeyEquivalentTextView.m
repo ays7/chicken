@@ -16,16 +16,8 @@
 {  return mKeyEquivalent;  }
 
 
-- (void)dealloc
-{
-	[mKeyEquivalent release];
-	[super dealloc];
-}
-
-
 - (void)interpretKeyEvents:(NSArray *)eventArray
 {
-	[mKeyEquivalent autorelease];
 	NSString *characters = @"";
 	unsigned int modifiers = 0;
 	NSEnumerator *eventEnumerator = [eventArray objectEnumerator];
@@ -46,7 +38,6 @@
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
-	[mKeyEquivalent autorelease];
 	NSString *characters = [theEvent charactersIgnoringModifiers];
 	NSEventModifierFlags modifiers = [theEvent modifierFlags];
 	modifiers &= 0xFFFF0000;

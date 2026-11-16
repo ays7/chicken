@@ -33,12 +33,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [posReader release];
-    [super dealloc];
-}
-
 - (void)readEncoding
 {
     [connection setReader:posReader];

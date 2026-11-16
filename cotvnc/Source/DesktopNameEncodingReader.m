@@ -25,12 +25,6 @@
 /* Pseudo-encoding to support renaming the desktop. */
 @implementation DesktopNameEncodingReader
 
-- (void)dealloc
-{
-    [nameReader release];
-    [super dealloc];
-}
-
 - (void)readEncoding
 {
     if (!nameReader)

@@ -25,7 +25,7 @@
 - (unsigned)readBytes:(unsigned char*)theBytes length:(unsigned)aLength
 {
     if(aLength > 0) {
-        [target performSelector:action withObject:[NSNumber numberWithUnsignedChar:*theBytes]];
+        [self notifyTargetWithObject:[NSNumber numberWithUnsignedChar:*theBytes]];
     }
     return 1;
 }

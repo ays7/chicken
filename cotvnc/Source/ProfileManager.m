@@ -118,7 +118,6 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
     Profile *newProfile = [[Profile alloc] initWithProfile:current
                                                    andName:newName];
     [profiles setProfile:newProfile forKey: newName];
-    [newProfile release];
 	
 	[mProfileTable reloadData];
     [self _selectProfileNamed: newName];
@@ -336,7 +335,7 @@ static NSString *kProfileDragEntry = @"net.sourceforge.chicken.ProfileDragEntry"
 	{
 		int rIdx = (int)row;
 		NSData *data = [NSData dataWithBytes:&rIdx length:sizeof(int)];
-		NSPasteboardItem *item = [[[NSPasteboardItem alloc] init] autorelease];
+		NSPasteboardItem *item = [[NSPasteboardItem alloc] init];
 		[item setData:data forType:kProfileDragEntry];
 
 		mEncodingDragRow = rIdx;

@@ -60,8 +60,8 @@ extern NSString *encodingNames[];
     DesktopNameEncodingReader   *desktopNameReader;
     CursorPseudoEncodingReader  *cursorReader;
 
-    RFBConnection   *connection;
-    RFBProtocol     *protocol;
+    __weak RFBConnection   *connection;
+    __weak RFBProtocol     *protocol;
     unsigned        bytesPerPixel;  // bytes per pixel in framebuffer
 
     CARD32 encoding;

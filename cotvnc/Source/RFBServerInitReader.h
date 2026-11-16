@@ -43,8 +43,8 @@
 
 @interface RFBServerInitReader : NSObject
 {
-    RFBConnection       *connection;
-    RFBHandshaker       *handshaker;
+    __weak RFBConnection    *connection;
+    __weak RFBHandshaker    *handshaker;
     RFBStringReader     *nameReader;
     ServerInitMessage*  msg;
 }

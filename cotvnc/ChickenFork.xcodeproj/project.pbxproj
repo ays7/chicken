@@ -1236,6 +1236,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/freerdp/include",
 				);
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1288,6 +1289,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/freerdp/include",
 				);
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1338,6 +1340,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/freerdp/include",
 				);
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1526,6 +1529,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/freerdp/include",
 				);
+				CLANG_ENABLE_OBJC_ARC = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (

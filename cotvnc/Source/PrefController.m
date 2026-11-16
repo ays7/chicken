@@ -46,7 +46,6 @@ static int const kPrefsVersion = 0x00000002;
     profiles = [NSDictionary dictionaryWithObject: [defaultProfile dictionary]
                                            forKey:profileName];
     [defaultDict setObject: profiles forKey: kPrefs_ConnectionProfiles_Key];
-    [defaultProfile release];
 	
 	[defaults registerDefaults: defaultDict];
 }
@@ -61,13 +60,6 @@ static int const kPrefsVersion = 0x00000002;
 		NSParameterAssert( sInstance != nil );
 	}
 	return sInstance;
-}
-
-
-- (void)dealloc
-{
-	[mTopLevelObjects release];
-	[super dealloc];
 }
 
 

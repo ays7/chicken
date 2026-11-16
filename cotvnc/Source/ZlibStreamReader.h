@@ -32,7 +32,7 @@
     unsigned        capacity;   // size of buffer
     z_stream        stream;
     unsigned        bytesLeft;  // number of compressed bytes left to read
-    RFBConnection   *connection;
+    __weak RFBConnection *connection;
 }
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction

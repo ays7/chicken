@@ -34,10 +34,7 @@
 
 - (void)dealloc
 {
-	[zLengthReader release];
-    [rawStream release];
 	inflateEnd(&encodedStream);
-	[super dealloc];
 }
 
 - (void)setSubEncoding:(NSNumber *)aNumber

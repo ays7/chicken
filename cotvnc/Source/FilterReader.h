@@ -26,12 +26,12 @@
 /* Base class for filters which are used by the Tight encoding */
 @interface FilterReader : NSObject
 {
-    TightEncodingReader *target;
-    RFBConnection       *connection;
+    __weak TightEncodingReader  *target;
+    __weak RFBConnection        *connection;
 
-    FrameBuffer*        frameBuffer;
-    unsigned            bytesPerPixel;
-    unsigned            bytesTransferred;
+    __weak FrameBuffer          *frameBuffer;
+    unsigned                    bytesPerPixel;
+    unsigned                    bytesTransferred;
 }
 
 - (id)initWithTarget: (TightEncodingReader *)aTarget

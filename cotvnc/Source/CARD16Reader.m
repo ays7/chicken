@@ -35,7 +35,7 @@
     memcpy(value.card8 + (sizeof(value) - bytesToRead), theBytes, canConsume);
     if((bytesToRead -= canConsume) == 0) {
         value.card16 = ntohs(value.card16);
-        [target performSelector:action withObject:[NSNumber numberWithUnsignedShort:value.card16]];
+        [self notifyTargetWithObject:[NSNumber numberWithUnsignedShort:value.card16]];
     }
     return canConsume;
 }

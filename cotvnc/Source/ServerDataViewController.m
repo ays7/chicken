@@ -47,7 +47,7 @@
 			if ([obj isKindOfClass:[NSWindow class]])
 				[(NSWindow *)obj setReleasedWhenClosed:NO];
 		}
-		topLevelObjects = [tlo retain];
+		topLevelObjects = tlo;
 		
 		selfTerminate = NO;
 		removedSaveCheckbox = NO;
@@ -78,11 +78,16 @@
 	return self;
 }
 
+static NSMutableSet *sSelfTerminatingControllers = nil;
+
 - (id)initWithReleaseOnCloseOrConnect
 {
 	if (self = [self init])
 	{
 		selfTerminate = YES;
+		if (!sSelfTerminatingControllers)
+			sSelfTerminatingControllers = [[NSMutableSet alloc] init];
+		[sSelfTerminatingControllers addObject:self];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(windowClose:)
@@ -95,19 +100,8 @@
 
 - (void)dealloc
 {
-	[(id)mServer release];
-	if( YES == removedSaveCheckbox )
-	{
-		[save release];
-	}
-	
     [connectionWaiter cancel];
-    [connectionWaiter release];
-		
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[topLevelObjects release];
-    
-    [super dealloc];
 }
 
 - (void)setServer:(id<IServerData>)server
@@ -117,10 +111,9 @@
 		[[NSNotificationCenter defaultCenter] removeObserver:self
 														name:ServerChangeMsg
 													  object:(id)mServer];
-		[(id)mServer autorelease];
 	}
 	
-	mServer = [(id)server retain];
+	mServer = server;
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(updateView:)
 												 name:ServerChangeMsg
@@ -347,12 +340,10 @@
     {
         removedSaveCheckbox = NO;
         [[box contentView] addSubview: save];
-        [save release];
     }
     else if ( ! visible && ! removedSaveCheckbox )
     {
         removedSaveCheckbox = YES;
-        [save retain];
         [save removeFromSuperview];
         [(NSView *)[box contentView] display];
     }
@@ -653,9 +644,9 @@
         server = mServer;
 	
     // Asynchronously creates a connection to the server
-    connectionWaiter = [[ConnectionWaiter waiterForServer:server
-                                                 delegate:self
-                                                   window:window] retain];
+    connectionWaiter = [ConnectionWaiter waiterForServer:server
+                                                delegate:self
+                                                  window:window];
     [[ServerDataManager sharedInstance] save]; // just in case we crash
     [[NSUserDefaults standardUserDefaults] synchronize];
     if (connectionWaiter == nil)
@@ -703,7 +694,6 @@
     [connectBtn setKeyEquivalent:@"\r"];
     [connectBtn setKeyEquivalentModifierMask:0];
 
-    [connectionWaiter release];
     connectionWaiter = nil;
 }
 
@@ -734,7 +724,9 @@
 		if( YES == selfTerminate )
 		{
 			selfTerminate = NO;
-			[self autorelease];
+			id keepAlive = self;
+			(void)keepAlive;
+			[sSelfTerminatingControllers removeObject:self];
 		}
 	}
 }

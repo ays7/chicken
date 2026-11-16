@@ -58,7 +58,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)_resetMultiTapTimer: (NSTimer *)timer
 {
 	[_multiTapTimer invalidate];
-	[_multiTapTimer release];
 	_multiTapTimer = nil;
 	if ( timer )
 	{
@@ -72,7 +71,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)_resetTapModifierAndClick: (NSTimer *)timer
 {
 	[_tapAndClickTimer invalidate];
-	[_tapAndClickTimer release];
 	_tapAndClickTimer = nil;
 	[_view setCursorTo: nil];
 	if ( timer ) {
@@ -124,14 +122,9 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 - (void)dealloc
 {
     [_multiTapTimer invalidate];
-    [_multiTapTimer release];
     [_tapAndClickTimer invalidate];
-    [_tapAndClickTimer release];
 
-	[_pendingEvents release];
-	[_pressedKeys release];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-	[super dealloc];
 }
 
 
@@ -776,7 +769,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 			
 			if ( kQueuedMouse1DownEvent == [event2 type] )
 			{
-				[[event2 retain] autorelease];
 				[self discardAllPendingQueueEntries];
 				[self _queueEmulatedMouseDownForButton: button basedOnEvent: event2];
 				_clickWhileHoldingModifierStillDown[buttonIndex] = YES;
@@ -798,7 +790,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 		else if ( YES == _clickWhileHoldingModifierStillDown[buttonIndex] 
 				  && kQueuedMouse1DownEvent == [event type] )
 		{
-			[[event retain] autorelease];
 			[self discardAllPendingQueueEntries];
 			[self _queueEmulatedMouseDownForButton: button basedOnEvent: event];
 			return 0;
@@ -852,7 +843,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 	
 	if ( validEvents && (validEvents % 2 == 0) )
 	{
-		_multiTapTimer = [[NSTimer scheduledTimerWithTimeInterval: [_profile multiTapDelayForButton:button] target: self selector: @selector(_resetMultiTapTimer:) userInfo: nil repeats: NO] retain];
+		_multiTapTimer = [NSTimer scheduledTimerWithTimeInterval: [_profile multiTapDelayForButton:button] target: self selector: @selector(_resetMultiTapTimer:) userInfo: nil repeats: NO];
 //		NSLog(@"starting multi-tap timer");
 	}
 	
@@ -889,7 +880,7 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 
 			if ( ! _tapAndClickTimer )
 			{
-                _tapAndClickTimer = [[NSTimer scheduledTimerWithTimeInterval: [_profile tapAndClickTimeoutForButton:button] target: self selector: @selector(_resetTapModifierAndClick:) userInfo: nil repeats: NO] retain];
+                _tapAndClickTimer = [NSTimer scheduledTimerWithTimeInterval: [_profile tapAndClickTimeoutForButton:button] target: self selector: @selector(_resetTapModifierAndClick:) userInfo: nil repeats: NO];
 				[_view setCursorTo: (button == 2) ? @"rfbCursor2" : @"rfbCursor3"];
 			}
 		}
@@ -905,7 +896,6 @@ ButtonNumberToRFBButtomMask( unsigned int buttonNumber )
 				return 0;
 			}
 			
-			[[event retain] autorelease];
 			[self discardAllPendingQueueEntries];
 			[self _queueEmulatedMouseDownForButton: button basedOnEvent: event];
 			[self _resetTapModifierAndClick: nil];

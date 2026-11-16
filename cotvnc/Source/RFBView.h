@@ -24,8 +24,8 @@
 
 @interface RFBView : NSView
 {
-    id<RemoteConnection> _delegate;
-    EventFilter     *_eventFilter;
+    __weak id<RemoteConnection> _delegate;
+    __weak EventFilter     *_eventFilter;
     NSCursor        *_modifierCursor;
     NSCursor        *_serverCursor; // cursor sent by server, if any
     NSTrackingArea  *_cursorTrackingArea;

@@ -83,10 +83,10 @@ enum {
     if ((self = [super init]) == nil)
         return nil;
 
-    connection = [aConnection retain];
-    server_ = [[connection server] retain];
-    host = [[server_ host] retain];
-    sshTunnel = [[connection sshTunnel] retain];
+    connection = aConnection;
+    server_ = [connection server];
+    host = [server_ host];
+    sshTunnel = [connection sshTunnel];
 
 
 
@@ -101,11 +101,11 @@ enum {
             }
         }
     }
-    _nibTopLevelObjects = [tlo retain];
+    _nibTopLevelObjects = tlo;
     _companionWindows = [[NSMutableArray alloc] init];
     [rfbView registerForDraggedTypes:[NSArray arrayWithObjects:NSPasteboardTypeString, NSPasteboardTypeFileURL, nil]];
 
-    password = [[connection password] retain];
+    password = [connection password];
 
     _reconnectWaiter = nil;
     _reconnectSheetTimer = nil;
@@ -138,37 +138,22 @@ enum {
 - (void)dealloc
 {
     [self hideCompanionWindows];
-    [_companionWindows release];
     _companionWindows = nil;
     [rfbView setDelegate:nil];
     [rfbView setFrameBuffer:nil];
     [connection closeConnection];
-    [connection release];
     connection = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[titleString release];
-	[(id)server_ release];
-	[host release];
-    [username release];
-    [password release];
     [sshTunnel close];
-    [sshTunnel release];
-	[realDisplayName release];
     [_reconnectSheetTimer invalidate];
-    [_reconnectSheetTimer release];
     [_reconnectWaiter cancel];
-    [_reconnectWaiter release];
 
 	[newTitlePanel orderOut:self];
 	[optionPanel orderOut:self];
 	
 	[window setDelegate:nil];
 	[window close];
-
-    [_connectionStartDate release];
-    [_nibTopLevelObjects release];
-    [super dealloc];
 }
 
 - (BOOL)viewOnly
@@ -223,11 +208,10 @@ enum {
                                                    sshTunnel:sshTunnel];
     } else {
         [sshTunnel close];
-        [sshTunnel release];
         sshTunnel = nil;
-        _reconnectWaiter = [[ConnectionWaiter waiterForServer:server_
-                                                     delegate:self
-                                                       window:window] retain];
+        _reconnectWaiter = [ConnectionWaiter waiterForServer:server_
+                                                    delegate:self
+                                                      window:window];
     }
     NSString *templ = NSLocalizedString(@"NoReconnection", nil);
     NSString *err = [NSString stringWithFormat:templ, host];
@@ -237,9 +221,9 @@ enum {
 
 - (void)startTimerForReconnectSheet
 {
-    _reconnectSheetTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5
+    _reconnectSheetTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
             target:self selector:@selector(createReconnectSheet:)
-            userInfo:nil repeats:NO] retain];
+            userInfo:nil repeats:NO];
 }
 
 static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
@@ -274,7 +258,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [rfbView setDelegate:nil];
     [rfbView setFrameBuffer:nil];
     [connection closeConnection];
-    [connection release];
     connection = nil;
 }
 
@@ -282,7 +265,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 {
     [self hideCompanionWindows];
     [sshTunnel close];
-    [sshTunnel release];
     sshTunnel = nil;
     [[RFBConnectionManager sharedManager] removeConnection:self];
 }
@@ -311,7 +293,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
             [alert addButtonWithTitle:NSLocalizedString(@"Okay", nil)];
             [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
                 [self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
-                [alert release];
             }];
         }
     } else {
@@ -341,12 +322,10 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 				if ([window isVisible]) {
 					[alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
 						[self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
-						[alert release];
 					}];
 				} else {
 					NSModalResponse returnCode = [alert runModal];
 					[self connectionTerminatedSheetDidEnd:window returnCode:(int)returnCode contextInfo:nil];
-					[alert release];
 				}
 			}
         } else {
@@ -402,7 +381,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [usernameLabel setDrawsBackground:NO];
         [[usernameLabel cell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSize]]];
         [[passwordSheet contentView] addSubview:usernameLabel];
-        [usernameLabel release];
 
         usernameField = [[NSTextField alloc] initWithFrame:NSMakeRect(185, 117, 205, 22)];
         [usernameField setTag:9999];
@@ -410,7 +388,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         [[usernameField cell] setScrollable:YES];
         [[usernameField cell] setUsesSingleLineMode:YES];
         [[passwordSheet contentView] addSubview:usernameField];
-        [usernameField release];
     }
 
     [usernameField setHidden:NO];
@@ -442,8 +419,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 /* User entered new password */
 - (IBAction)reconnectWithNewPassword:(id)sender
 {
-    [password release];
-    password = [[passwordField stringValue] retain];
+    password = [passwordField stringValue];
     if ([rememberNewPassword state])
         [server_ setPassword: password];
     if ([server_ respondsToSelector:@selector(setRememberPassword:)]) {
@@ -455,7 +431,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     NSTextField *usernameField = [[passwordSheet contentView] viewWithTag:9999];
     if (usernameField && ![usernameField isHidden]) {
         NSString *enteredUsername = [usernameField stringValue];
-        [username release];
         username = [enteredUsername copy];
         if (connection) {
             [connection setUsername:username];
@@ -498,7 +473,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
     // Force ourselves to use a new SSH tunnel
     [sshTunnel close];
-    [sshTunnel release];
     sshTunnel = nil;
 
     [self beginReconnect];
@@ -763,11 +737,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
             [compView setFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
             [compView setMonitorOrigin:bufOrigin];
             [compWin setContentView:compView];
-            [compView release];
 
             [compWin orderFrontRegardless];
             [_companionWindows addObject:compWin];
-            [compWin release];
 
             NSLog(@"[Session] Companion window created: targetFrame=%@, actualFrame=%@, screen=%@, bufOrigin=%@",
                   NSStringFromRect(sf), NSStringFromRect([compWin frame]),
@@ -1026,8 +998,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)setNewTitle:(id)sender
 {
-    [titleString release];
-    titleString = [[newTitleField stringValue] retain];
+    titleString = [newTitleField stringValue];
 
     [[RFBConnectionManager sharedManager] setDisplayNameTranslation:titleString forName:realDisplayName forHost:host];
     [window setTitle:titleString];
@@ -1036,10 +1007,8 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (void)setDisplayName:(NSString*)aName
 {
-	[realDisplayName release];
-    realDisplayName = [aName retain];
-    [titleString release];
-    titleString = [[[RFBConnectionManager sharedManager] translateDisplayName:realDisplayName forHost:host] retain];
+    realDisplayName = aName;
+    titleString = [[RFBConnectionManager sharedManager] translateDisplayName:realDisplayName forHost:host];
     [window setTitle:titleString];
 }
 
@@ -1239,7 +1208,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     // The window will autorelease itself when closed.  If we allow terminateConnection
     // to close it again, it will get double-autoreleased.  Bummer.
     [window setDelegate:nil];
-    window = NULL;
+    window = nil;
     [self endSession];
 }
 
@@ -1446,14 +1415,12 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     }];
     [_reconnectIndicator startAnimation:self];
 
-    [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
 }
 
 - (void)reconnectCancelled:(id)sender
 {
     [_reconnectWaiter cancel];
-    [_reconnectWaiter release];
     _reconnectWaiter = nil;
     [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [self endSession];
@@ -1469,7 +1436,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 {
     [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [_reconnectSheetTimer invalidate];
-    [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
 }
 
@@ -1482,7 +1448,6 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 - (void)connectionFailed
 {
     [sshTunnel close];
-    [sshTunnel release];
     sshTunnel = nil;
     [self endSession];
 }
@@ -1492,25 +1457,21 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 {
     [_reconnectPanel.sheetParent endSheet:_reconnectPanel];
     [_reconnectSheetTimer invalidate];
-    [_reconnectSheetTimer release];
     _reconnectSheetTimer = nil;
 
 
 
-    connection = [newConnection retain];
+    connection = newConnection;
     [connection setSession:self];
     [connection setRfbView:rfbView];
     if (username)
         [connection setUsername:username];
     [connection setPassword:password];
     [connection installMouseMovedTrackingRect];
-    [sshTunnel release];
-    sshTunnel = [[connection sshTunnel] retain];
+    sshTunnel = [connection sshTunnel];
 
-    [_connectionStartDate release];
     _connectionStartDate = [[NSDate alloc] init];
 
-    [_reconnectWaiter release];
     _reconnectWaiter = nil;
 }
 

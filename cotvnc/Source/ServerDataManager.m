@@ -106,7 +106,6 @@ static ServerDataManager* gInstance = nil;
                                              andDictionary:dict];
             [mServers setObject:server forKey:name];
             [standServers setObject:server forKey:name];
-            [server release];
         }
     }
 
@@ -118,20 +117,6 @@ static ServerDataManager* gInstance = nil;
 	NSParameterAssert( gInstance == self );
 
 	[self save];
-		
-    [mServers release];
-	[mGroups release];
-	[mRendezvousNameToServer release];
-	if( nil != mServiceBrowser_VNC )
-	{
-		[mServiceBrowser_VNC release];
-	}
-	if( nil != mServiceBrowser_RFB )
-	{
-		[mServiceBrowser_RFB release];
-	}
-	
-    [super dealloc];
 	gInstance = nil;
 }
 
@@ -152,7 +137,6 @@ static ServerDataManager* gInstance = nil;
             if ( data )
             {
                 gInstance = [NSKeyedUnarchiver unarchivedObjectOfClass:[ServerDataManager class] fromData:data error:nil];
-                [gInstance retain];
             }
         }
 		
@@ -162,7 +146,6 @@ static ServerDataManager* gInstance = nil;
 			NSData *storeData = [NSData dataWithContentsOfFile:storePath];
 			if (storeData) {
 				gInstance = [NSKeyedUnarchiver unarchivedObjectOfClass:[ServerDataManager class] fromData:storeData error:nil];
-				[gInstance retain];
 			}
 			if( nil == gInstance )
 			{
@@ -188,17 +171,13 @@ static ServerDataManager* gInstance = nil;
 /* This is called when loading servers saved by version 2.1.x and earlier. */
 - (id)initWithCoder:(NSCoder *)coder
 {
-	[self autorelease];
 	NSParameterAssert( [coder allowsKeyedCoding] );
-	[self retain];
 			
 	if( self = [self init] )
 	{
-		[mServers release];
-		mServers = [[coder decodeObjectForKey:RFB_SERVER_LIST] retain];
+		mServers = [coder decodeObjectForKey:RFB_SERVER_LIST];
 		
-		[mGroups release];
-		mGroups = [[coder decodeObjectForKey:RFB_GROUP_LIST] retain];
+		mGroups = [coder decodeObjectForKey:RFB_GROUP_LIST];
 		
 		if( nil == mGroups )
 		{
@@ -328,7 +307,7 @@ static ServerDataManager* gInstance = nil;
 	}
 	
 	[names sortUsingSelector:@selector(caseInsensitiveCompare:)];
-    return [names autorelease];
+    return names;
 }
 
 - (unsigned) groupCount
@@ -428,10 +407,8 @@ static ServerDataManager* gInstance = nil;
 
 - (void)validateNameChange:(NSMutableString *)name forServer:(id<IServerData>)server;
 {
-	[(NSObject *)server retain];
-
 	BOOL insertServer = NO;
-	NSMutableArray *groupsWithServer = [[[NSMutableArray alloc] init] autorelease];
+	NSMutableArray *groupsWithServer = [[NSMutableArray alloc] init];
 
 	// Remove original server/key pair
 	//
@@ -480,8 +457,6 @@ static ServerDataManager* gInstance = nil;
 		}
 		[mServers setObject:server forKey:name];
 	}
-		
-	[(NSObject *)server release];
 }
 
 - (void)useRendezvous:(bool)use
@@ -508,8 +483,6 @@ static ServerDataManager* gInstance = nil;
 		{
             [self saveRendezvousServers];
 
-			[mServiceBrowser_VNC release];
-			[mServiceBrowser_RFB release];
 			mServiceBrowser_VNC = nil;
 			mServiceBrowser_RFB = nil;
 			
@@ -593,15 +566,11 @@ static ServerDataManager* gInstance = nil;
 	
 	if (serverToRemove != nil)
 	{
-		[serverToRemove retain];
-		
 		[mRendezvousNameToServer removeObjectForKey:[aNetService name]];
 		[[mGroups objectForKey:@"Rendezvous"] removeObjectForKey:[serverToRemove name]];
 		[mServers removeObjectForKey:[serverToRemove name]];
 
 		[self saveRendezvousServer:serverToRemove];
-		
-		[serverToRemove release];
 	}
 	else
 	{

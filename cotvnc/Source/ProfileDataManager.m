@@ -29,7 +29,6 @@
 			NSMutableDictionary* d = [mProfileDicts objectForKey:key];
             Profile *p = [[Profile alloc] initWithDictionary:d name:key];
             [mProfiles setObject:p forKey:key];
-            [p release];
 		}
 
         if (![mProfiles objectForKey:@"Windows"]) {
@@ -41,18 +40,10 @@
             [mProfiles setObject:winProfile forKey:@"Windows"];
             [mProfileDicts setObject:[winProfile dictionary] forKey:@"Windows"];
             [[PrefController sharedController] setProfileDict:mProfileDicts];
-            [winProfile release];
         }
 	}
 	
 	return self;
-}
-
-- (void)dealloc
-{
-	[mProfiles release];
-    [mProfileDicts release];
-	[super dealloc];
 }
 
 + (ProfileDataManager*) sharedInstance

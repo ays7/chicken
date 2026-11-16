@@ -27,13 +27,13 @@
 
 @interface ListenerController : NSWindowController
 {
-    IBOutlet NSTextField *portText;
-    IBOutlet NSButton *localOnlyBtn;
-    IBOutlet NSPopUpButton *profilePopup;
+    IBOutlet __weak NSTextField *portText;
+    IBOutlet __weak NSButton *localOnlyBtn;
+    IBOutlet __weak NSPopUpButton *profilePopup;
 
 
-	IBOutlet NSButton *actionBtn;
-	IBOutlet NSTextField *statusText;
+	IBOutlet __weak NSButton *actionBtn;
+	IBOutlet __weak NSTextField *statusText;
 
     NSFileHandle* listeningSockets[2]; // listening socket: IPv4 and IPv6
     Profile* listeningProfile;

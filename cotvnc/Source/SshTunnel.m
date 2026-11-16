@@ -87,6 +87,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 
 @implementation SshTunnel
 
+static NSMutableSet *sRunningTunnels = nil;
+
 - (id)initWithServer:(id<IServerData>)aServer delegate:(SshWaiter *)aDelegate
 {
     if (self = [super init]) {
@@ -99,7 +101,7 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         NSMutableDictionary     *env;
 
         delegate = aDelegate;
-        sshHost = [[aServer sshHost] retain];
+        sshHost = [aServer sshHost];
 
         task = [[NSTask alloc] init];
         sshIn = [[NSPipe alloc] init];
@@ -114,12 +116,10 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         [self findPortForTunnel];
         if (localPort == 0) {
             NSLog(@"Couldn't find port for tunnelling");
-            [self dealloc];
             return nil;
         }
 
         if (![self setupFifos]) {
-            [self dealloc];
             return nil;
         }
 
@@ -157,7 +157,13 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         [notifs addObserver:self selector:@selector(sshTerminated:)
                 name:NSTaskDidTerminateNotification object:task];
         [task launch];
-        [self retain]; // this retain lasts as long as ssh is running
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            sRunningTunnels = [[NSMutableSet alloc] init];
+        });
+        @synchronized(sRunningTunnels) {
+            [sRunningTunnels addObject:self]; // lasts as long as ssh is running
+        }
 
         [notifs addObserver:self selector:@selector(readFromSsh:)
                        name:NSFileHandleReadCompletionNotification
@@ -171,8 +177,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
         [notifs addObserver:self selector:@selector(applicationTerminating:)
                        name:NSApplicationWillTerminateNotification
                      object:NSApp];
-
-        [args release];
     }
 
     return self;
@@ -183,15 +187,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [self cleanupFifos];
-    [sshHost release];
-    [task release];
     [[sshOut fileHandleForWriting] closeFile];
     [[sshErr fileHandleForWriting] closeFile];
-    [sshIn release];
-    [sshOut release];
-    [sshErr release];
-
-    [super dealloc];
 }
 
 - (void)close
@@ -269,8 +266,8 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
 // Create FIFOs which we'll use to communicate the password to our helper script
 - (BOOL)setupFifos
 {
-    fifo = [[NSString stringWithFormat:@"/tmp/chicken-%d-%d", getpid(),
-                                       localPort] retain];
+    fifo = [NSString stringWithFormat:@"/tmp/chicken-%d-%d", getpid(),
+                                      localPort];
     if (mkfifo([fifo fileSystemRepresentation], S_IRUSR | S_IWUSR) != 0) {
         NSLog(@"Couldn't make fifo: %d", errno);
         return NO;
@@ -284,7 +281,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     if (fifo) {
         if (unlink([fifo fileSystemRepresentation]) != 0)
             NSLog(@"Error unlinking %@: %d", fifo, errno);
-        [fifo release];
         fifo = nil;
     }
 }
@@ -323,7 +319,6 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     } else
         NSLog(@"Read notification from unknown object");
 
-    [str release];
     [[notif object] readInBackgroundAndNotify];
 }
 
@@ -474,7 +469,11 @@ static BOOL portUsed[TUNNEL_PORT_END - TUNNEL_PORT_START];
     /* The termination notification can come before the end of the error stream,
      * so we clean up here, but we wait to see if we get an explanation on
      * sshErr before we tell the delegate that we've failed. */
-    [self release];
+    id keepAlive = self;
+    (void)keepAlive;
+    @synchronized(sRunningTunnels) {
+        [sRunningTunnels removeObject:self];
+    }
 }
 
 - (void)acceptKey:(BOOL)accept

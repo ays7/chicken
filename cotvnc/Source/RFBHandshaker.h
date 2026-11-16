@@ -26,7 +26,7 @@
 
 @interface RFBHandshaker : NSObject
 {
-    RFBConnection   *connection;
+    __weak RFBConnection   *connection;
     id	connFailedReader;
     id	challengeReader;
     id	authResultReader;

@@ -167,9 +167,6 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-	[mScenarioDict release];
-	[mCurrentScenarioName release];
-	[super dealloc];
 }
 
 
@@ -206,13 +203,10 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
     
     minimal = [[KeyEquivalentScenario alloc] init];
 
-    [mScenarioDict release];
     mScenarioDict = [[NSMutableDictionary alloc] init];
-    [mScenarioDict setObject:[[standardKeyEquivalents copy] autorelease]
+    [mScenarioDict setObject:[standardKeyEquivalents copy]
                       forKey:kNonConnectionWindowFrontmostScenario];
     [mScenarioDict setObject:minimal forKey:kConnectionWindowFrontmostScenario];
-
-    [minimal release];
 }
 
 
@@ -260,7 +254,6 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 	{
 		KeyEquivalentScenario *scenario = [[KeyEquivalentScenario alloc] initWithPropertyList: [propertyList objectForKey: scenarioName]];
 		[mScenarioDict setObject: scenario forKey: scenarioName];
-		[scenario release];
 	}
 }
 
@@ -276,8 +269,7 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 	mCurrentScenario = [mScenarioDict objectForKey: scenario];
 	[self makeAllScenariosInactive];
 	[mCurrentScenario makeActive: YES];
-	[mCurrentScenarioName release];
-	mCurrentScenarioName = [scenario retain];
+	mCurrentScenarioName = scenario;
 }
 
 
@@ -301,7 +293,6 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
 {
 	KeyEquivalent *keyEquivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 	NSMenuItem *menuItem = [mCurrentScenario menuItemForKeyEquivalent: keyEquivalent];
-	[keyEquivalent release];
 	if ( menuItem )
 	{
 		[NSApp sendAction: [menuItem action] to: [menuItem target] from: menuItem];
@@ -328,7 +319,6 @@ NSString *kConnectionWindowFrontmostScenario = @"ConnectionWindowFrontmostScenar
     entry = [[KeyEquivalentEntry alloc] initWithTitle: title];
     while (scen = [e nextObject])
         [scen removeEntry: entry];
-    [entry release];
     [[KeyEquivalentPrefsController sharedController] menusChanged];
 }
 

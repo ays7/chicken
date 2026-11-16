@@ -91,13 +91,6 @@ static NSData *decompressZlib(NSData *compressedData) {
     return self;
 }
 
-- (void)dealloc
-{
-    [dummyReader release];
-    [textReader release];
-    [super dealloc];
-}
-
 - (void)readMessage
 {
     [connection setReader:dummyReader];
@@ -107,7 +100,6 @@ static NSData *decompressZlib(NSData *compressedData) {
 {
     CARD32Reader *lengthReader = [[CARD32Reader alloc] initTarget:self action:@selector(setLength:)];
     [connection setReader:lengthReader];
-    [lengthReader release];
 }
 
 - (void)setLength:(NSNumber *)theLength
@@ -128,7 +120,6 @@ static NSData *decompressZlib(NSData *compressedData) {
                                                                      action:@selector(setExtendedClipboardContent:)
                                                                        size:slen];
         [connection setReader:contentReader];
-        [contentReader release];
     } else {
         // Standard CutText
         if (lengthVal == 0) {
@@ -139,7 +130,6 @@ static NSData *decompressZlib(NSData *compressedData) {
                                                                      action:@selector(setStandardClipboardContent:)
                                                                        size:lengthVal];
         [connection setReader:contentReader];
-        [contentReader release];
     }
 }
 
@@ -147,7 +137,6 @@ static NSData *decompressZlib(NSData *compressedData) {
 {
     NSString *str = [[NSString alloc] initWithData:content encoding:NSISOLatin1StringEncoding];
     [self setText:str];
-    [str release];
 }
 
 - (void)setExtendedClipboardContent:(NSData *)content
@@ -219,7 +208,6 @@ static NSData *decompressZlib(NSData *compressedData) {
                     NSString *str = [[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding];
                     if (str) {
                         [self setText:str];
-                        [str release];
                         return;
                     }
                 }

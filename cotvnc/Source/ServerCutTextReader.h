@@ -25,8 +25,8 @@
 
 @interface ServerCutTextReader : NSObject
 {
-    RFBConnection   *connection;
-    RFBProtocol     *protocol;
+    __weak RFBConnection   *connection;
+    __weak RFBProtocol     *protocol;
     id              dummyReader;
     id              textReader;
 }

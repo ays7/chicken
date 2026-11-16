@@ -25,10 +25,10 @@
 
 @interface RFBStringReader : NSObject
 {
-    id              target;
-    SEL             action;
-	RFBConnection	*connection;
-    NSStringEncoding    encoding;
+    __weak id               target;
+    SEL                     action;
+    __weak RFBConnection    *connection;
+    NSStringEncoding        encoding;
 }
 
 - (id)initTarget:(id)aTarget action:(SEL)anAction

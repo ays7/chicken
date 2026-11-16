@@ -44,8 +44,6 @@
 				KeyEquivalent *keyEquivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 				KeyEquivalentEntry *keyEquivalentEntry = [[KeyEquivalentEntry alloc] initWithTitle: title];
 				[mEquivalentToEntryMapping setObject: keyEquivalentEntry forKey: keyEquivalent];
-				[keyEquivalent release];
-				[keyEquivalentEntry release];
 			}
 		}
 	}
@@ -72,8 +70,6 @@
 				KeyEquivalent *equivalent = [[KeyEquivalent alloc] initWithCharacters: characters modifiers: modifiers];
 				KeyEquivalentEntry *entry = [[KeyEquivalentEntry alloc] initWithMenuItem: menuItem];
 				[mEquivalentToEntryMapping setObject: entry forKey: equivalent];
-				[equivalent release];
-				[entry release];
 			}
 		}
 		if ( [menuItem hasSubmenu] )
@@ -91,13 +87,6 @@
         [self loadKeyEquivalentsFromMenu: mainMenu];
     }
     return self;
-}
-
-
-- (void)dealloc
-{
-	[mEquivalentToEntryMapping release];
-	[super dealloc];
 }
 
 

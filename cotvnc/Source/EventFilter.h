@@ -103,9 +103,9 @@ typedef enum {
 
 
 @interface EventFilter : NSObject {
-	id<RemoteConnection> _connection;
+	__weak id<RemoteConnection> _connection;
 	Profile *_profile;
-	RFBView *_view;
+	__weak RFBView *_view;
 	
 	NSMutableArray *_pendingEvents;
 	NSEventModifierFlags _queuedModifiers;
