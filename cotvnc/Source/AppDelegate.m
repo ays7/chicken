@@ -114,6 +114,11 @@
 	return YES;
 }
 
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app
+{
+	return YES;
+}
+
 - (IBAction)changeRendezvousUse:(id)sender
 {
 	PrefController *prefs = [PrefController sharedController];
