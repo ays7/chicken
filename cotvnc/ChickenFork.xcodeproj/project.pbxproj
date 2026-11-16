@@ -120,6 +120,11 @@
 		7FB3EA8E0804ECE0003757C9 /* CotVNC.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 7FF0C9A305CDBDCE008E39DD /* CotVNC.scriptSuite */; };
 		7FB6A8D1068AB5E3005E5E49 /* ServerFromRendezvous.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC6DF6D05C31B0D0028A970 /* ServerFromRendezvous.h */; };
 		7FB6A8D2068AB5E7005E5E49 /* ServerFromRendezvous.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6DF6E05C31B0D0028A970 /* ServerFromRendezvous.m */; };
+		D15C00010000000000000001 /* ServerFromDiscovery.h in Headers */ = {isa = PBXBuildFile; fileRef = D15C00020000000000000001 /* ServerFromDiscovery.h */; };
+		D15C00010000000000000002 /* ServerFromDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = D15C00020000000000000002 /* ServerFromDiscovery.m */; };
+		D15C00010000000000000003 /* SubnetScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C00020000000000000003 /* SubnetScanner.swift */; };
+		D15C00010000000000000004 /* HostNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C00020000000000000004 /* HostNameResolver.swift */; };
+		D15C00010000000000000005 /* NetworkDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C00020000000000000005 /* NetworkDiscoveryManager.swift */; };
 		7FBB0A6A05F5BC9700F716C4 /* ServerDataViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FBB0A6605F5BC9700F716C4 /* ServerDataViewController.h */; };
 		7FBB0A6B05F5BC9700F716C4 /* ServerDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FBB0A6705F5BC9700F716C4 /* ServerDataViewController.m */; };
 		7FD35C1A06CC583A00648090 /* ProfileDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD35C1806CC583A00648090 /* ProfileDataManager.h */; };
@@ -275,6 +280,11 @@
 		7FC6DF6805C31AF50028A970 /* ServerFromPrefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerFromPrefs.m; sourceTree = "<group>"; };
 		7FC6DF6D05C31B0D0028A970 /* ServerFromRendezvous.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerFromRendezvous.h; sourceTree = "<group>"; };
 		7FC6DF6E05C31B0D0028A970 /* ServerFromRendezvous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerFromRendezvous.m; sourceTree = "<group>"; };
+		D15C00020000000000000001 /* ServerFromDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerFromDiscovery.h; sourceTree = "<group>"; };
+		D15C00020000000000000002 /* ServerFromDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerFromDiscovery.m; sourceTree = "<group>"; };
+		D15C00020000000000000003 /* SubnetScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery/SubnetScanner.swift; sourceTree = "<group>"; };
+		D15C00020000000000000004 /* HostNameResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery/HostNameResolver.swift; sourceTree = "<group>"; };
+		D15C00020000000000000005 /* NetworkDiscoveryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery/NetworkDiscoveryManager.swift; sourceTree = "<group>"; };
 		7FD35C1806CC583A00648090 /* ProfileDataManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ProfileDataManager.h; sourceTree = "<group>"; };
 		7FD35C1906CC583A00648090 /* ProfileDataManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ProfileDataManager.m; sourceTree = "<group>"; };
 		7FD66F5805E9E2B500229E5C /* Chicken Fork.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chicken Fork.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -674,6 +684,11 @@
 				7FC6DF6805C31AF50028A970 /* ServerFromPrefs.m */,
 				7FC6DF6D05C31B0D0028A970 /* ServerFromRendezvous.h */,
 				7FC6DF6E05C31B0D0028A970 /* ServerFromRendezvous.m */,
+				D15C00020000000000000001 /* ServerFromDiscovery.h */,
+				D15C00020000000000000002 /* ServerFromDiscovery.m */,
+				D15C00020000000000000003 /* SubnetScanner.swift */,
+				D15C00020000000000000004 /* HostNameResolver.swift */,
+				D15C00020000000000000005 /* NetworkDiscoveryManager.swift */,
 				7F7DE7D4080F39DF006BF1DF /* ServerStandAlone.h */,
 				7F7DE7D5080F39DF006BF1DF /* ServerStandAlone.m */,
 			);
@@ -928,6 +943,7 @@
 				E21FE454062B79AB0059585C /* KeyEquivalentManager.h in Headers */,
 				7FFA8FEB062BA6330008D381 /* ServerBase.h in Headers */,
 				7FB6A8D1068AB5E3005E5E49 /* ServerFromRendezvous.h in Headers */,
+				D15C00010000000000000001 /* ServerFromDiscovery.h in Headers */,
 				7FD35C1A06CC583A00648090 /* ProfileDataManager.h in Headers */,
 				E2F3A2CB06D44755005EB917 /* PrefController.h in Headers */,
 				E2F3A2E506D4483D005EB917 /* AppDelegate.h in Headers */,
@@ -1139,6 +1155,10 @@
 				E21FE453062B79AB0059585C /* KeyEquivalentPrefsController.m in Sources */,
 				7FFA8FEC062BA6330008D381 /* ServerBase.m in Sources */,
 				7FB6A8D2068AB5E7005E5E49 /* ServerFromRendezvous.m in Sources */,
+				D15C00010000000000000002 /* ServerFromDiscovery.m in Sources */,
+				D15C00010000000000000003 /* SubnetScanner.swift in Sources */,
+				D15C00010000000000000004 /* HostNameResolver.swift in Sources */,
+				D15C00010000000000000005 /* NetworkDiscoveryManager.swift in Sources */,
 				7FD35C1B06CC583A00648090 /* ProfileDataManager.m in Sources */,
 				E2F3A2CC06D44755005EB917 /* PrefController.m in Sources */,
 				E2F3A2E606D4483D005EB917 /* AppDelegate.m in Sources */,

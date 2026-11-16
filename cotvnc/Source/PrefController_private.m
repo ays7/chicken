@@ -13,7 +13,6 @@
 
 // --- Preference Keys --- //
 
-NSString *kPrefs_UseRendezvous_Key = @"Rendezvous Setting";
 NSString *kPrefs_ConnectionProfiles_Key = @"ConnectProfiles";
 NSString *kPrefs_FrontFrameBufferUpdateSeconds_Key = @"FrontFrameBufferUpdateSeconds";
 NSString *kPrefs_OtherFrameBufferUpdateSeconds_Key = @"OtherFrameBufferUpdateSeconds";

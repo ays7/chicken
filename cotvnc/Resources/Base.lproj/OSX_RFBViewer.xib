@@ -32,11 +32,6 @@
                                     <action selector="showPreferences:" target="1367" id="1373"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Use Bonjour" id="1361">
-                                <connections>
-                                    <action selector="changeRendezvousUse:" target="1367" id="1370"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="610">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -410,7 +405,6 @@ source code available at https://github.com/ays7/chicken</string>
             <connections>
 
                 <outlet property="mInfoVersionNumber" destination="228" id="1376"/>
-                <outlet property="mRendezvousMenuItem" destination="1361" id="1375"/>
             </connections>
         </customObject>
         <view id="910">

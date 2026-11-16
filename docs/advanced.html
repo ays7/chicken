@@ -127,8 +127,13 @@
     <p>When connecting to modern macOS machines running <strong>Screen Sharing</strong> or <strong>Remote Management</strong>, Apple defaults to a proprietary Diffie-Hellman Key Exchange (DHX) and AES encryption scheme requiring a Mac system account.</p>
     <p>Chicken Fork integrates native support for Apple Remote Desktop authentication (powered by CryptoSwift). Enter your macOS system username and password into Chicken Fork's connection dialog to authenticate directly &mdash; no need to downgrade to legacy VNC password authentication in macOS Sharing settings!</p>
 
-    <h2>Bonjour Network Discovery</h2>
-    <p>Chicken Fork listens for local network servers advertising themselves via Bonjour (mDNS / Zeroconf) using the <code>_rfb._tcp</code> and <code>_vnc._tcp</code> service types. Discovered Mac and Linux machines automatically populate in your Connection Window sidebar under the Rendezvous/Bonjour section.</p>
+    <h2>Unified Network Discovery (Bonjour &amp; Windows RDP)</h2>
+    <p>Clicking the <strong>Scan</strong> button in the Connection Dialog sidebar discovers both Macs/Linux machines advertising via Bonjour (<code>_rfb._tcp</code> and <code>_vnc._tcp</code>) and Windows machines running Remote Desktop (port <code>3389</code>) on your local private IPv4 LAN subnets. No network discovery runs automatically on launch.</p>
+    <p>For Windows hosts, Chicken Fork performs a polite, rate-limited active sweep on TCP port <code>3389</code> (X.224 Connection Request/Confirm, zero authentication) and resolves Windows hostnames concurrently via mDNS, reverse DNS, NetBIOS (UDP <code>137</code>), LLMNR (UDP <code>5355</code>), MSRPC Endpoint Mapper (TCP <code>135</code>), and the RDP TLS certificate Common Name.</p>
+    <div class="callout callout-note">
+      <div class="callout-title">Security Note: No Active VNC Scanning</div>
+      <p>Chicken Fork <strong>explicitly refuses to actively scan or discover VNC servers</strong> (ports <code>5900</code>&ndash;<code>5909</code>) during LAN sweeps. Standard VNC is unencrypted and insecure by default and should not be exposed or encouraged via active network discovery. Only encrypted RDP endpoints (<code>3389</code>) are actively probed; Macs continue to appear passively via Bonjour.</p>
+    </div>
 
     <h2>Listening (Reverse) Connections</h2>
     <p>When a remote server is located behind a strict NAT router or firewall where inbound ports cannot be opened, you can use Chicken Fork in <strong>Listening Mode</strong>:</p>

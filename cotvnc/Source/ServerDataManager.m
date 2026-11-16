@@ -23,6 +23,8 @@
 #import "PrefController.h"
 #import "ServerFromPrefs.h"
 #import "ServerFromRendezvous.h"
+#import "ServerFromDiscovery.h"
+#import "ChickenFork-Swift.h"
 #import <AppKit/AppKit.h>
 
 #define RFB_PREFS_LOCATION  @"Library/Preferences/cotvnc.prefs"
@@ -30,6 +32,9 @@
 #define RFB_GROUP_LIST		@"GroupList"
 #define RFB_SAVED_SERVERS   @"SavedServers"
 #define RFB_SAVED_SERVERS2  @"SavedServers2"
+
+@interface ServerDataManager () <NetworkDiscoveryDelegate>
+@end
 
 @implementation ServerDataManager
 
@@ -48,10 +53,12 @@ static ServerDataManager* gInstance = nil;
 		mServers                 = [[NSMutableDictionary alloc] init];
 		mGroups                  = [[NSMutableDictionary alloc] init];
 		mRendezvousNameToServer  = [[NSMutableDictionary alloc] init];
+		mDiscoveredKeyToServer   = [[NSMutableDictionary alloc] init];
 		
 		[mGroups setObject:mServers forKey:@"All"];
 		[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Standard"];
 		[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Rendezvous"];
+		[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Discovered"];
 		
 		assert( nil != [mGroups objectForKey:@"All"] );
 		assert( mServers == [mGroups objectForKey:@"All"] );
@@ -161,8 +168,6 @@ static ServerDataManager* gInstance = nil;
 		{
 			[gInstance createServerByName:NSLocalizedString(@"RFBDefaultServerName", nil)];
 		}
-        
-        [gInstance useRendezvous:[[PrefController sharedController] usesRendezvous]];
 	}
 	
 	return gInstance;
@@ -184,6 +189,9 @@ static ServerDataManager* gInstance = nil;
 			mGroups                  = [[NSMutableDictionary alloc] init];
 			[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Standard"];
 			[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Rendezvous"];
+		}
+		if (nil == [mGroups objectForKey:@"Discovered"]) {
+			[mGroups setObject:[NSMutableDictionary dictionaryWithCapacity:1] forKey:@"Discovered"];
 		}
 
 		[mGroups setObject:mServers forKey:@"All"];
@@ -256,10 +264,24 @@ static ServerDataManager* gInstance = nil;
                                          forKey:RFB_SAVED_RENDEZVOUS_SERVERS];
 }
 
+- (void)saveDiscoveredServers
+{
+    NSDictionary            *stored;
+    NSMutableDictionary     *dict;
+
+    stored = [[NSUserDefaults standardUserDefaults]
+                                objectForKey:RFB_SAVED_DISCOVERED_SERVERS];
+    dict = [NSMutableDictionary dictionaryWithDictionary:stored];
+    [self putServers:[[mGroups objectForKey:@"Discovered"] allValues] inDictionary:dict];
+    [[NSUserDefaults standardUserDefaults] setObject:dict
+                                         forKey:RFB_SAVED_DISCOVERED_SERVERS];
+}
+
 - (void)save
 {
     [self saveStandardServers];
     [self saveRendezvousServers];
+    [self saveDiscoveredServers];
 }
 
 - (void)saveRendezvousServer: (PersistentServer *)server
@@ -582,6 +604,121 @@ static ServerDataManager* gInstance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg
 															object:self];
     }	
+}
+
+#pragma mark - Active LAN RDP Network Scan
+
+- (NSDictionary *)localSubnetsInfo
+{
+    return [[NetworkDiscoveryManager shared] localSubnetsInfo];
+}
+
+- (void)stopBonjourBrowsers
+{
+    [mServiceBrowser_VNC stop];
+    mServiceBrowser_VNC = nil;
+    [mServiceBrowser_RFB stop];
+    mServiceBrowser_RFB = nil;
+    mUsingRendezvous = NO;
+}
+
+- (void)startNetworkScan
+{
+    [self useRendezvous:NO];
+    [self saveDiscoveredServers];
+
+    NSMutableDictionary *discoveredDict = [mGroups objectForKey:@"Discovered"];
+    for (NSString *key in [discoveredDict allKeys]) {
+        [mServers removeObjectForKey:key];
+    }
+    [discoveredDict removeAllObjects];
+    [mDiscoveredKeyToServer removeAllObjects];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
+    [self useRendezvous:YES];
+    [[NetworkDiscoveryManager shared] startScanWithDelegate:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg object:self];
+}
+
+- (void)stopNetworkScan
+{
+    [self stopBonjourBrowsers];
+    [[NetworkDiscoveryManager shared] stopScan];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg object:self];
+}
+
+- (BOOL)isNetworkScanning
+{
+    return [[NetworkDiscoveryManager shared] isScanning];
+}
+
+- (NSString *)discoveredDisplayNameFor:(NSString *)hostName
+{
+    NSMutableString *candidate = [NSMutableString stringWithFormat:@"%@ (RDP)", hostName];
+    [self makeNameUnique:candidate];
+    return candidate;
+}
+
+- (void)discoveryDidFindHost:(NSString *)address port:(uint16_t)port initialName:(NSString *)initialName
+{
+    NSString *key = [NSString stringWithFormat:@"%@:%u", address, port];
+    if ([mDiscoveredKeyToServer objectForKey:key] != nil) {
+        return;
+    }
+
+    NSString *baseName = (initialName.length > 0) ? initialName : address;
+    NSString *displayName = [self discoveredDisplayNameFor:baseName];
+    ServerFromDiscovery *server = [ServerFromDiscovery createWithAddress:address
+                                                                    port:(int)port
+                                                             displayName:displayName];
+    [mDiscoveredKeyToServer setObject:server forKey:key];
+    [mServers setObject:server forKey:[server name]];
+    [[mGroups objectForKey:@"Discovered"] setObject:server forKey:[server name]];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
+}
+
+- (void)discoveryDidUpdateHost:(NSString *)address port:(uint16_t)port resolvedName:(NSString *)resolvedName
+{
+    NSString *key = [NSString stringWithFormat:@"%@:%u", address, port];
+    ServerFromDiscovery *server = [mDiscoveredKeyToServer objectForKey:key];
+    if (!server) {
+        return;
+    }
+
+    NSString *oldName = [server name];
+    NSString *desiredPrefix = [NSString stringWithFormat:@"%@ (RDP)", resolvedName];
+    if ([oldName isEqualToString:desiredPrefix]) {
+        return;
+    }
+
+    NSMutableDictionary *discoveredDict = [mGroups objectForKey:@"Discovered"];
+    [mServers removeObjectForKey:oldName];
+    [discoveredDict removeObjectForKey:oldName];
+
+    NSString *newName = [self discoveredDisplayNameFor:resolvedName];
+    [server updateDisplayName:newName];
+    [mServers setObject:server forKey:newName];
+    [discoveredDict setObject:server forKey:newName];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
+}
+
+- (void)discoveryDidUpdateProgress:(NSInteger)scanned total:(NSInteger)total
+{
+    NSDictionary *info = @{ @"scanned": @(scanned), @"total": @(total) };
+    [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg
+                                                        object:self
+                                                      userInfo:info];
+}
+
+- (void)discoveryDidCompleteWithError:(NSString *)error
+{
+    [self stopBonjourBrowsers];
+    NSDictionary *info = error ? @{ @"error": error } : nil;
+    [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg
+                                                        object:self
+                                                      userInfo:info];
 }
 
 @end

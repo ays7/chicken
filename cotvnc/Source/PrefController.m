@@ -34,7 +34,6 @@ static int const kPrefsVersion = 0x00000002;
 	
 	defaults = [NSUserDefaults standardUserDefaults];
 	defaultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithBool: YES],			kPrefs_UseRendezvous_Key,
 		[NSNumber numberWithFloat: 0],			kPrefs_FrontFrameBufferUpdateSeconds_Key,
 		[NSNumber numberWithFloat: 0.9],		kPrefs_OtherFrameBufferUpdateSeconds_Key, 
 		[NSNumber numberWithBool: YES],			kPrefs_AutoReconnect_Key, 
@@ -142,10 +141,6 @@ static int const kPrefsVersion = 0x00000002;
 }
 
 
-- (BOOL)usesRendezvous
-{  return [[NSUserDefaults standardUserDefaults] boolForKey: kPrefs_UseRendezvous_Key];  }
-
-
 - (NSDictionary *)hostInfo
 {  return [[NSUserDefaults standardUserDefaults] objectForKey: kPrefs_HostInfo_Key];  }
 
@@ -205,19 +200,6 @@ static int const kPrefsVersion = 0x00000002;
 	updateDelay = (float)[sender maxValue] - updateDelay;
 	[[NSUserDefaults standardUserDefaults] setFloat: updateDelay forKey: kPrefs_OtherFrameBufferUpdateSeconds_Key];
 	[[RFBConnectionManager sharedManager] setOtherWindowUpdateInterval: updateDelay];
-}
-
-
-
-
-
-- (IBAction)toggleUseRendezvous: (id)sender
-{
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	BOOL use = ! [[defaults objectForKey: kPrefs_UseRendezvous_Key] boolValue];
-	[defaults setBool: use forKey: kPrefs_UseRendezvous_Key];
-
-	[[RFBConnectionManager sharedManager] useRendezvous: use];
 }
 
 @end

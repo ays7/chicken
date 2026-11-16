@@ -14,11 +14,9 @@
     NSMutableArray      *dockConnections;
 }
 
-@property (nonatomic, weak) IBOutlet NSMenuItem *mRendezvousMenuItem;
 @property (nonatomic, weak) IBOutlet NSTextField *mInfoVersionNumber;
 
 - (IBAction)showPreferences: (id)sender;
-- (IBAction)changeRendezvousUse:(id)sender;
 - (IBAction)showNewConnectionDialog:(id)sender;
 - (IBAction)showConnectionDialog: (id)sender;
 - (IBAction)showListenerDialog: (id)sender;

@@ -29,7 +29,6 @@
 - (void)getLocalPixelFormat:(rfbPixelFormat*)pf;
 - (id)defaultFrameBufferClass;
 - (float)maxPossibleFrameBufferUpdateSeconds;
-- (BOOL)usesRendezvous;
 - (NSDictionary *)hostInfo;
 - (void)setHostInfo: (NSDictionary *)hostInfo;
 - (NSDictionary *)profileDict;
@@ -44,7 +43,5 @@
 	// Action Methods
 - (IBAction)frontInverseCPUSliderChanged: (NSSlider *)sender;
 - (IBAction)otherInverseCPUSliderChanged: (NSSlider *)sender;
-
-- (IBAction)toggleUseRendezvous: (id)sender;
 
 @end

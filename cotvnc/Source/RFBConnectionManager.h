@@ -35,6 +35,8 @@
 	IBOutlet __weak NSSplitView *splitView;
     IBOutlet __weak NSButton *serverDeleteBtn;
     IBOutlet __weak NSButton *serverAddBtn;
+    IBOutlet __weak NSButton *serverScanBtn;
+    IBOutlet __weak NSProgressIndicator *serverScanSpinner;
     NSMutableArray*	sessions;
 	ServerDataViewController* mServerCtrler;
 	BOOL mDisplayGroups;
@@ -74,6 +76,7 @@
 
 - (IBAction)addServer:(id)sender;
 - (IBAction)deleteSelectedServer:(id)sender;
+- (IBAction)scanNetwork:(id)sender;
 
 
 
@@ -81,8 +84,6 @@
 
 - (id<IServerData>)selectedServer;
 - (BOOL)selectServerByName:(NSString *)aName;
-
-- (void)useRendezvous:(BOOL)useRendezvous;
 
 - (void)displayGroups:(bool)display;
 

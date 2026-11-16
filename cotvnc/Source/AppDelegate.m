@@ -22,7 +22,6 @@
 
 @implementation AppDelegate
 
-@synthesize mRendezvousMenuItem;
 @synthesize mInfoVersionNumber;
 
 - (id) init
@@ -87,7 +86,6 @@
 	if ( ! [cm runFromCommandLine] && ! [cm launchedByURL] )
 		[cm runNormally];
 	
-    [mRendezvousMenuItem setState: [[PrefController sharedController] usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
 	[mInfoVersionNumber setStringValue: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"]];
     if ([NSWindow respondsToSelector:@selector(setAllowsAutomaticWindowTabbing:)]) {
         [NSWindow setAllowsAutomaticWindowTabbing:NO];
@@ -118,15 +116,6 @@
 {
 	return YES;
 }
-
-- (IBAction)changeRendezvousUse:(id)sender
-{
-	PrefController *prefs = [PrefController sharedController];
-	[prefs toggleUseRendezvous: sender];
-	
-    [mRendezvousMenuItem setState: [prefs usesRendezvous] ? NSControlStateValueOn : NSControlStateValueOff];
-}
-
 
 - (IBAction)showConnectionDialog: (id)sender
 {  [[RFBConnectionManager sharedManager] showConnectionDialog: nil];  }

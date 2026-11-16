@@ -45,6 +45,7 @@
 	NSMutableDictionary* mServers;
 	NSMutableDictionary* mGroups;
 	NSMutableDictionary* mRendezvousNameToServer;
+	NSMutableDictionary* mDiscoveredKeyToServer;
 	
 	bool mPostMessages;
 	
@@ -56,6 +57,7 @@
 }
 
 #define ServerListChangeMsg @"ServerListChangeMsg"
+#define NetworkScanStateChangeMsg @"NetworkScanStateChangeMsg"
 
 /**
  *  Accessor method to fetch the singleton instance for this class. Use this method
@@ -167,5 +169,11 @@
 - (void)netServiceBrowser:(NSNetServiceBrowser *)browser
 		 didRemoveService:(NSNetService *)aNetService
 			   moreComing:(BOOL)moreComing;
+
+// Active LAN RDP network scan
+- (NSDictionary *)localSubnetsInfo;
+- (void)startNetworkScan;
+- (void)stopNetworkScan;
+- (BOOL)isNetworkScanning;
 
 @end

@@ -132,7 +132,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	// we now own serverGroupBox and are responsible for releasing it
 	
 	[splitView adjustSubviews];
-	[self useRendezvous: [[PrefController sharedController] usesRendezvous]];
 
     connectionWaiter = nil;
     lockedSelection = -1;
@@ -335,6 +334,10 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 	[nc addObserver: self 
 		   selector: @selector(serverListDidChange:) 
 			   name: ServerListChangeMsg 
+			 object: nil];
+	[nc addObserver: self
+		   selector: @selector(networkScanStateDidChange:)
+			   name: NetworkScanStateChangeMsg
 			 object: nil];
 	
 	// So we can tell when the serverList finished changing
@@ -685,13 +688,6 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     [[NSNotificationCenter defaultCenter] postNotificationName:cotvncTouchBarNeedsUpdateNotification object:nil];
 }
 
-- (void)useRendezvous:(BOOL)useRendezvous
-{
-	[[ServerDataManager sharedInstance] useRendezvous: useRendezvous];
-	
-	NSParameterAssert( [[ServerDataManager sharedInstance] getUseRendezvous] == useRendezvous );
-}
-
 - (void)displayGroups:(bool)display
 {
 	if( display != mDisplayGroups )
@@ -768,6 +764,64 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     if ([self selectServerByName:serverName]) {
         [self selectedHostChanged];
         [mServerCtrler connectToServer:nil];
+    }
+}
+
+- (IBAction)scanNetwork:(id)sender
+{
+    ServerDataManager *sdm = [ServerDataManager sharedInstance];
+    if ([sdm isNetworkScanning]) {
+        [sdm stopNetworkScan];
+        return;
+    }
+
+    NSDictionary *info = [sdm localSubnetsInfo];
+    NSArray *cidrs = info[@"cidrs"];
+    NSInteger totalHosts = [info[@"totalHosts"] integerValue];
+    BOOL needsConfirm = [info[@"needsConfirmation"] boolValue];
+
+    if (cidrs.count == 0 || totalHosts <= 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"No Local Subnets Found"];
+        [alert setInformativeText:@"No scannable private IPv4 LAN subnets were detected."];
+        [alert beginSheetModalForWindow:[self window] completionHandler:nil];
+        return;
+    }
+
+    if (needsConfirm) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Scan Large Subnet?"];
+        [alert setInformativeText:[NSString stringWithFormat:@"Scanning %@ covers %ld addresses for RDP servers (port 3389). Continue?",
+                                   [cidrs componentsJoinedByString:@", "], (long)totalHosts]];
+        [alert addButtonWithTitle:@"Scan"];
+        [alert addButtonWithTitle:@"Cancel"];
+        [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+            if (returnCode == NSAlertFirstButtonReturn) {
+                [sdm startNetworkScan];
+            }
+        }];
+        return;
+    }
+
+    [sdm startNetworkScan];
+}
+
+- (void)networkScanStateDidChange:(NSNotification *)notification
+{
+    BOOL scanning = [[ServerDataManager sharedInstance] isNetworkScanning];
+    [serverScanBtn setTitle:scanning ? @"Stop" : @"Scan"];
+    if (scanning) {
+        [serverScanSpinner startAnimation:nil];
+    } else {
+        [serverScanSpinner stopAnimation:nil];
+    }
+
+    NSString *errorMsg = notification.userInfo[@"error"];
+    if (errorMsg.length > 0) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Network Scan"];
+        [alert setInformativeText:errorMsg];
+        [alert beginSheetModalForWindow:[self window] completionHandler:nil];
     }
 }
 
