@@ -870,35 +870,28 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (NSPoint)rdpCoordinatesForViewPoint:(NSPoint)viewPoint inView:(NSView *)view
 {
-    if ([self isInMultiMonitorFullScreen] && [view isKindOfClass:[RFBView class]]) {
-        RFBView *rfb = (RFBView *)view;
-        CGFloat scale = [rfb displayScale];
+    if (![self isInMultiMonitorFullScreen]) {
+        CGFloat scale = [view isKindOfClass:[RFBView class]] ? [(RFBView *)view displayScale] : 1.0;
         if (scale <= 0.0) scale = 1.0;
-        CGFloat w = [rfb bounds].size.width;
-        CGFloat h = [rfb bounds].size.height;
+        CGFloat w = view ? [view bounds].size.width : 1024.0;
+        CGFloat h = view ? [view bounds].size.height : 768.0;
         NSPoint pt = viewPoint;
         if (pt.x < 0) pt.x = 0;
         if (pt.y < 0) pt.y = 0;
         if (pt.x >= w) pt.x = w > 0 ? w - 0.5 : 0;
         if (pt.y >= h) pt.y = h > 0 ? h - 0.5 : 0;
-        NSPoint monOrigin = [rfb monitorOrigin];
-        CGFloat rdpX = pt.x * scale + monOrigin.x;
-        CGFloat rdpY = (h - pt.y) * scale - 1.0 + monOrigin.y;
-        if (rdpY < monOrigin.y) rdpY = monOrigin.y;
+        CGFloat rdpX = pt.x * scale;
+        CGFloat rdpY = (h - pt.y) * scale - 1.0;
+        if (rdpY < 0) rdpY = 0;
         return NSMakePoint(rdpX, rdpY);
     }
 
-    NSPoint screenPoint = viewPoint;
+    NSPoint screenPoint;
     if (view && [view window]) {
         NSPoint winPoint = [view convertPoint:viewPoint toView:nil];
         screenPoint = [[view window] convertPointToScreen:winPoint];
     } else {
         screenPoint = [NSEvent mouseLocation];
-    }
-
-    if (![self isInMultiMonitorFullScreen]) {
-        CGFloat h = view ? [view bounds].size.height : 768.0;
-        return NSMakePoint(viewPoint.x, h - 1.0 - viewPoint.y);
     }
 
     NSArray *descriptors = [self multiMonitorDescriptors];
@@ -907,33 +900,59 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         return NSMakePoint(viewPoint.x, h - 1.0 - viewPoint.y);
     }
 
-    NSScreen *primaryScreen = [window screen] ? [window screen] : [[NSScreen screens] objectAtIndex:0];
-    NSRect primaryFrame = [primaryScreen frame];
-    CGFloat primaryTop = primaryFrame.origin.y + primaryFrame.size.height;
-
-    NSSize boundingBox = [self multiMonitorBoundingBoxSize];
-
-    int minRdpX = 0;
-    int minRdpY = 0;
+    NSDictionary *targetDesc = nil;
     for (NSDictionary *desc in descriptors) {
-        int left = [[desc objectForKey:@"rdpLeft"] intValue];
-        int top = [[desc objectForKey:@"rdpTop"] intValue];
-        minRdpX = MIN(minRdpX, left);
-        minRdpY = MIN(minRdpY, top);
+        NSScreen *s = [desc objectForKey:@"screen"];
+        if (s && NSPointInRect(screenPoint, [s frame])) {
+            targetDesc = desc;
+            break;
+        }
     }
 
-    CGFloat minGlobalX = primaryFrame.origin.x + minRdpX;
-    CGFloat maxGlobalY = primaryTop - minRdpY;
+    if (!targetDesc) {
+        CGFloat bestDistSq = CGFLOAT_MAX;
+        for (NSDictionary *desc in descriptors) {
+            NSScreen *s = [desc objectForKey:@"screen"];
+            if (!s) continue;
+            NSRect sf = [s frame];
+            CGFloat cx = MIN(MAX(screenPoint.x, NSMinX(sf)), NSMaxX(sf));
+            CGFloat cy = MIN(MAX(screenPoint.y, NSMinY(sf)), NSMaxY(sf));
+            CGFloat dx = screenPoint.x - cx;
+            CGFloat dy = screenPoint.y - cy;
+            CGFloat distSq = dx * dx + dy * dy;
+            if (distSq < bestDistSq) {
+                bestDistSq = distSq;
+                targetDesc = desc;
+            }
+        }
+    }
 
-    CGFloat rdpX = screenPoint.x - minGlobalX;
-    CGFloat rdpY = maxGlobalY - screenPoint.y;
+    if (!targetDesc) {
+        targetDesc = [descriptors objectAtIndex:0];
+    }
 
-    if (rdpX < 0) rdpX = 0;
-    if (rdpX >= boundingBox.width) rdpX = boundingBox.width - 1;
-    if (rdpY < 0) rdpY = 0;
-    if (rdpY >= boundingBox.height) rdpY = boundingBox.height - 1;
+    NSScreen *targetScreen = [targetDesc objectForKey:@"screen"];
+    NSRect sf = [targetScreen frame];
+    NSPoint bufOrigin = [[targetDesc objectForKey:@"bufferOrigin"] pointValue];
+    CGFloat scale = [[targetDesc objectForKey:@"scaleFactor"] doubleValue];
+    if (scale <= 0.0) scale = 1.0;
+    int monW = [[targetDesc objectForKey:@"width"] intValue];
+    int monH = [[targetDesc objectForKey:@"height"] intValue];
 
-    return NSMakePoint(rdpX, rdpY);
+    CGFloat localPtX = MIN(MAX(screenPoint.x - sf.origin.x, 0.0), sf.size.width);
+    CGFloat localPtY = MIN(MAX(screenPoint.y - sf.origin.y, 0.0), sf.size.height);
+
+    CGFloat localPxX = localPtX * scale;
+    CGFloat localPxY = (sf.size.height - localPtY) * scale - 1.0;
+
+    CGFloat maxPxX = monW > 0 ? (CGFloat)(monW - 1) : 0.0;
+    CGFloat maxPxY = monH > 0 ? (CGFloat)(monH - 1) : 0.0;
+    if (localPxX < 0.0) localPxX = 0.0;
+    if (localPxX > maxPxX) localPxX = maxPxX;
+    if (localPxY < 0.0) localPxY = 0.0;
+    if (localPxY > maxPxY) localPxY = maxPxY;
+
+    return NSMakePoint(bufOrigin.x + localPxX, bufOrigin.y + localPxY);
 }
 
 - (NSSize)preferredInitialDesktopSize
