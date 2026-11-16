@@ -1,0 +1,60 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "moe", "master" ]
+  pull_request:
+    branches: [ "moe", "master" ]
+  schedule:
+    - cron: '30 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.os }}
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: c-cpp
+            os: macos-latest
+            build-mode: manual
+          - language: actions
+            os: ubuntu-latest
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: default
+
+      - name: Build Chicken Fork (for CodeQL C/C++/ObjC extraction)
+        if: matrix.language == 'c-cpp'
+        run: |
+          xcodebuild \
+            -project cotvnc/ChickenFork.xcodeproj \
+            -scheme "Chicken Fork" \
+            -configuration Deployment \
+            -derivedDataPath ./DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            clean build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
