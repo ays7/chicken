@@ -634,9 +634,19 @@ static ServerDataManager* gInstance = nil;
     [discoveredDict removeAllObjects];
     [mDiscoveredKeyToServer removeAllObjects];
 
+    NSMutableArray *excludedHosts = [NSMutableArray array];
+    for (id<IServerData> saved in [[mGroups objectForKey:@"Standard"] allValues]) {
+        if ([saved remoteProtocol] == RemoteProtocolRDP && ([saved port] == 3389 || [saved port] <= 0)) {
+            NSString *h = [saved host];
+            if (h.length > 0) {
+                [excludedHosts addObject:h];
+            }
+        }
+    }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:ServerListChangeMsg object:self];
     [self useRendezvous:YES];
-    [[NetworkDiscoveryManager shared] startScanWithDelegate:self];
+    [[NetworkDiscoveryManager shared] startScanWithDelegate:self excludedHosts:excludedHosts];
     [[NSNotificationCenter defaultCenter] postNotificationName:NetworkScanStateChangeMsg object:self];
 }
 

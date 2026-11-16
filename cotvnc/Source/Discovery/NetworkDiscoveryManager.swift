@@ -55,7 +55,7 @@ public final class NetworkDiscoveryManager: NSObject {
         ]
     }
 
-    public func startScan(delegate: NetworkDiscoveryDelegate) {
+    public func startScan(delegate: NetworkDiscoveryDelegate, excludedHosts: [String] = []) {
         stopScan()
 
         let (subnets, localIPs) = SubnetScanner.detectLocalNetwork()
@@ -77,10 +77,21 @@ public final class NetworkDiscoveryManager: NSObject {
         }
 
         setScanning(true)
-        let total = targets.count
 
         scanTask = Task.detached(priority: .utility) { [weak self, weak delegate] in
             guard let self else { return }
+
+            let excludedIPs = Self.resolveIPv4Addresses(for: excludedHosts)
+            let filteredTargets = excludedIPs.isEmpty ? targets : targets.filter { !excludedIPs.contains($0) }
+            guard !filteredTargets.isEmpty else {
+                self.setScanning(false)
+                await MainActor.run {
+                    delegate?.discoveryDidCompleteWithError(nil)
+                }
+                return
+            }
+            let total = filteredTargets.count
+
             let minGapNs = UInt64(1_000_000_000.0 / self.maxRatePerSec)
             var nextSlotNs = DispatchTime.now().uptimeNanoseconds
 
@@ -90,8 +101,8 @@ public final class NetworkDiscoveryManager: NSObject {
                 var inFlight = 0
 
                 func enqueueNext() {
-                    guard !Task.isCancelled, index < targets.count else { return }
-                    let ip = targets[index]
+                    guard !Task.isCancelled, index < filteredTargets.count else { return }
+                    let ip = filteredTargets[index]
                     index += 1
                     inFlight += 1
 
@@ -125,7 +136,7 @@ public final class NetworkDiscoveryManager: NSObject {
                     }
                 }
 
-                while inFlight < self.maxConcurrency && index < targets.count && !Task.isCancelled {
+                while inFlight < self.maxConcurrency && index < filteredTargets.count && !Task.isCancelled {
                     enqueueNext()
                 }
 
@@ -155,5 +166,36 @@ public final class NetworkDiscoveryManager: NSObject {
         scanTask?.cancel()
         scanTask = nil
         setScanning(false)
+    }
+
+    private static func resolveIPv4Addresses(for hosts: [String]) -> Set<UInt32> {
+        var result = Set<UInt32>()
+        for rawHost in hosts {
+            let host = rawHost.trimmingCharacters(in: .whitespacesAndNewlines)
+            if host.isEmpty { continue }
+
+            var addr = in_addr()
+            if inet_pton(AF_INET, host, &addr) == 1 {
+                result.insert(UInt32(bigEndian: addr.s_addr))
+                continue
+            }
+
+            var hints = addrinfo()
+            hints.ai_family = AF_INET
+            hints.ai_socktype = SOCK_STREAM
+            var res: UnsafeMutablePointer<addrinfo>?
+            if getaddrinfo(host, nil, &hints, &res) == 0, let first = res {
+                defer { freeaddrinfo(res) }
+                var ptr: UnsafeMutablePointer<addrinfo>? = first
+                while let info = ptr {
+                    if let sa = info.pointee.ai_addr, sa.pointee.sa_family == UInt8(AF_INET) {
+                        let sin = sa.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee }
+                        result.insert(UInt32(bigEndian: sin.sin_addr.s_addr))
+                    }
+                    ptr = info.pointee.ai_next
+                }
+            }
+        }
+        return result
     }
 }
