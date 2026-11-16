@@ -57,10 +57,10 @@ fragment float4 rfbFragmentFloat(RFBVertexOut in [[stage_in]],
                                  constant RFBUniforms &uniforms [[buffer(0)]],
                                  texture2d<float> tex [[texture(0)]])
 {
-    constexpr sampler nearestSampler(coord::normalized,
+    constexpr sampler linearSampler(coord::normalized,
                                      address::clamp_to_edge,
-                                     filter::nearest);
-    float4 sample = tex.sample(nearestSampler, in.texCoord);
+                                     filter::linear);
+    float4 sample = tex.sample(linearSampler, in.texCoord);
 
     float3 rgb;
     if (uniforms.pixelFormat == kPixelFormatXBGR8888) {

@@ -123,6 +123,17 @@
                                     <action selector="forceReconnect:" target="-1" id="1505"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="scale-sep-1"/>
+                            <menuItem title="Fit to Window" keyEquivalent="9" id="scale-fit-1">
+                                <connections>
+                                    <action selector="setScaleFitToWindow:" target="-1" id="scale-act-fit"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Actual Size (1:1)" keyEquivalent="0" id="scale-1to1-1">
+                                <connections>
+                                    <action selector="setScaleActualSize:" target="-1" id="scale-act-1to1"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="1019">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>

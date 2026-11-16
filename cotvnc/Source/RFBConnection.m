@@ -316,7 +316,8 @@
     [session setupWindow];
     [session setDisplayName: [info name]];
     DiagnosticLog(DiagnosticLogLevelBasic, @"[Conn %p fd=%d] RFBConnection start: Requesting initial non-incremental update...", self, [self fileDescriptor]);
-    [self requestUpdate:[rfbView bounds] incremental:NO];
+    NSSize fbSize = [frameBuffer size];
+    [self requestUpdate:NSMakeRect(0, 0, fbSize.width, fbSize.height) incremental:NO];
     if (_serverSupportsSetDesktopSize && ![self viewOnly] && [session window] && ![server_ fullscreen]) {
         [self writeSetDesktopSize:[[[session window] contentView] frame].size];
     }
@@ -343,9 +344,14 @@
 - (void)invalidateRect:(NSRect)aRect
 {
     NSRect b = [rfbView bounds];
-    NSRect r = aRect;
-
-    r.origin.y = b.size.height - NSMaxY(r);
+    NSSize s = [frameBuffer size];
+    CGFloat scaleX = (s.width > 0.0) ? (b.size.width / s.width) : 1.0;
+    CGFloat scaleY = (s.height > 0.0) ? (b.size.height / s.height) : 1.0;
+    NSRect r;
+    r.origin.x = aRect.origin.x * scaleX;
+    r.origin.y = (s.height - NSMaxY(aRect)) * scaleY;
+    r.size.width = aRect.size.width * scaleX;
+    r.size.height = aRect.size.height * scaleY;
     [rfbView setNeedsDisplayInRect: r];
 }
 
@@ -386,7 +392,8 @@
     desktopResizeAttempts = 0;
     [self sizeDisplay:newSize withPixelFormat:[frameBuffer pixelFormat]];
     [rfbProtocol setFrameBuffer:frameBuffer];
-    [self requestUpdate:[rfbView bounds] incremental:NO];
+    NSSize fbSize = [frameBuffer size];
+    [self requestUpdate:NSMakeRect(0, 0, fbSize.width, fbSize.height) incremental:NO];
     isReceivingUpdate = NO;
     [session frameBufferUpdateComplete];
 
@@ -485,12 +492,14 @@
 	[_frameUpdateTimer invalidate];
 	_frameUpdateTimer = nil;
 
-    [self requestUpdate:[rfbView bounds] incremental:YES];
+    NSSize fbSize = [frameBuffer size];
+    [self requestUpdate:NSMakeRect(0, 0, fbSize.width, fbSize.height) incremental:YES];
 }
 
 // Force an immediate frame buffer update
 - (void)forceFrameBufferUpdate {
-    [self requestUpdate:[rfbView bounds] incremental:NO];
+    NSSize fbSize = [frameBuffer size];
+    [self requestUpdate:NSMakeRect(0, 0, fbSize.width, fbSize.height) incremental:NO];
 }
 
 - (void)requestUpdate:(NSRect)frame incremental:(BOOL)aFlag
@@ -541,13 +550,18 @@
     NSRect b = [rfbView bounds];
     NSSize s = [frameBuffer size];
 
-    if(thePoint.x < 0) thePoint.x = 0;
-    if(thePoint.y < 0) thePoint.y = 0;
-    if(thePoint.x > s.width - 1) thePoint.x = s.width - 1;
-    if(thePoint.y > s.height - 1) thePoint.y = s.height - 1;
+    CGFloat scaleX = (b.size.width > 0.0) ? (s.width / b.size.width) : 1.0;
+    CGFloat scaleY = (b.size.height > 0.0) ? (s.height / b.size.height) : 1.0;
+    CGFloat fbX = thePoint.x * scaleX;
+    CGFloat fbY = (b.size.height - thePoint.y) * scaleY;
 
-    msg->x = htons((CARD16) thePoint.x);
-    msg->y = htons((CARD16) (b.size.height - thePoint.y));
+    if (fbX < 0) fbX = 0;
+    if (fbY < 0) fbY = 0;
+    if (fbX > s.width - 1) fbX = s.width - 1;
+    if (fbY > s.height - 1) fbY = s.height - 1;
+
+    msg->x = htons((CARD16) fbX);
+    msg->y = htons((CARD16) fbY);
 
     lastMouseMovement = [[NSDate alloc] init];
 }

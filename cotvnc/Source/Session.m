@@ -482,11 +482,148 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)item
 {
-    if ([item action] == @selector(forceReconnect:))
+    SEL action = [item action];
+    if (action == @selector(forceReconnect:)) {
         // we only enable Force Reconnect menu item if server supports it
         return [server_ doYouSupport:CONNECT];
-    else
-        return [self respondsToSelector:[item action]];
+    } else if (action == @selector(setScaleFitToWindow:)) {
+        if ([(id)item isKindOfClass:[NSMenuItem class]]) {
+            [(NSMenuItem *)item setState:(_scaleMode == SessionScaleModeFitToWindow) ? NSControlStateValueOn : NSControlStateValueOff];
+        }
+        return [self _supportsScalingModes];
+    } else if (action == @selector(setScaleActualSize:)) {
+        if ([(id)item isKindOfClass:[NSMenuItem class]]) {
+            [(NSMenuItem *)item setState:(_scaleMode == SessionScaleModeActualSize) ? NSControlStateValueOn : NSControlStateValueOff];
+        }
+        return [self _supportsScalingModes];
+    } else {
+        return [self respondsToSelector:action];
+    }
+}
+
+- (BOOL)_supportsScalingModes
+{
+    return ![connection serverSupportsSetDesktopSize];
+}
+
+- (NSString *)_scaleModeDefaultsKey
+{
+    NSString *keyHost = (host && [host length] > 0) ? host : @"default";
+    return [NSString stringWithFormat:@"RFBScaleMode_%@", keyHost];
+}
+
+- (void)_loadScaleMode
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *key = [self _scaleModeDefaultsKey];
+    if ([defaults objectForKey:key] != nil) {
+        NSInteger val = [defaults integerForKey:key];
+        _scaleMode = (val == SessionScaleModeActualSize) ? SessionScaleModeActualSize : SessionScaleModeFitToWindow;
+    } else {
+        _scaleMode = SessionScaleModeFitToWindow;
+    }
+}
+
+- (void)_saveScaleMode
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:_scaleMode forKey:[self _scaleModeDefaultsKey]];
+}
+
+- (void)_installScaleTitlebarAccessoryIfNeeded
+{
+    if (![self _supportsScalingModes] || _scaleTitlebarAccessory != nil || !window) {
+        return;
+    }
+    NSSegmentedControl *seg = [NSSegmentedControl segmentedControlWithLabels:@[@"Fit", @"1:1"]
+                                                               trackingMode:NSSegmentSwitchTrackingSelectOne
+                                                                     target:self
+                                                                     action:@selector(scaleSegmentChanged:)];
+    [seg setSegmentStyle:NSSegmentStyleTexturedRounded];
+    [seg setControlSize:NSControlSizeSmall];
+    [seg sizeToFit];
+    [seg setSelectedSegment:_scaleMode];
+
+    NSRect segFrame = [seg frame];
+    NSView *container = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(segFrame) + 8.0, 26.0)];
+    segFrame.origin.x = 4.0;
+    segFrame.origin.y = floor((NSHeight(container.frame) - NSHeight(segFrame)) * 0.5);
+    [seg setFrame:segFrame];
+    [container addSubview:seg];
+
+    NSTitlebarAccessoryViewController *accessory = [[NSTitlebarAccessoryViewController alloc] init];
+    [accessory setView:container];
+    [accessory setLayoutAttribute:NSLayoutAttributeRight];
+    [window addTitlebarAccessoryViewController:accessory];
+
+    _scaleTitlebarAccessory = accessory;
+    _scaleSegmentedControl = seg;
+}
+
+- (void)_applyScaleModeLayout
+{
+    if (![self _supportsScalingModes] || _maxSize.width <= 0 || _maxSize.height <= 0) {
+        return;
+    }
+
+    if (_scaleMode == SessionScaleModeFitToWindow) {
+        horizontalScroll = NO;
+        verticalScroll = NO;
+        [scrollView setHasHorizontalScroller:NO];
+        [scrollView setHasVerticalScroller:NO];
+        [scrollView setBackgroundColor:[NSColor blackColor]];
+        [scrollView setDrawsBackground:YES];
+
+        NSSize avail = [scrollView contentSize];
+        if (avail.width > 0 && avail.height > 0) {
+            CGFloat scale = MIN(avail.width / _maxSize.width, avail.height / _maxSize.height);
+            NSSize fittedSize = NSMakeSize(MAX(1.0, floor(_maxSize.width * scale)),
+                                           MAX(1.0, floor(_maxSize.height * scale)));
+            CGFloat x = MAX(0.0, floor((avail.width - fittedSize.width) * 0.5));
+            CGFloat y = MAX(0.0, floor((avail.height - fittedSize.height) * 0.5));
+            [rfbView setDisplayScale:_maxSize.width / fittedSize.width];
+            [rfbView setFrame:NSMakeRect(x, y, fittedSize.width, fittedSize.height)];
+        }
+    } else {
+        CGFloat backingScale = (window && [window backingScaleFactor] > 0.0) ? [window backingScaleFactor] : 1.0;
+        NSSize actualPointSize = NSMakeSize(floor(_maxSize.width / backingScale),
+                                            floor(_maxSize.height / backingScale));
+        [rfbView setDisplayScale:backingScale];
+        [rfbView setFrame:NSMakeRect(0, 0, actualPointSize.width, actualPointSize.height)];
+        [self _maxSizeForWindowSize:[[window contentView] frame].size];
+        [scrollView setHasHorizontalScroller:horizontalScroll];
+        [scrollView setHasVerticalScroller:verticalScroll];
+    }
+
+    if (_scaleSegmentedControl) {
+        [_scaleSegmentedControl setSelectedSegment:_scaleMode];
+    }
+    [rfbView setNeedsDisplay:YES];
+}
+
+- (IBAction)scaleSegmentChanged:(NSSegmentedControl *)sender
+{
+    NSInteger seg = [sender selectedSegment];
+    if (seg == SessionScaleModeActualSize) {
+        [self setScaleActualSize:sender];
+    } else {
+        [self setScaleFitToWindow:sender];
+    }
+}
+
+- (IBAction)setScaleFitToWindow:(id)sender
+{
+    if (![self _supportsScalingModes]) return;
+    _scaleMode = SessionScaleModeFitToWindow;
+    [self _saveScaleMode];
+    [self _applyScaleModeLayout];
+}
+
+- (IBAction)setScaleActualSize:(id)sender
+{
+    if (![self _supportsScalingModes]) return;
+    _scaleMode = SessionScaleModeActualSize;
+    [self _saveScaleMode];
+    [self _applyScaleModeLayout];
 }
 
 - (void)setSize:(NSSize)aSize
@@ -504,19 +641,21 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
     horizontalScroll = verticalScroll = NO;
 
-    // If server supports SetDesktopSize, allow any window size without scrollbars
-    if (serverSupportsResize && ![self viewOnly]) {
+    // If server supports SetDesktopSize, or Fit-to-Window scaling is active, allow any window size without scrollbars
+    if ((serverSupportsResize && ![self viewOnly]) ||
+        ([self _supportsScalingModes] && _scaleMode == SessionScaleModeFitToWindow)) {
         return aSize;
     }
 
-    maxviewsize = FrameSizeForContentSize([rfbView frame].size, horizontalScroll, verticalScroll);
+    NSSize targetSize = [rfbView frame].size;
+    maxviewsize = FrameSizeForContentSize(targetSize, horizontalScroll, verticalScroll);
     if(aSize.width < maxviewsize.width) {
         horizontalScroll = YES;
     }
     if(aSize.height < maxviewsize.height) {
         verticalScroll = YES;
     }
-    maxviewsize = FrameSizeForContentSize([rfbView frame].size, horizontalScroll, verticalScroll);
+    maxviewsize = FrameSizeForContentSize(targetSize, horizontalScroll, verticalScroll);
     winframe = [window frame];
     winframe.size = maxviewsize;
     winframe = [NSWindow frameRectForContentRect:winframe styleMask:[window styleMask]];
@@ -993,20 +1132,34 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 	BOOL resizable = [connection serverSupportsSetDesktopSize] && ![self viewOnly];
 	_enteringInitialFullscreen = (!_hasSetupWindow && [server_ fullscreen] && (([window styleMask] & NSWindowStyleMaskFullScreen) == 0));
 
+	if (!_hasSetupWindow) {
+		[self _loadScaleMode];
+		[self _installScaleTitlebarAccessoryIfNeeded];
+	}
+	BOOL allowFreeResize = resizable || ([self _supportsScalingModes] && _scaleMode == SessionScaleModeFitToWindow);
+
 	horizontalScroll = NO;
 	verticalScroll = NO;
 
 	screenRect = [[NSScreen mainScreen] visibleFrame];
     wf.origin.x = wf.origin.y = 0;
-    wf.size = FrameSizeForContentSize(_maxSize, NO, NO);
+    if ([self _supportsScalingModes] && _scaleMode == SessionScaleModeFitToWindow && _maxSize.width > 0 && _maxSize.height > 0) {
+        CGFloat maxW = floor(NSWidth(screenRect) * 0.8);
+        CGFloat maxH = floor(NSHeight(screenRect) * 0.8);
+        CGFloat fitScale = MIN(1.0, MIN(maxW / _maxSize.width, maxH / _maxSize.height));
+        NSSize initContent = NSMakeSize(floor(_maxSize.width * fitScale), floor(_maxSize.height * fitScale));
+        wf.size = FrameSizeForContentSize(initContent, NO, NO);
+    } else {
+        wf.size = FrameSizeForContentSize(_maxSize, NO, NO);
+    }
     wf = [NSWindow frameRectForContentRect:wf styleMask:[window styleMask]];
 	if (NSWidth(wf) > NSWidth(screenRect)) {
-		if (!resizable)
+		if (!allowFreeResize)
 			horizontalScroll = YES;
 		wf.size.width = NSWidth(screenRect);
 	}
 	if (NSHeight(wf) > NSHeight(screenRect)) {
-		if (!resizable)
+		if (!allowFreeResize)
 			verticalScroll = YES;
 		wf.size.height = NSHeight(screenRect);
 	}
@@ -1026,7 +1179,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 		NSScreen *targetScreen = [window screen] ? [window screen] : [NSScreen mainScreen];
 		if (!_hasRestoredFrame && ![self restoreWindowFrameForScreen:targetScreen]) {
 			[window setFrame:wf display:NO];
-		} else if (_hasRestoredFrame && !resizable && !_enteringInitialFullscreen &&
+		} else if (_hasRestoredFrame && !allowFreeResize && !_enteringInitialFullscreen &&
 		           (([window styleMask] & NSWindowStyleMaskFullScreen) == 0)) {
 			NSSize maxSize = [self _maxSizeForWindowSize:[[window contentView] frame].size];
 			NSRect frame = [window frame];
@@ -1168,8 +1321,18 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
     if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 || _enteringInitialFullscreen) {
         _maxSize = size;
-        [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
-        [self windowDidResize:nil];
+        if ([self _supportsScalingModes]) {
+            [self _applyScaleModeLayout];
+        } else {
+            [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
+            [self windowDidResize:nil];
+        }
+        return;
+    }
+
+    _maxSize = size;
+    if ([self _supportsScalingModes]) {
+        [self _applyScaleModeLayout];
         return;
     }
 
@@ -1330,8 +1493,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         return proposedFrameSize;
     }
 
-    // If server supports SetDesktopSize, allow any window size
-    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
+    // If server supports SetDesktopSize, or Fit-to-Window scaling is active, allow any window size
+    if (([connection serverSupportsSetDesktopSize] && ![self viewOnly]) ||
+        ([self _supportsScalingModes] && _scaleMode == SessionScaleModeFitToWindow)) {
         
         // allow anything not outrageously small
         if (proposedFrameSize.width < 200)
@@ -1361,6 +1525,11 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
                 [connection writeSetDesktopSize:[[window contentView] frame].size];
             }
         }
+        return;
+    }
+
+    if ([self _supportsScalingModes]) {
+        [self _applyScaleModeLayout];
         return;
     }
 

@@ -25,7 +25,7 @@
 #import "CARD32Reader.h"
 #import "ByteBlockReader.h"
 #import "RFBStringReader.h"
-#import "ChickenFork-Swift.h"
+#import "ARDAuthHelper.h"
 #import "debug.h"
 
 /* This handles the handshaking messages from the server. */
@@ -202,27 +202,36 @@
     }
 
     DiagnosticLog(DiagnosticLogLevelBasic, @"Executing ARD Diffie-Hellman calculation for user '%@'...", user);
-    ARDAuthResult *result = [ARDAuthHelper performDiffieHellmanWithGenerator:ardGenerator
-                                                                       prime:ardPrime
-                                                                     peerKey:ardPeerKey
-                                                                    username:user
-                                                                    password:pass];
-    if (!result) {
-        DiagnosticLog(DiagnosticLogLevelBasic, @"ARDAuthHelper performDiffieHellman returned nil (calculation failed).");
-        [connection terminateConnection:NSLocalizedString(@"AuthenticationFailed", nil)];
-        return;
-    }
+    NSData *gen = ardGenerator;
+    NSData *prime = ardPrime;
+    NSData *peer = ardPeerKey;
+    int keySize = ardKeySize;
 
-    NSMutableData *payload = [NSMutableData dataWithCapacity:128 + ardKeySize];
-    [payload appendData:[result encryptedCredentials]];
-    [payload appendData:[result clientPublicKey]];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        ARDAuthResult *result = [ARDAuthHelper performDiffieHellmanWithGenerator:gen
+                                                                           prime:prime
+                                                                         peerKey:peer
+                                                                        username:user
+                                                                        password:pass];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!result) {
+                DiagnosticLog(DiagnosticLogLevelBasic, @"ARDAuthHelper performDiffieHellman returned nil (calculation failed).");
+                [self->connection terminateConnection:NSLocalizedString(@"AuthenticationFailed", nil)];
+                return;
+            }
 
-    DiagnosticLog(DiagnosticLogLevelBasic, @"Sending %lu-byte combined authentication payload (ciphertext + client public key) to server...", (unsigned long)[payload length]);
-    [connection writeBytes:(unsigned char *)[payload bytes] length:(unsigned int)[payload length]];
+            NSMutableData *payload = [NSMutableData dataWithCapacity:128 + keySize];
+            [payload appendData:[result encryptedCredentials]];
+            [payload appendData:[result clientPublicKey]];
 
-    DiagnosticLog(DiagnosticLogLevelBasic, @"Sent authentication payload. Setting reader to authResultReader...");
-    [connection setReader:authResultReader];
-    triedPassword = YES;
+            DiagnosticLog(DiagnosticLogLevelBasic, @"Sending %lu-byte combined authentication payload (ciphertext + client public key) to server...", (unsigned long)[payload length]);
+            [self->connection writeBytes:(unsigned char *)[payload bytes] length:(unsigned int)[payload length]];
+
+            DiagnosticLog(DiagnosticLogLevelBasic, @"Sent authentication payload. Setting reader to authResultReader...");
+            [self->connection setReader:self->authResultReader];
+            self->triedPassword = YES;
+        });
+    });
 }
 
 - (void)setAuthType:(NSNumber*)authType

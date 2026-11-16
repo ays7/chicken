@@ -417,7 +417,7 @@ typedef int NSInteger;
      * there are 4 pixels for each point. By default, the OS will interpolate
      * for us, but we don't want that. We want to draw "large" pixels. */
     [[NSGraphicsContext currentContext]
-        setImageInterpolation:NSImageInterpolationNone];
+        setImageInterpolation:([self _effectiveDisplayScale] != 1.0) ? NSImageInterpolationHigh : NSImageInterpolationNone];
 
     if (drawTint)
         [tint setFill];

@@ -26,6 +26,11 @@
 @class RFBView;
 @class SshTunnel;
 
+typedef NS_ENUM(NSInteger, SessionScaleMode) {
+    SessionScaleModeFitToWindow = 0,
+    SessionScaleModeActualSize = 1,
+};
+
 @interface Session : NSObject <
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1060
 NSNetServiceDelegate,NSWindowDelegate,
@@ -53,6 +58,9 @@ ConnectionWaiterDelegate>
     BOOL	_hasRestoredFrame;
     BOOL	_hasSetupWindow;
     BOOL	_enteringInitialFullscreen;
+    SessionScaleMode _scaleMode;
+    NSTitlebarAccessoryViewController *_scaleTitlebarAccessory;
+    NSSegmentedControl *_scaleSegmentedControl;
 
     id optionPanel;
     id infoField;
@@ -107,6 +115,8 @@ ConnectionWaiterDelegate>
 - (void)setNewTitle:(id)sender;
 
 - (IBAction)requestFrameBufferUpdate:(id)sender;
+- (IBAction)setScaleFitToWindow:(id)sender;
+- (IBAction)setScaleActualSize:(id)sender;
 
     //window delegate messages
 - (void)windowDidBecomeKey:(NSNotification *)aNotification;
