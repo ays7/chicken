@@ -1,4 +1,4 @@
-name: Build Unsigned DMG
+name: Build Signed & Notarized DMG
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Unsigned DMG
+    name: Build, Sign & Notarize DMG
     runs-on: macos-latest
 
     steps:
@@ -29,61 +29,17 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             clean build
 
-      - name: Package and Verify DMG
+      - name: Sign, Package, Notarize and Staple DMG
         id: package
+        env:
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         run: |
-          mkdir -p dist
-
-          # Locate built Chicken Fork.app bundle
-          APP_PATH=$(find ./DerivedData -name "Chicken Fork.app" -type d | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            echo "Error: Chicken Fork.app not found in DerivedData!"
-            exit 1
-          fi
-          echo "Found Chicken Fork.app at: $APP_PATH"
-
-          # Apply ad-hoc code signature with Hardened Runtime and entitlements
-          echo "=== Applying Ad-Hoc Code Signature to App Bundle ==="
-          ENTITLEMENTS_ARG=""
-          if [ -f "cotvnc/Resources/ChickenFork.entitlements" ]; then
-            ENTITLEMENTS_ARG="--entitlements cotvnc/Resources/ChickenFork.entitlements"
-          fi
-          codesign --force --deep --options runtime -s - $ENTITLEMENTS_ARG "$APP_PATH"
-          codesign -dv "$APP_PATH"
-          codesign --verify --deep --strict "$APP_PATH"
-          echo "====================================================="
-
-          # Extract version from Info.plist
-          VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.12")
-          DMG_NAME="Chicken-Fork-${VERSION}.dmg"
-          DMG_PATH="dist/${DMG_NAME}"
-
-          echo "Creating styled UDZO DMG at $DMG_PATH..."
-          ./scripts/package_dmg.sh "$APP_PATH" "$DMG_PATH"
-
-          # Apply ad-hoc code signature to the DMG image
-          echo "=== Applying Ad-Hoc Code Signature to DMG ==="
-          codesign --force -s - "$DMG_PATH"
-          codesign -dv "$DMG_PATH"
-          codesign --verify "$DMG_PATH"
-          echo "============================================="
-
-          # Verify DMG mountability on runner
-          echo "=== Testing DMG mountability ==="
-          MOUNT_DIR="/tmp/chickenfork_test_mount"
-          mkdir -p "$MOUNT_DIR"
-          hdiutil attach "$DMG_PATH" -mountpoint "$MOUNT_DIR" -nobrowse -readonly
-          ls -la "$MOUNT_DIR"
-          hdiutil detach "$MOUNT_DIR"
-          rm -rf "$MOUNT_DIR" "$STAGING_DIR"
-          echo "=== DMG mount test passed ==="
-
-          echo "=== Artifact Details ==="
-          ls -lh dist/
-          shasum -a 256 dist/*.dmg
-          echo "========================"
-
-          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
+          ./scripts/sign_and_notarize.sh
 
       - name: Upload DMG Artifact
         uses: actions/upload-artifact@v7
