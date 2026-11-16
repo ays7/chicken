@@ -16,6 +16,8 @@
 #import "PrefController.h"
 #import "ServerBase.h"
 #import "ServerDataManager.h"
+#import <Security/Security.h>
+#import <SecurityInterface/SFCertificateTrustPanel.h>
 #define XK_MISCELLANY
 #include "keysymdef.h"
 
@@ -61,9 +63,8 @@ static BOOL rdp_DesktopResize(rdpContext *context);
 static BOOL rdp_PreConnect(freerdp *instance);
 static BOOL rdp_PostConnect(freerdp *instance);
 static void rdp_PostDisconnect(freerdp *instance);
-static DWORD rdp_VerifyCertificateEx(freerdp *instance, const char *host, UINT16 port,
-                                     const char *common_name, const char *subject,
-                                     const char *issuer, const char *fingerprint, DWORD flags);
+static int rdp_VerifyX509Certificate(freerdp *instance, const BYTE *data, size_t length,
+                                     const char *hostname, UINT16 port, DWORD flags);
 static BOOL rdp_AuthenticateEx(freerdp *instance, char **username, char **password,
                                char **domain, rdp_auth_reason reason);
 
@@ -186,7 +187,7 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     inst->PreConnect = rdp_PreConnect;
     inst->PostConnect = rdp_PostConnect;
     inst->PostDisconnect = rdp_PostDisconnect;
-    inst->VerifyCertificateEx = rdp_VerifyCertificateEx;
+    inst->VerifyX509Certificate = rdp_VerifyX509Certificate;
     inst->AuthenticateEx = rdp_AuthenticateEx;
 
     PubSub_SubscribeChannelConnected(ctx->pubSub, (pChannelConnectedEventHandler)rdp_OnChannelConnected);
@@ -351,8 +352,9 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     freerdp_settings_set_bool(settings, FreeRDP_NlaSecurity, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_TlsSecurity, TRUE);
     freerdp_settings_set_bool(settings, FreeRDP_RdpSecurity, TRUE);
-    freerdp_settings_set_bool(settings, FreeRDP_IgnoreCertificate, TRUE);
-    freerdp_settings_set_bool(settings, FreeRDP_AutoAcceptCertificate, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_ExternalCertificateManagement, TRUE);
+    freerdp_settings_set_bool(settings, FreeRDP_IgnoreCertificate, FALSE);
+    freerdp_settings_set_bool(settings, FreeRDP_AutoAcceptCertificate, FALSE);
 
     // Apply network connection type & performance optimizations
     freerdp_set_connection_type(settings, CONNECTION_TYPE_AUTODETECT);
@@ -571,6 +573,116 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
             [self->session updateCursorOnCompanionViews:cursor];
         }
     });
+}
+
+- (int)verifyX509CertificateData:(const BYTE *)data
+                          length:(size_t)length
+                            host:(const char *)host
+                            port:(UINT16)port
+                           flags:(DWORD)flags
+{
+    if (!data || length == 0)
+        return -1;
+
+    NSString *canonicalHost = [server_ host];
+    if (!canonicalHost || [canonicalHost length] == 0)
+        canonicalHost = host ? [NSString stringWithUTF8String:host] : @"unknown";
+
+    NSData *pemData = [NSData dataWithBytes:data length:length];
+    SecExternalFormat format = kSecFormatPEMSequence;
+    SecExternalItemType itemType = kSecItemTypeCertificate;
+    CFArrayRef items = NULL;
+
+    OSStatus importStatus = SecItemImport((__bridge CFDataRef)pemData,
+                                          NULL,
+                                          &format,
+                                          &itemType,
+                                          0,
+                                          NULL,
+                                          NULL,
+                                          &items);
+    if (importStatus != errSecSuccess || !items || CFArrayGetCount(items) == 0)
+    {
+        if (items)
+        {
+            CFRelease(items);
+            items = NULL;
+        }
+        format = kSecFormatX509Cert;
+        importStatus = SecItemImport((__bridge CFDataRef)pemData,
+                                     NULL,
+                                     &format,
+                                     &itemType,
+                                     0,
+                                     NULL,
+                                     NULL,
+                                     &items);
+    }
+
+    if (importStatus != errSecSuccess || !items || CFArrayGetCount(items) == 0)
+    {
+        NSLog(@"[RDPConnection] VerifyX509Certificate: failed to parse certificate (status=%d)", (int)importStatus);
+        if (items)
+            CFRelease(items);
+        return -1;
+    }
+
+    SecPolicyRef policy = SecPolicyCreateSSL(true, (__bridge CFStringRef)canonicalHost);
+    SecTrustRef trust = NULL;
+    OSStatus trustStatus = SecTrustCreateWithCertificates(items, policy, &trust);
+    if (trustStatus != errSecSuccess || !trust)
+    {
+        NSLog(@"[RDPConnection] VerifyX509Certificate: SecTrustCreateWithCertificates failed (status=%d)", (int)trustStatus);
+        if (trust)
+            CFRelease(trust);
+        if (policy)
+            CFRelease(policy);
+        CFRelease(items);
+        return -1;
+    }
+
+    CFErrorRef evalError = NULL;
+    BOOL trusted = SecTrustEvaluateWithError(trust, &evalError);
+    if (evalError)
+        CFRelease(evalError);
+
+    if (trusted)
+    {
+        NSLog(@"[RDPConnection] VerifyX509Certificate: trusted by macOS trust store for %@", canonicalHost);
+        CFRelease(trust);
+        CFRelease(policy);
+        CFRelease(items);
+        return 1;
+    }
+
+    __block NSInteger panelResult = NSModalResponseCancel;
+    void (^showPanel)(void) = ^{
+        SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
+        [panel setPolicies:(__bridge id)policy];
+        [panel setDefaultButtonTitle:NSLocalizedString(@"Continue", nil)];
+        [panel setAlternateButtonTitle:NSLocalizedString(@"Cancel", nil)];
+        [panel setShowsHelp:NO];
+        [panel setInformativeText:@""];
+
+        NSString *message = [NSString stringWithFormat:
+            NSLocalizedString(@"You are connecting to the RDP host \"%@\". The certificate couldn't be verified back to a root certificate. Your connection may not be secure. Do you want to continue?", nil),
+            canonicalHost];
+        panelResult = [panel runModalForTrust:trust message:message];
+    };
+
+    if ([NSThread isMainThread])
+        showPanel();
+    else
+        dispatch_sync(dispatch_get_main_queue(), showPanel);
+
+    CFRelease(trust);
+    CFRelease(policy);
+    CFRelease(items);
+
+    int rc = (panelResult == NSModalResponseOK) ? 1 : -1;
+    NSLog(@"[RDPConnection] VerifyX509Certificate: host=%@ panelResult=%ld rc=%d",
+          canonicalHost, (long)panelResult, rc);
+    return rc;
 }
 
 - (BOOL)handleAuthenticateUser:(char **)outUser password:(char **)outPwd domain:(char **)outDom reason:(rdp_auth_reason)reason
@@ -1612,12 +1724,16 @@ static BOOL rdp_DesktopResize(rdpContext *context)
     return TRUE;
 }
 
-static DWORD rdp_VerifyCertificateEx(freerdp *instance, const char *host, UINT16 port,
-                                     const char *common_name, const char *subject,
-                                     const char *issuer, const char *fingerprint, DWORD flags)
+static int rdp_VerifyX509Certificate(freerdp *instance, const BYTE *data, size_t length,
+                                     const char *hostname, UINT16 port, DWORD flags)
 {
-    NSLog(@"[RDPConnection] VerifyCertificateEx: host=%s port=%u fp=%s", host, port, fingerprint);
-    return 1;
+    rdpChickenContext *c = (rdpChickenContext *)instance->context;
+    RDPConnection *conn = (__bridge RDPConnection *)c->connection;
+    return [conn verifyX509CertificateData:data
+                                     length:length
+                                       host:hostname
+                                       port:port
+                                      flags:flags];
 }
 
 static BOOL rdp_AuthenticateEx(freerdp *instance, char **username, char **password,

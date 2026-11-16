@@ -424,6 +424,9 @@
         }
       }
     },
+    "Continue" : {
+
+    },
     "defaultProfileName" : {
       "localizations" : {
         "en" : {
@@ -1236,7 +1239,6 @@
       }
     },
     "PasteAnyways" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1265,7 +1267,6 @@
       }
     },
     "PasteConversionBody" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1294,7 +1295,6 @@
       }
     },
     "PasteConversionHeader" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2396,6 +2396,9 @@
           }
         }
       }
+    },
+    "You are connecting to the RDP host \"%@\". The certificate couldn't be verified back to a root certificate. Your connection may not be secure. Do you want to continue?" : {
+
     },
     "ZlibHexDeflateTooSmall" : {
       "localizations" : {

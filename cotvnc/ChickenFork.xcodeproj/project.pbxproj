@@ -169,6 +169,7 @@
 		DA1FD8C512D5100400632D78 /* PersistentServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1FD8C312D5100400632D78 /* PersistentServer.h */; };
 		DA1FD8C612D5100400632D78 /* PersistentServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1FD8C412D5100400632D78 /* PersistentServer.m */; };
 		DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9112D6B1A000632D78 /* Security.framework */; };
+		DA1FDD9412D6B1A000632D78 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1FDD9312D6B1A000632D78 /* SecurityInterface.framework */; };
 		DA22199916BC615600410C5A /* CommandLineConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DA22199716BC615600410C5A /* CommandLineConnection.h */; };
 		DA22199A16BC615600410C5A /* CommandLineConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA22199816BC615600410C5A /* CommandLineConnection.m */; };
 		DA231DF612BD562100D3AD44 /* Keymap.h in Headers */ = {isa = PBXBuildFile; fileRef = DA231DF512BD562100D3AD44 /* Keymap.h */; };
@@ -329,6 +330,7 @@
 		DA1FD8C312D5100400632D78 /* PersistentServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentServer.h; sourceTree = "<group>"; };
 		DA1FD8C412D5100400632D78 /* PersistentServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentServer.m; sourceTree = "<group>"; };
 		DA1FDD9112D6B1A000632D78 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		DA1FDD9312D6B1A000632D78 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
 		DA22199716BC615600410C5A /* CommandLineConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLineConnection.h; sourceTree = "<group>"; };
 		DA22199816BC615600410C5A /* CommandLineConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandLineConnection.m; sourceTree = "<group>"; };
 		DA231DF512BD562100D3AD44 /* Keymap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keymap.h; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
+				DA1FDD9412D6B1A000632D78 /* SecurityInterface.framework in Frameworks */,
 				C07000060000000000000002 /* Metal.framework in Frameworks */,
 				C07000070000000000000002 /* QuartzCore.framework in Frameworks */,
 			);
@@ -521,6 +524,7 @@
 				8AF0001A2FAA000100000001 /* CoreMedia.framework */,
 				8AF0001C2FAA000100000001 /* CoreVideo.framework */,
 				DA1FDD9112D6B1A000632D78 /* Security.framework */,
+				DA1FDD9312D6B1A000632D78 /* SecurityInterface.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				E2F48D78040EDD5100BD55BA /* Carbon.framework */,
 				C07000060000000000000001 /* Metal.framework */,
