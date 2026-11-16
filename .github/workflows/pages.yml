@@ -2,8 +2,8 @@ name: Deploy Documentation to GitHub Pages
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
