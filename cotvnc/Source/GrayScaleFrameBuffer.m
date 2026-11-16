@@ -53,6 +53,11 @@ typedef	unsigned char			FBColor;
 	aFormat->depth = 24;
 }
 
+- (FrameBufferMetalPixelFormat)metalPixelFormat
+{
+    return FrameBufferMetalPixelFormatGray8;
+}
+
 #include "FrameBufferDrawing.h"
 
 @end

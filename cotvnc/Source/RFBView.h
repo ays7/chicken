@@ -16,13 +16,14 @@
  *
  */
 
+#import <QuartzCore/QuartzCore.h>
 #import "FrameBuffer.h"
 #import "RemoteConnection.h"
 
 @class EventFilter, Profile;
 
 
-@interface RFBView : NSView
+@interface RFBView : NSView <CALayerDelegate>
 {
     __weak id<RemoteConnection> _delegate;
     __weak EventFilter     *_eventFilter;
@@ -33,6 +34,7 @@
     NSColor         *tint;
     BOOL            drawTint;
     NSPoint         _monitorOrigin;
+    BOOL            _useMetal;
 }
 
 - (void)setFrameBuffer:(id)aBuffer;

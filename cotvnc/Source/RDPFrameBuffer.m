@@ -96,6 +96,21 @@
     return 4;
 }
 
+- (const void *)pixelBuffer
+{
+    return _buffer;
+}
+
+- (size_t)pixelBufferStride
+{
+    return _stride;
+}
+
+- (FrameBufferMetalPixelFormat)metalPixelFormat
+{
+    return FrameBufferMetalPixelFormatBGRX8888;
+}
+
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint
 {
     [self drawRect:aRect at:aPoint monitorOrigin:NSZeroPoint viewHeight:size.height];

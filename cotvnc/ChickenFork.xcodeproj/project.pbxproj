@@ -155,6 +155,11 @@
 		C07000020000000000000004 /* RDPFrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000020000000000000003 /* RDPFrameBuffer.m */; };
 		C07000030000000000000002 /* RDPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000030000000000000001 /* RDPConnection.h */; };
 		C07000030000000000000004 /* RDPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000030000000000000003 /* RDPConnection.m */; };
+		C07000040000000000000002 /* RFBMetalRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = C07000040000000000000001 /* RFBMetalRenderer.h */; };
+		C07000040000000000000004 /* RFBMetalRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = C07000040000000000000003 /* RFBMetalRenderer.m */; };
+		C07000050000000000000002 /* RFBShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C07000050000000000000001 /* RFBShaders.metal */; };
+		C07000060000000000000002 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C07000060000000000000001 /* Metal.framework */; };
+		C07000070000000000000002 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C07000070000000000000001 /* QuartzCore.framework */; };
 		C1DB65427CF08686781F946F /* Multiplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2414BD5025D38343B896663 /* Multiplication.swift */; };
 		C3A04E1F7F96C29F70D59628 /* CS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291C2C28573CF34D12230072 /* CS.swift */; };
 		C68A7701D2AC549231897A86 /* Shifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3268AEF31863553C9B05C7E /* Shifts.swift */; };
@@ -310,6 +315,11 @@
 		C07000020000000000000003 /* RDPFrameBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPFrameBuffer.m; sourceTree = "<group>"; };
 		C07000030000000000000001 /* RDPConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RDPConnection.h; sourceTree = "<group>"; };
 		C07000030000000000000003 /* RDPConnection.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RDPConnection.m; sourceTree = "<group>"; };
+		C07000040000000000000001 /* RFBMetalRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFBMetalRenderer.h; sourceTree = "<group>"; };
+		C07000040000000000000003 /* RFBMetalRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFBMetalRenderer.m; sourceTree = "<group>"; };
+		C07000050000000000000001 /* RFBShaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = RFBShaders.metal; sourceTree = "<group>"; };
+		C07000060000000000000001 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = /System/Library/Frameworks/Metal.framework; sourceTree = "<absolute>"; };
+		C07000070000000000000001 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		C3268AEF31863553C9B05C7E /* Shifts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Shifts.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Shifts.swift; sourceTree = "<group>"; };
 		CF34D9BB98B98C6741057041 /* Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Random.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Random.swift; sourceTree = "<group>"; };
 		D1D136EE9BF32170EAD3AA0F /* Exponentiation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Exponentiation.swift; path = CryptoSwift/Sources/CryptoSwift/CS_BigInt/Exponentiation.swift; sourceTree = "<group>"; };
@@ -492,6 +502,8 @@
 				7F7A945905E71B5C00E20416 /* Cocoa.framework in Frameworks */,
 				7F7A945B05E71B5C00E20416 /* Carbon.framework in Frameworks */,
 				DA1FDD9212D6B1A000632D78 /* Security.framework in Frameworks */,
+				C07000060000000000000002 /* Metal.framework in Frameworks */,
+				C07000070000000000000002 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,6 +523,8 @@
 				DA1FDD9112D6B1A000632D78 /* Security.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				E2F48D78040EDD5100BD55BA /* Carbon.framework */,
+				C07000060000000000000001 /* Metal.framework */,
+				C07000070000000000000001 /* QuartzCore.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -804,6 +818,9 @@
 				C07000020000000000000003 /* RDPFrameBuffer.m */,
 				C07000030000000000000001 /* RDPConnection.h */,
 				C07000030000000000000003 /* RDPConnection.m */,
+				C07000040000000000000001 /* RFBMetalRenderer.h */,
+				C07000040000000000000003 /* RFBMetalRenderer.m */,
+				C07000050000000000000001 /* RFBShaders.metal */,
 				F5DC71E1033DB4A801A8010C /* RFBHandshaker.h */,
 				F5DC71E2033DB4A801A8010C /* RFBHandshaker.m */,
 				F5DC71E3033DB4A801A8010C /* rfbproto.h */,
@@ -876,6 +893,7 @@
 				C07000010000000000000002 /* RemoteConnection.h in Headers */,
 				C07000020000000000000002 /* RDPFrameBuffer.h in Headers */,
 				C07000030000000000000002 /* RDPConnection.h in Headers */,
+				C07000040000000000000002 /* RFBMetalRenderer.h in Headers */,
 				7F7A940005E71B5C00E20416 /* RFBHandshaker.h in Headers */,
 				7F7A940105E71B5C00E20416 /* rfbproto.h in Headers */,
 				7F7A940205E71B5C00E20416 /* RFBProtocol.h in Headers */,
@@ -1087,6 +1105,7 @@
 				7F7A944005E71B5C00E20416 /* RFBConnectionManager.m in Sources */,
 				C07000020000000000000004 /* RDPFrameBuffer.m in Sources */,
 				C07000030000000000000004 /* RDPConnection.m in Sources */,
+				C07000040000000000000004 /* RFBMetalRenderer.m in Sources */,
 				7F7A944105E71B5C00E20416 /* RFBHandshaker.m in Sources */,
 				7F7A944205E71B5C00E20416 /* RFBProtocol.m in Sources */,
 				7F7A944305E71B5C00E20416 /* RFBServerInitReader.m in Sources */,

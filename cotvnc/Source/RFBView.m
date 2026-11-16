@@ -21,6 +21,7 @@
 #import "RFBConnection.h"
 #import "FrameBuffer.h"
 #import "Profile.h"
+#import "RFBMetalRenderer.h"
 //#import "RectangleList.h"
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED < 1050
@@ -36,6 +37,92 @@ typedef int NSInteger;
 @end
 
 @implementation RFBView
+
+- (void)_commonMetalInit
+{
+    if ([RFBMetalContext sharedContext] != nil) {
+        _useMetal = YES;
+        [self setWantsLayer:YES];
+        [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawDuringViewResize];
+    }
+}
+
+- (instancetype)initWithFrame:(NSRect)frameRect
+{
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        [self _commonMetalInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self _commonMetalInit];
+    }
+    return self;
+}
+
+- (BOOL)wantsUpdateLayer
+{
+    return _useMetal;
+}
+
+- (CALayer *)makeBackingLayer
+{
+    if (!_useMetal) {
+        return [super makeBackingLayer];
+    }
+    RFBMetalContext *ctx = [RFBMetalContext sharedContext];
+    CAMetalLayer *metalLayer = [CAMetalLayer layer];
+    metalLayer.device = ctx.device;
+    metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+    metalLayer.framebufferOnly = YES;
+    CGColorSpaceRef srgb = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
+    if (srgb) {
+        metalLayer.colorspace = srgb;
+        CGColorSpaceRelease(srgb);
+    }
+    metalLayer.delegate = self;
+    return metalLayer;
+}
+
+- (void)_updateMetalDrawableSize
+{
+    if (!_useMetal || ![self.layer isKindOfClass:[CAMetalLayer class]])
+        return;
+
+    CAMetalLayer *metalLayer = (CAMetalLayer *)self.layer;
+    CGFloat scale = self.window ? self.window.backingScaleFactor : 1.0;
+    if (scale <= 0.0)
+        scale = 1.0;
+    metalLayer.contentsScale = scale;
+
+    NSSize b = [self bounds].size;
+    if (b.width > 0 && b.height > 0) {
+        metalLayer.drawableSize = CGSizeMake(floor(b.width * scale), floor(b.height * scale));
+    }
+}
+
+- (void)viewDidChangeBackingProperties
+{
+    [super viewDidChangeBackingProperties];
+    [self _updateMetalDrawableSize];
+    if (_useMetal) {
+        [self.layer setNeedsDisplay];
+    }
+}
+
+- (void)setFrameSize:(NSSize)newSize
+{
+    [super setFrameSize:newSize];
+    [self _updateMetalDrawableSize];
+    if (_useMetal) {
+        [self.layer setNeedsDisplay];
+    }
+}
 
 /* One-time initializer to read the cursors into memory. */
 + (NSCursor *)_cursorForName: (NSString *)name
@@ -88,8 +175,17 @@ typedef int NSInteger;
     NSRect f = [self frame];
     
     fbuf = aBuffer;
-    f.size = [aBuffer size];
+    f.size = [fbuf size];
     [self setFrame:f];
+    if (_useMetal && fbuf) {
+        RFBMetalTextureCache *cache = [fbuf metalTextureCache];
+        if (!cache) {
+            cache = [[RFBMetalTextureCache alloc] initWithDevice:[RFBMetalContext sharedContext].device];
+            [fbuf setMetalTextureCache:cache];
+        }
+        [cache markAllDirty];
+        [self.layer setNeedsDisplay];
+    }
 }
 
 - (void)dealloc
@@ -213,6 +309,70 @@ typedef int NSInteger;
 - (void)setMonitorOrigin:(NSPoint)origin
 {
     _monitorOrigin = origin;
+    if (_useMetal) {
+        [self.layer setNeedsDisplay];
+    }
+}
+
+- (void)setNeedsDisplay:(BOOL)needsDisplay
+{
+    if (_useMetal) {
+        if (needsDisplay && fbuf) {
+            RFBMetalTextureCache *cache = [fbuf metalTextureCache];
+            if (!cache) {
+                cache = [[RFBMetalTextureCache alloc] initWithDevice:[RFBMetalContext sharedContext].device];
+                [fbuf setMetalTextureCache:cache];
+            }
+            [cache markAllDirty];
+            [self.layer setNeedsDisplay];
+        }
+        return;
+    }
+    [super setNeedsDisplay:needsDisplay];
+}
+
+- (void)setNeedsDisplayInRect:(NSRect)invalidRect
+{
+    if (_useMetal) {
+        if (fbuf && invalidRect.size.width > 0 && invalidRect.size.height > 0) {
+            RFBMetalTextureCache *cache = [fbuf metalTextureCache];
+            if (!cache) {
+                cache = [[RFBMetalTextureCache alloc] initWithDevice:[RFBMetalContext sharedContext].device];
+                [fbuf setMetalTextureCache:cache];
+            }
+            NSRect b = [self bounds];
+            NSRect fbRect;
+            fbRect.origin.x = invalidRect.origin.x + _monitorOrigin.x;
+            fbRect.origin.y = (b.size.height - NSMaxY(invalidRect)) + _monitorOrigin.y;
+            fbRect.size = invalidRect.size;
+            [cache markDirtyRect:fbRect];
+            [self.layer setNeedsDisplay];
+        }
+        return;
+    }
+    [super setNeedsDisplayInRect:invalidRect];
+}
+
+- (void)displayIfNeededIgnoringOpacity
+{
+    if (_useMetal) {
+        [self.layer displayIfNeeded];
+        return;
+    }
+    [super displayIfNeededIgnoringOpacity];
+}
+
+- (void)displayLayer:(CALayer *)layer
+{
+    if (!_useMetal || !fbuf || ![layer isKindOfClass:[CAMetalLayer class]])
+        return;
+
+    [self _updateMetalDrawableSize];
+    [RFBMetalRenderer renderFrameBuffer:fbuf
+                                inLayer:(CAMetalLayer *)layer
+                             viewBounds:[self bounds]
+                          monitorOrigin:_monitorOrigin
+                                   tint:(drawTint ? tint : nil)];
 }
 
 - (void)drawRect:(NSRect)destRect

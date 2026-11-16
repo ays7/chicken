@@ -443,6 +443,10 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 - (void)putRun:(FrameBufferColor*)fbc ofLength:(int)length at:(NSRect)aRect pixelOffset:(int)offset {}
 - (void)putRect:(NSRect)aRect fromRGBBytes:(unsigned char*)rgb {}
 
+- (const void *)pixelBuffer { return NULL; }
+- (size_t)pixelBufferStride { return 0; }
+- (FrameBufferMetalPixelFormat)metalPixelFormat { return FrameBufferMetalPixelFormatUnsupported; }
+
 /* --------------------------------------------------------------------------------- */
 
 @end

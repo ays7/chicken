@@ -30,6 +30,16 @@ typedef union _FrameBufferColor {
 
 typedef unsigned char	FrameBufferPaletteIndex;
 
+typedef NS_ENUM(NSInteger, FrameBufferMetalPixelFormat) {
+    FrameBufferMetalPixelFormatUnsupported = 0,
+    FrameBufferMetalPixelFormatBGRX8888,
+    FrameBufferMetalPixelFormatRGBX8888,
+    FrameBufferMetalPixelFormatXBGR8888,
+    FrameBufferMetalPixelFormatRGB444,
+    FrameBufferMetalPixelFormatRGB222,
+    FrameBufferMetalPixelFormatGray8
+};
+
 /* Stores the current frame buffer. The putXXX, fillXXX are used to update the
  * buffer from server messages. The drawRect message then renders this on
  * screen. */
@@ -103,6 +113,12 @@ typedef unsigned char	FrameBufferPaletteIndex;
 - (void)putRect:(NSRect)aRect withColors:(FrameBufferPaletteIndex*)data fromPalette:(FrameBufferColor*)palette;
 - (void)putRun:(FrameBufferColor*)fbc ofLength:(int)length at:(NSRect)aRect pixelOffset:(int)offset;
 - (void)putRect:(NSRect)aRect fromRGBBytes:(unsigned char*)rgb;
+
+- (const void *)pixelBuffer;
+- (size_t)pixelBufferStride;
+- (FrameBufferMetalPixelFormat)metalPixelFormat;
+
+@property (nonatomic, strong) id metalTextureCache;
 
 @end
 

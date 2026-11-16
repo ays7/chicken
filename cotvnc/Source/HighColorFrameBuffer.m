@@ -62,6 +62,11 @@ typedef	unsigned short			FBColor;
 }
 
 
+- (FrameBufferMetalPixelFormat)metalPixelFormat
+{
+    return FrameBufferMetalPixelFormatRGB444;
+}
+
 #include "FrameBufferDrawing.h"
 
 @end

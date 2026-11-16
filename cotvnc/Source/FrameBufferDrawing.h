@@ -431,6 +431,16 @@ printf("put x=%f y=%f w=%f h=%f\n", aRect.origin.x, aRect.origin.y, aRect.size.w
 
 /* Draws an updated region of the FrameBuffer to the screen. The region of the
  * framebuffer is given by aRect and the on-screen location is aPoint. */
+- (const void *)pixelBuffer
+{
+    return pixels;
+}
+
+- (size_t)pixelBufferStride
+{
+    return (size_t)size.width * sizeof(FBColor);
+}
+
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint
 {
     NSRect r;

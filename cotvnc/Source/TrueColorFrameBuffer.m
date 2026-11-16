@@ -61,6 +61,11 @@ typedef	unsigned int			FBColor;
    aFormat->depth = 24;
 }
 
+- (FrameBufferMetalPixelFormat)metalPixelFormat
+{
+    return isBig ? FrameBufferMetalPixelFormatXBGR8888 : FrameBufferMetalPixelFormatRGBX8888;
+}
+
 #include "FrameBufferDrawing.h"
 
 @end
