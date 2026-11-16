@@ -34,6 +34,8 @@
 #define RFB_SHARED		  @"Shared"
 #define RFB_FULLSCREEN    @"Fullscreen"
 #define RFB_USEALLSCREENS @"UseAllScreens"
+#define RFB_USERETINA     @"UseRetina"
+#define RFB_RDPSCALEFACTOR @"RdpScaleFactor"
 
 #define RFB_VIEWONLY      @"ViewOnly"
 #define RFB_LAST_DISPLAY  @"Display"
@@ -61,6 +63,8 @@
 		[self setShared:          [[prefDict objectForKey:RFB_SHARED] intValue]];
 		[self setFullscreen:      [[prefDict objectForKey:RFB_FULLSCREEN] boolValue]];
 		[self setUseAllScreens:  [[prefDict objectForKey:RFB_USEALLSCREENS] boolValue]];
+		[self setUseRetina:      [[prefDict objectForKey:RFB_USERETINA] boolValue]];
+		[self setRdpScaleFactor: [[prefDict objectForKey:RFB_RDPSCALEFACTOR] intValue]];
 
 		[self setViewOnly:        [[prefDict objectForKey:RFB_VIEWONLY] intValue]];
 	}
@@ -123,6 +127,8 @@
 		[self setShared:          [coder decodeBoolForKey:RFB_SHARED]];
 		[self setFullscreen:      [coder decodeBoolForKey:RFB_FULLSCREEN]];
 		[self setUseAllScreens:  [coder decodeBoolForKey:RFB_USEALLSCREENS]];
+		[self setUseRetina:      [coder decodeBoolForKey:RFB_USERETINA]];
+		[self setRdpScaleFactor: [coder decodeIntForKey:RFB_RDPSCALEFACTOR]];
 
 		[self setViewOnly:  	  [coder decodeBoolForKey:RFB_VIEWONLY]];
 	}

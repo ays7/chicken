@@ -338,6 +338,7 @@ static NSString *const kRFBMetalShaderSource = @
                   inLayer:(CAMetalLayer *)metalLayer
                viewBounds:(NSRect)bounds
             monitorOrigin:(NSPoint)monitorOrigin
+             displayScale:(CGFloat)displayScale
                      tint:(nullable NSColor *)tint
 {
     RFBMetalContext *ctx = [RFBMetalContext sharedContext];
@@ -379,10 +380,12 @@ static NSString *const kRFBMetalShaderSource = @
 
     float texW = (float)texture.width;
     float texH = (float)texture.height;
+    CGFloat effectiveScale = displayScale > 0.0 ? displayScale : ([frameBuffer displayScale] > 0.0 ? [frameBuffer displayScale] : 1.0);
 
     RFBUniforms uniforms;
     uniforms.uvOrigin = simd_make_float2((float)monitorOrigin.x / texW, (float)monitorOrigin.y / texH);
-    uniforms.uvSize = simd_make_float2((float)bounds.size.width / texW, (float)bounds.size.height / texH);
+    uniforms.uvSize = simd_make_float2((float)(bounds.size.width * effectiveScale) / texW,
+                                       (float)(bounds.size.height * effectiveScale) / texH);
     uniforms.textureSize = simd_make_float2(texW, texH);
     uniforms.pixelFormat = (uint32_t)fbFormat;
     uniforms._padding = 0;

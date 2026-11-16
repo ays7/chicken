@@ -40,6 +40,8 @@
         _shared = [[dict objectForKey:@"shared"] boolValue];
         _fullscreen = [[dict objectForKey:@"fullscreen"] boolValue];
         _useAllScreens = [[dict objectForKey:@"useAllScreens"] boolValue];
+        _useRetina = [[dict objectForKey:@"useRetina"] boolValue];
+        _rdpScaleFactor = [[dict objectForKey:@"rdpScaleFactor"] intValue];
 
         NSNumber *protoNum = [dict objectForKey:@"remoteProtocol"];
         if (protoNum) {
@@ -67,6 +69,8 @@
 		[NSNumber numberWithBool:_shared],				@"shared",
 		[NSNumber numberWithBool:_fullscreen],			@"fullscreen",
 		[NSNumber numberWithBool:_useAllScreens],		@"useAllScreens",
+		[NSNumber numberWithBool:_useRetina],			@"useRetina",
+		[NSNumber numberWithInt:_rdpScaleFactor],		@"rdpScaleFactor",
 
 		[NSNumber numberWithBool:_viewOnly],            @"viewOnly", 
 		[_profile profileName],							@"lastProfile",

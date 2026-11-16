@@ -192,6 +192,8 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
 			[cmdlineServer setFullscreen: YES];
 			[cmdlineServer setUseAllScreens: YES];
 		}
+		else if ([arg isEqualToString:@"--UseRetina"])
+			[cmdlineServer setUseRetina: YES];
 		else if ([arg isEqualToString:@"--ViewOnly"])
 			[cmdlineServer setViewOnly: YES];
 		else if ([arg isEqualToString:@"--RDP"])
@@ -304,6 +306,9 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
             if (savedServ && [cmdlineServer useAllScreens]) {
                 [savedServ setUseAllScreens:YES];
             }
+            if (savedServ && [cmdlineServer useRetina]) {
+                [savedServ setUseRetina:YES];
+            }
             CommandLineConnection   *conn;
 
             conn = [[CommandLineConnection alloc] initWithServer:server];
@@ -357,6 +362,7 @@ static NSString *kPrefs_LastHost_Key = @"RFBLastHost";
     fprintf(stderr, "--Display <display-number>\n");
     fprintf(stderr, "--FullScreen\n");
     fprintf(stderr, "--UseAllScreens\n");
+    fprintf(stderr, "--UseRetina\n");
     fprintf(stderr, "--Shared\n");
 	fprintf(stderr, "--ViewOnly\n");
     fprintf(stderr, "--Listen\n");

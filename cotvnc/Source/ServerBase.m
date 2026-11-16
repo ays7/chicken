@@ -45,6 +45,8 @@
         _shared = NO;
         _fullscreen = NO;
         _useAllScreens = NO;
+        _useRetina = NO;
+        _rdpScaleFactor = 0;
 
         _remoteProtocol = RemoteProtocolVNC;
         _username = nil;
@@ -387,6 +389,26 @@
     _rdpAudioMode = mode;
 }
 
+- (bool)useRetina
+{
+    return _useRetina;
+}
+
+- (void)setUseRetina:(bool)useRetina
+{
+    _useRetina = useRetina;
+}
+
+- (int)rdpScaleFactor
+{
+    return _rdpScaleFactor;
+}
+
+- (void)setRdpScaleFactor:(int)scaleFactor
+{
+    _rdpScaleFactor = scaleFactor;
+}
+
 - (void)copyServer: (id<IServerData>)server
 {
     [self setHost:[server host]];
@@ -400,6 +422,16 @@
         _useAllScreens = [server useAllScreens];
     } else {
         _useAllScreens = NO;
+    }
+    if ([server respondsToSelector:@selector(useRetina)]) {
+        _useRetina = [server useRetina];
+    } else {
+        _useRetina = NO;
+    }
+    if ([server respondsToSelector:@selector(rdpScaleFactor)]) {
+        _rdpScaleFactor = [server rdpScaleFactor];
+    } else {
+        _rdpScaleFactor = 0;
     }
 
     _viewOnly = [server viewOnly];

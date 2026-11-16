@@ -130,6 +130,9 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
     [displayDescription setHidden:isRDP];
     [shared setHidden:isRDP];
     [useAllScreens setHidden:!isRDP];
+    [useRetina setHidden:!isRDP];
+    [rdpScaleLabel setHidden:!isRDP];
+    [rdpScalePopup setHidden:!isRDP];
 
     NSRect f;
 #define SET_POS(v, yVal) do { if (v) { f = [v frame]; f.origin.y = (yVal); [v setFrame:f]; } } while(0)
@@ -142,11 +145,14 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
     SET_POS(profileLabel, isRDP ? 230 : 198);
     SET_POS(viewOnly, isRDP ? 191 : 159);
     SET_POS(shared, 138);
-    SET_POS(fullscreen, isRDP ? 169 : 117);
-    SET_POS(useAllScreens, 147);
-    SET_POS(useSshTunnel, isRDP ? 124 : 92);
-    SET_POS(sshHost, isRDP ? 96 : 64);
-    SET_POS(sshHostLabel, isRDP ? 101 : 69);
+    SET_POS(fullscreen, isRDP ? 170 : 117);
+    SET_POS(useAllScreens, 148);
+    SET_POS(useRetina, 126);
+    SET_POS(rdpScaleLabel, 104);
+    SET_POS(rdpScalePopup, 101);
+    SET_POS(useSshTunnel, isRDP ? 78 : 92);
+    SET_POS(sshHost, isRDP ? 52 : 64);
+    SET_POS(sshHostLabel, isRDP ? 57 : 69);
 #undef SET_POS
 
     [hostName setNextKeyView: isRDP ? username : display];
@@ -157,9 +163,19 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
     [profilePopup setNextKeyView: viewOnly];
     [viewOnly setNextKeyView: isRDP ? fullscreen : shared];
     [shared setNextKeyView: fullscreen];
-    if (isRDP && [mServer fullscreen]) {
-        [fullscreen setNextKeyView: useAllScreens];
-        [useAllScreens setNextKeyView: useSshTunnel];
+    if (isRDP) {
+        if ([mServer fullscreen]) {
+            [fullscreen setNextKeyView: useAllScreens];
+            [useAllScreens setNextKeyView: useRetina];
+        } else {
+            [fullscreen setNextKeyView: useRetina];
+        }
+        if ([mServer useRetina]) {
+            [useRetina setNextKeyView: rdpScalePopup];
+            [rdpScalePopup setNextKeyView: useSshTunnel];
+        } else {
+            [useRetina setNextKeyView: useSshTunnel];
+        }
     } else {
         [fullscreen setNextKeyView: useSshTunnel];
     }
@@ -250,6 +266,10 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
 		[viewOnly setIntValue:[mServer viewOnly]];
 		[fullscreen setIntValue:[mServer fullscreen]];
 		[useAllScreens setIntValue:[mServer useAllScreens]];
+		[useRetina setIntValue:[mServer useRetina]];
+		if (![rdpScalePopup selectItemWithTag:[mServer rdpScaleFactor]]) {
+			[rdpScalePopup selectItemWithTag:0];
+		}
 		[self setProfilePopupToProfile: [mServer profile]];
         if ([mServer sshHost] == nil) {
             [useSshTunnel setIntValue:NO];
@@ -269,6 +289,9 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
         [viewOnly setEnabled: YES];
         [fullscreen setEnabled: YES];
         [useAllScreens setEnabled:(proto == RemoteProtocolRDP && [mServer fullscreen])];
+        [useRetina setEnabled:(proto == RemoteProtocolRDP)];
+        [rdpScaleLabel setEnabled:(proto == RemoteProtocolRDP && [mServer useRetina])];
+        [rdpScalePopup setEnabled:(proto == RemoteProtocolRDP && [mServer useRetina])];
 
     }
 	else
@@ -282,6 +305,9 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
 		[shared setEnabled: NO];
 		[fullscreen setEnabled: NO];
 		[useAllScreens setEnabled: NO];
+		[useRetina setEnabled: NO];
+		[rdpScaleLabel setEnabled: NO];
+		[rdpScalePopup setEnabled: NO];
 		[profilePopup setEnabled: NO];
 		[connectBtn setEnabled: NO];
         [useSshTunnel setEnabled: NO];
@@ -295,6 +321,8 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
 		[shared setIntValue:0];
 		[fullscreen setIntValue:0];
 		[useAllScreens setIntValue:0];
+		[useRetina setIntValue:0];
+		[rdpScalePopup selectItemWithTag:0];
 
 		[viewOnly setIntValue:0];
         [useSshTunnel setIntValue:0];
@@ -551,7 +579,9 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
 		[useAllScreens setEnabled:(isRDP && [mServer fullscreen])];
 		if (isRDP && [mServer fullscreen]) {
 			[fullscreen setNextKeyView: useAllScreens];
-			[useAllScreens setNextKeyView: useSshTunnel];
+			[useAllScreens setNextKeyView: useRetina];
+		} else if (isRDP) {
+			[fullscreen setNextKeyView: useRetina];
 		} else {
 			[fullscreen setNextKeyView: useSshTunnel];
 		}
@@ -563,6 +593,33 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
 	if( nil != mServer )
 	{
 		[mServer setUseAllScreens:![mServer useAllScreens]];
+	}
+}
+
+- (IBAction)useRetinaChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		BOOL enabled = ![mServer useRetina];
+		[mServer setUseRetina:enabled];
+		BOOL isRDP = ([mServer remoteProtocol] == RemoteProtocolRDP);
+		[rdpScaleLabel setEnabled:(isRDP && enabled)];
+		[rdpScalePopup setEnabled:(isRDP && enabled)];
+		if (isRDP && enabled) {
+			[useRetina setNextKeyView: rdpScalePopup];
+			[rdpScalePopup setNextKeyView: useSshTunnel];
+		} else {
+			[useRetina setNextKeyView: useSshTunnel];
+		}
+	}
+}
+
+- (IBAction)rdpScaleChanged:(id)sender
+{
+	if( nil != mServer )
+	{
+		NSInteger tag = [[sender selectedItem] tag];
+		[mServer setRdpScaleFactor:(int)tag];
 	}
 }
 
@@ -712,6 +769,9 @@ static NSMutableSet *sSelfTerminatingControllers = nil;
     [viewOnly setEnabled: NO];
     [fullscreen setEnabled: NO];
     [useAllScreens setEnabled: NO];
+    [useRetina setEnabled: NO];
+    [rdpScaleLabel setEnabled: NO];
+    [rdpScalePopup setEnabled: NO];
     [useSshTunnel setEnabled: NO];
     [sshHost setEnabled: NO];
     [superController setControlsEnabled: NO];

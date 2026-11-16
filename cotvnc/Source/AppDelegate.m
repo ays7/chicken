@@ -258,6 +258,8 @@
         int audioMode = 0; // Default: 0 = play on this computer
         BOOL fullscreen = NO;
         BOOL useAllScreens = NO;
+        BOOL useRetina = NO;
+        int rdpScaleFactor = 0;
 
         if (content)
         {
@@ -305,6 +307,19 @@
                         fullscreen = YES;
                     }
                 }
+                else if ([line hasPrefix:@"desktopscalefactor:i:"])
+                {
+                    NSString *scaleStr = [line substringFromIndex:[@"desktopscalefactor:i:" length]];
+                    int val = [scaleStr intValue];
+                    if (val > 100)
+                    {
+                        useRetina = YES;
+                        if (val == 150 || val == 200)
+                            rdpScaleFactor = val;
+                        else
+                            rdpScaleFactor = 0;
+                    }
+                }
             }
         }
 
@@ -313,6 +328,8 @@
         [server setRdpAudioMode:audioMode];
         [server setFullscreen:fullscreen];
         [server setUseAllScreens:useAllScreens];
+        [server setUseRetina:useRetina];
+        [server setRdpScaleFactor:rdpScaleFactor];
         if (host)
         {
             [server setHostAndPort:host];

@@ -635,12 +635,17 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         return nil;
     }
 
+    BOOL useRetina = [server_ respondsToSelector:@selector(useRetina)] && [server_ useRetina];
+    int configuredScale = [server_ respondsToSelector:@selector(rdpScaleFactor)] ? [server_ rdpScaleFactor] : 0;
     NSScreen *primaryScreen = [window screen] ? [window screen] : [screens objectAtIndex:0];
     if (![screens containsObject:primaryScreen]) {
         primaryScreen = [screens objectAtIndex:0];
     }
     NSRect primaryFrame = [primaryScreen frame];
     CGFloat primaryTop = primaryFrame.origin.y + primaryFrame.size.height;
+    CGFloat primaryScale = (useRetina && [primaryScreen backingScaleFactor] > 0.0) ? [primaryScreen backingScaleFactor] : 1.0;
+    int primaryPixelW = ((int)(primaryFrame.size.width * primaryScale)) & ~1;
+    int primaryPixelH = (int)(primaryFrame.size.height * primaryScale);
 
     NSMutableArray *descriptors = [NSMutableArray arrayWithCapacity:[screens count]];
 
@@ -653,16 +658,35 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
         NSScreen *s = [screens objectAtIndex:i];
         NSRect sf = [s frame];
         BOOL isPrimary = (s == primaryScreen);
-        int w = ((int)sf.size.width) & ~1;
-        int h = (int)sf.size.height;
+        CGFloat scale = (useRetina && [s backingScaleFactor] > 0.0) ? [s backingScaleFactor] : 1.0;
+        int w = ((int)(sf.size.width * scale)) & ~1;
+        int h = (int)(sf.size.height * scale);
         CGFloat sTop = sf.origin.y + sf.size.height;
-        int rdpLeft = (int)(sf.origin.x - primaryFrame.origin.x);
-        int rdpTop = (int)(primaryTop - sTop);
+        int rdpLeft = 0;
+        int rdpTop = 0;
 
-        if (isPrimary) {
-            rdpLeft = 0;
-            rdpTop = 0;
+        if (!isPrimary) {
+            if (sf.origin.x >= NSMaxX(primaryFrame)) {
+                rdpLeft = primaryPixelW + (int)((sf.origin.x - NSMaxX(primaryFrame)) * scale);
+            } else if (NSMaxX(sf) <= primaryFrame.origin.x) {
+                rdpLeft = -w - (int)((primaryFrame.origin.x - NSMaxX(sf)) * scale);
+            } else {
+                rdpLeft = (int)((sf.origin.x - primaryFrame.origin.x) * primaryScale);
+            }
+
+            if (sTop <= primaryFrame.origin.y) {
+                rdpTop = primaryPixelH + (int)((primaryFrame.origin.y - sTop) * scale);
+            } else if (sf.origin.y >= primaryTop) {
+                rdpTop = -h - (int)((sf.origin.y - primaryTop) * scale);
+            } else {
+                rdpTop = (int)((primaryTop - sTop) * primaryScale);
+            }
         }
+
+        int desktopScale = useRetina ? (configuredScale > 0 ? configuredScale : (int)llround(scale * 100.0)) : 100;
+        if (desktopScale < 100) desktopScale = 100;
+        if (desktopScale > 500) desktopScale = 500;
+        int deviceScale = (desktopScale >= 180) ? 180 : ((desktopScale >= 140) ? 140 : 100);
 
         if (i == 0) {
             minRdpX = rdpLeft;
@@ -683,6 +707,9 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
             [NSNumber numberWithInt:rdpTop], @"rdpTop",
             [NSNumber numberWithInt:w], @"width",
             [NSNumber numberWithInt:h], @"height",
+            [NSNumber numberWithDouble:scale], @"scaleFactor",
+            [NSNumber numberWithInt:desktopScale], @"desktopScaleFactor",
+            [NSNumber numberWithInt:deviceScale], @"deviceScaleFactor",
             nil]];
     }
 
@@ -737,12 +764,15 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     for (NSDictionary *desc in descriptors) {
         BOOL isPrimary = [[desc objectForKey:@"isPrimary"] boolValue];
         NSPoint bufOrigin = [[desc objectForKey:@"bufferOrigin"] pointValue];
+        CGFloat monScale = [[desc objectForKey:@"scaleFactor"] doubleValue];
+        if (monScale <= 0.0) monScale = 1.0;
         NSScreen *screen = [desc objectForKey:@"screen"];
         NSRect sf = [screen frame];
 
         if (isPrimary) {
+            [rfbView setDisplayScale:monScale];
             [rfbView setMonitorOrigin:bufOrigin];
-            [rfbView setFrame:NSMakeRect(0, 0, ((int)sf.size.width) & ~1, (int)sf.size.height)];
+            [rfbView setFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
             [scrollView setHasHorizontalScroller:NO];
             [scrollView setHasVerticalScroller:NO];
             [rfbView setNeedsDisplay:YES];
@@ -767,6 +797,7 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
             RFBView *compView = [[RFBView alloc] initWithFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
             [compView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [compView setDelegate:connection];
+            [compView setDisplayScale:monScale];
             [compView setFrameBuffer:[connection frameBuffer]];
             [compView setFrame:NSMakeRect(0, 0, sf.size.width, sf.size.height)];
             [compView setMonitorOrigin:bufOrigin];
@@ -801,33 +832,29 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     [_companionWindows removeAllObjects];
 }
 
+- (void)_invalidateDirtyRect:(NSRect)dirtyRect forView:(RFBView *)view
+{
+    if (!view) return;
+    NSPoint monOrigin = [view monitorOrigin];
+    NSSize viewSize = [view bounds].size;
+    CGFloat scale = [view displayScale];
+    if (scale <= 0.0) scale = 1.0;
+    NSRect pixelRect = NSMakeRect(monOrigin.x, monOrigin.y, viewSize.width * scale, viewSize.height * scale);
+    NSRect inter = NSIntersectionRect(dirtyRect, pixelRect);
+    if (inter.size.width > 0 && inter.size.height > 0) {
+        NSRect localRect;
+        localRect.origin.x = (inter.origin.x - monOrigin.x) / scale;
+        localRect.origin.y = viewSize.height - (inter.origin.y - monOrigin.y + inter.size.height) / scale;
+        localRect.size = NSMakeSize(inter.size.width / scale, inter.size.height / scale);
+        [view setNeedsDisplayInRect:localRect];
+    }
+}
+
 - (void)invalidateDirtyRect:(NSRect)dirtyRect
 {
-    NSPoint pOrigin = [rfbView monitorOrigin];
-    NSSize pSize = [rfbView bounds].size;
-    NSRect pRect = NSMakeRect(pOrigin.x, pOrigin.y, pSize.width, pSize.height);
-    NSRect pInter = NSIntersectionRect(dirtyRect, pRect);
-    if (pInter.size.width > 0 && pInter.size.height > 0) {
-        NSRect localRect;
-        localRect.origin.x = pInter.origin.x - pOrigin.x;
-        localRect.origin.y = pSize.height - (pInter.origin.y - pOrigin.y + pInter.size.height);
-        localRect.size = pInter.size;
-        [rfbView setNeedsDisplayInRect:localRect];
-    }
-
+    [self _invalidateDirtyRect:dirtyRect forView:rfbView];
     for (NSWindow *win in _companionWindows) {
-        RFBView *view = (RFBView *)[win contentView];
-        NSPoint monOrigin = [view monitorOrigin];
-        NSSize monSize = [view bounds].size;
-        NSRect monRect = NSMakeRect(monOrigin.x, monOrigin.y, monSize.width, monSize.height);
-        NSRect inter = NSIntersectionRect(dirtyRect, monRect);
-        if (inter.size.width > 0 && inter.size.height > 0) {
-            NSRect localRect;
-            localRect.origin.x = inter.origin.x - monOrigin.x;
-            localRect.origin.y = monSize.height - (inter.origin.y - monOrigin.y + inter.size.height);
-            localRect.size = inter.size;
-            [view setNeedsDisplayInRect:localRect];
-        }
+        [self _invalidateDirtyRect:dirtyRect forView:(RFBView *)[win contentView]];
     }
 }
 
@@ -843,6 +870,24 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
 
 - (NSPoint)rdpCoordinatesForViewPoint:(NSPoint)viewPoint inView:(NSView *)view
 {
+    if ([self isInMultiMonitorFullScreen] && [view isKindOfClass:[RFBView class]]) {
+        RFBView *rfb = (RFBView *)view;
+        CGFloat scale = [rfb displayScale];
+        if (scale <= 0.0) scale = 1.0;
+        CGFloat w = [rfb bounds].size.width;
+        CGFloat h = [rfb bounds].size.height;
+        NSPoint pt = viewPoint;
+        if (pt.x < 0) pt.x = 0;
+        if (pt.y < 0) pt.y = 0;
+        if (pt.x >= w) pt.x = w > 0 ? w - 0.5 : 0;
+        if (pt.y >= h) pt.y = h > 0 ? h - 0.5 : 0;
+        NSPoint monOrigin = [rfb monitorOrigin];
+        CGFloat rdpX = pt.x * scale + monOrigin.x;
+        CGFloat rdpY = (h - pt.y) * scale - 1.0 + monOrigin.y;
+        if (rdpY < monOrigin.y) rdpY = monOrigin.y;
+        return NSMakePoint(rdpX, rdpY);
+    }
+
     NSPoint screenPoint = viewPoint;
     if (view && [view window]) {
         NSPoint winPoint = [view convertPoint:viewPoint toView:nil];
@@ -1081,17 +1126,21 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     }
 
     if ([connection serverSupportsSetDesktopSize] && ![self viewOnly]) {
-        _maxSize = size;
-        [rfbView setFrame:NSMakeRect(0, 0, size.width, size.height)];
+        CGFloat fbScale = [rfbView displayScale];
+        if (fbScale <= 0.0) fbScale = 1.0;
+        NSSize viewSize = NSMakeSize(size.width / fbScale, size.height / fbScale);
+        _maxSize = viewSize;
+        [rfbView setFrame:NSMakeRect(0, 0, viewSize.width, viewSize.height)];
         [scrollView setHasHorizontalScroller:NO];
         [scrollView setHasVerticalScroller:NO];
 
         if (window && !_enteringInitialFullscreen) {
             NSSize winSize = [[window contentView] frame].size;
-            uint32_t winW = ((uint32_t)winSize.width) & ~1;
-            uint32_t winH = (uint32_t)winSize.height;
-            if (winW >= 200 && winH >= 200 &&
-                (winW != ((uint32_t)size.width & ~1) || winH != (uint32_t)size.height)) {
+            CGFloat winScale = ([server_ respondsToSelector:@selector(useRetina)] && [server_ useRetina] && [window backingScaleFactor] > 0.0) ? [window backingScaleFactor] : 1.0;
+            uint32_t targetW = ((uint32_t)(winSize.width * winScale)) & ~1;
+            uint32_t targetH = (uint32_t)(winSize.height * winScale);
+            if (targetW >= 200 && targetH >= 200 &&
+                (targetW != ((uint32_t)size.width & ~1) || targetH != (uint32_t)size.height)) {
                 [connection writeSetDesktopSize:winSize];
             }
         }
@@ -1365,6 +1414,19 @@ static inline NSSize FrameSizeForContentSize(NSSize cSize, BOOL hasH, BOOL hasV)
     // and causing it to hit a wall when dragged across monitors.
     // Instead, save the current frame for the new screen.
     [self saveCurrentWindowFrame];
+}
+
+- (void)windowDidChangeBackingProperties:(NSNotification *)aNotification
+{
+    if ([connection serverSupportsSetDesktopSize] && ![self viewOnly] && window && !_enteringInitialFullscreen) {
+        if ([server_ respondsToSelector:@selector(useRetina)] && [server_ useRetina]) {
+            if ([self isInMultiMonitorFullScreen]) {
+                [connection writeSetDesktopSize:[self multiMonitorBoundingBoxSize]];
+            } else {
+                [connection writeSetDesktopSize:[[window contentView] frame].size];
+            }
+        }
+    }
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification

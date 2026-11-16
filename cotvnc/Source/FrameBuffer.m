@@ -344,6 +344,7 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 		x.s = 0x1234;
 		isBig = (x.c[0] == 0x12);
 		size = aSize;
+		_displayScale = 1.0;
         forceServerBigEndian = NO;
         serverIsBigEndian = theFormat->bigEndian;
 

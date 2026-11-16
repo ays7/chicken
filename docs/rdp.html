@@ -134,6 +134,10 @@
         <span class="ui-card-label">5. Connection Profile</span>
         <p class="ui-card-desc">Choose a connection profile (such as <strong>Windows</strong> or <strong>Default</strong>). Profiles manage keyboard modifier translations and color depths.</p>
       </div>
+      <div class="ui-card-row">
+        <span class="ui-card-label">6. Optimize for Retina displays &amp; Scale</span>
+        <p class="ui-card-desc">Check <strong>Optimize for Retina displays</strong> to render the remote Windows session at your Mac's native Retina pixel resolution instead of 1x upscaling. Use the <strong>Scale</strong> dropdown to choose <strong>Auto</strong> (matches your macOS display scale, e.g. 200% on Retina) or a fixed Windows DPI scale (<strong>100%</strong>, <strong>150%</strong>, or <strong>200%</strong>).</p>
+      </div>
     </div>
 
     <h2>Opening <code>.rdp</code> Files</h2>
@@ -142,7 +146,7 @@
       <li><strong>Double-Clicking in Finder</strong>: Simply double-click any <code>.rdp</code> connection file exported from Windows or cloud consoles (AWS, Azure). Chicken Fork automatically opens, parses the settings, and starts the session.</li>
       <li><strong>Menu Bar</strong>: Choose <strong>File &rarr; Open Connection...</strong> (<kbd>⌘</kbd> + <kbd>O</kbd>) and select an <code>.rdp</code> file.</li>
     </ul>
-    <p>Chicken Fork automatically parses the server hostname, port, domain, and username from the file, prompting for passwords when required.</p>
+    <p>Chicken Fork automatically parses the server hostname, port, domain, username, audio mode (<code>audiomode:i:</code>), full-screen/multi-monitor mode (<code>screen mode id:i:</code>, <code>use multimon:i:</code>), and DPI scale factor (<code>desktopscalefactor:i:</code>) from the file, prompting for passwords when required.</p>
 
     <h2>Handling <code>rdp://</code> URL Schemes</h2>
     <p>You can launch RDP sessions directly from web browsers, custom scripts, Alfred, Raycast, or the Terminal using standard <code>rdp://</code> URLs:</p>
@@ -197,6 +201,14 @@ open "rdp://Administrator@winserver.local:3390"
 
     <h3>Dynamic Desktop Resizing</h3>
     <p>Chicken Fork supports dynamic display resizing via Microsoft's RDP <code>DisplayControl</code> extension. When you resize the Chicken Fork session window on macOS, a dynamic monitor layout update is transmitted to Windows. The Windows remote desktop instantly reorganizes its desktop resolution to match your macOS window dimensions &mdash; no reconnecting or logging off required!</p>
+
+    <h3>Retina / HiDPI Display Scaling</h3>
+    <p>When <strong>Optimize for Retina displays</strong> is enabled for an RDP server, Chicken Fork negotiates the session at your display's native backing pixel resolution (e.g. 2x on Retina Macs) and transmits the configured Windows DPI scale factor (<strong>Auto</strong>, <strong>100%</strong>, <strong>150%</strong>, or <strong>200%</strong>) via FreeRDP and <code>DisplayControl</code>:</p>
+    <ul>
+      <li><strong>Crisp 1:1 Metal Rendering</strong>: Text, icons, and UI elements render sharply at full Retina pixel density.</li>
+      <li><strong>Dynamic Display Migration</strong>: Dragging an active Retina RDP window between a 2x Retina display and a 1x external monitor automatically updates the remote resolution and Windows DPI scaling on the fly.</li>
+      <li><strong>Per-Monitor DPI in Multi-Monitor Mode</strong>: When combined with <strong>Use all screens</strong> across mixed Retina and standard displays, each monitor receives its own native pixel resolution and DPI scale factor.</li>
+    </ul>
 
     <h3>Audio Reception &amp; Output</h3>
     <p>Remote audio is streamed directly to your Mac using Microsoft's RDP Audio Output extension (<code>rdpsnd</code>) powered by macOS <code>AVAudioEngine</code> and CoreAudio. High-fidelity stereo audio plays seamlessly with automatic latency compensation. When opening <code>.rdp</code> connection files, Chicken Fork respects the standard <code>audiomode:i:</code> setting (redirect to client, play on remote server, or mute).</p>

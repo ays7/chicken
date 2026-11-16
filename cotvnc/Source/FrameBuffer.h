@@ -119,6 +119,7 @@ typedef NS_ENUM(NSInteger, FrameBufferMetalPixelFormat) {
 - (FrameBufferMetalPixelFormat)metalPixelFormat;
 
 @property (nonatomic, strong) id metalTextureCache;
+@property (nonatomic, assign) CGFloat displayScale;
 
 @end
 

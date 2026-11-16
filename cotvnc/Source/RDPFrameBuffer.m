@@ -149,9 +149,10 @@
     {
         CGContextClipToRect(ctx, CGRectMake(aPoint.x, aPoint.y, aRect.size.width, aRect.size.height));
     }
-    CGFloat imgX = -monOrigin.x;
-    CGFloat imgY = viewHeight + monOrigin.y - size.height;
-    CGContextDrawImage(ctx, CGRectMake(imgX, imgY, size.width, size.height), image);
+    CGFloat fbScale = [self displayScale] > 0.0 ? [self displayScale] : 1.0;
+    CGFloat imgX = -monOrigin.x / fbScale;
+    CGFloat imgY = viewHeight + (monOrigin.y - size.height) / fbScale;
+    CGContextDrawImage(ctx, CGRectMake(imgX, imgY, size.width / fbScale, size.height / fbScale), image);
     CGContextRestoreGState(ctx);
 
     CGImageRelease(image);

@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
                   inLayer:(CAMetalLayer *)metalLayer
                viewBounds:(NSRect)bounds
             monitorOrigin:(NSPoint)monitorOrigin
+             displayScale:(CGFloat)displayScale
                      tint:(nullable NSColor *)tint;
 
 @end

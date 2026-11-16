@@ -34,6 +34,7 @@
     NSColor         *tint;
     BOOL            drawTint;
     NSPoint         _monitorOrigin;
+    CGFloat         _displayScale;
     BOOL            _useMetal;
 }
 
@@ -44,6 +45,8 @@
 
 - (NSPoint)monitorOrigin;
 - (void)setMonitorOrigin:(NSPoint)origin;
+- (CGFloat)displayScale;
+- (void)setDisplayScale:(CGFloat)scale;
 
 - (void)setCursorTo: (NSString *)name;
 - (void)setServerCursorTo: (NSCursor *)aCursor;

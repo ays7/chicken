@@ -50,6 +50,9 @@
 	IBOutlet __weak NSButton *viewOnly;
 	IBOutlet __weak NSButton *fullscreen;
 	IBOutlet __weak NSButton *useAllScreens;
+	IBOutlet __weak NSButton *useRetina;
+	IBOutlet __weak NSTextField *rdpScaleLabel;
+	IBOutlet __weak NSPopUpButton *rdpScalePopup;
 	IBOutlet NSButton *save;
     IBOutlet __weak NSButton *useSshTunnel;
     IBOutlet __weak NSTextField *sshHost;
@@ -87,6 +90,8 @@
 - (IBAction)viewOnlyChanged:(id)sender;
 - (IBAction)fullscreenChanged:(id)sender;
 - (IBAction)useAllScreensChanged:(id)sender;
+- (IBAction)useRetinaChanged:(id)sender;
+- (IBAction)rdpScaleChanged:(id)sender;
 - (IBAction)useSshTunnelChanged:(id)sender;
 - (IBAction)sshHostChanged:(id)sender;
 - (IBAction)connectToServer:(id)sender;

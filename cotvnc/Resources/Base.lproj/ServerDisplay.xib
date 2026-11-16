@@ -23,12 +23,15 @@
                 <outlet property="profilePopup" destination="17" id="44"/>
                 <outlet property="protocolControl" destination="150" id="160"/>
                 <outlet property="protocolLabel" destination="151" id="161"/>
+                <outlet property="rdpScaleLabel" destination="177" id="178"/>
+                <outlet property="rdpScalePopup" destination="179" id="180"/>
                 <outlet property="rememberPwd" destination="20" id="42"/>
                 <outlet property="save" destination="95" id="96"/>
                 <outlet property="shared" destination="26" id="43"/>
                 <outlet property="sshHost" destination="133" id="139"/>
                 <outlet property="sshHostLabel" destination="135" id="167"/>
                 <outlet property="useAllScreens" destination="170" id="172"/>
+                <outlet property="useRetina" destination="174" id="175"/>
                 <outlet property="useSshTunnel" destination="131" id="140"/>
                 <outlet property="username" destination="152" id="162"/>
                 <outlet property="usernameLabel" destination="153" id="163"/>
@@ -271,6 +274,45 @@
                                         <action selector="useAllScreensChanged:" target="-2" id="173"/>
                                     </connections>
                                 </button>
+                                <button toolTip="Use native Retina pixel resolution and Windows DPI scaling." imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="174">
+                                    <rect key="frame" x="103" y="126" width="222" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Optimize for Retina displays" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="176">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="useRetinaChanged:" target="-2" id="189"/>
+                                    </connections>
+                                </button>
+                                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="177">
+                                    <rect key="frame" x="119" y="104" width="44" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scale:" id="181">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="179">
+                                    <rect key="frame" x="165" y="99" width="96" height="25"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                    <popUpButtonCell key="cell" type="push" title="Auto" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="184" id="182">
+                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="menu"/>
+                                        <menu key="menu" id="183">
+                                            <items>
+                                                <menuItem title="Auto" state="on" id="184"/>
+                                                <menuItem title="100%" tag="100" id="185"/>
+                                                <menuItem title="150%" tag="150" id="186"/>
+                                                <menuItem title="200%" tag="200" id="187"/>
+                                            </items>
+                                        </menu>
+                                    </popUpButtonCell>
+                                    <connections>
+                                        <action selector="rdpScaleChanged:" target="-2" id="188"/>
+                                    </connections>
+                                </popUpButton>
                                 <button imageHugsTitle="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="131">
                                     <rect key="frame" x="103" y="92" width="222" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>

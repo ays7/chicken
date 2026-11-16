@@ -170,12 +170,38 @@ typedef int NSInteger;
     return YES;
 }
 
+- (CGFloat)_effectiveDisplayScale
+{
+    if (_displayScale > 0.0)
+        return _displayScale;
+    if (fbuf && [fbuf displayScale] > 0.0)
+        return [fbuf displayScale];
+    return 1.0;
+}
+
+- (CGFloat)displayScale
+{
+    return [self _effectiveDisplayScale];
+}
+
+- (void)setDisplayScale:(CGFloat)scale
+{
+    _displayScale = scale;
+    if (_useMetal) {
+        [self.layer setNeedsDisplay];
+    } else {
+        [self setNeedsDisplay:YES];
+    }
+}
+
 - (void)setFrameBuffer:(id)aBuffer;
 {
     NSRect f = [self frame];
     
     fbuf = aBuffer;
-    f.size = [fbuf size];
+    CGFloat fbScale = [self _effectiveDisplayScale];
+    NSSize fbSize = [fbuf size];
+    f.size = NSMakeSize(fbSize.width / fbScale, fbSize.height / fbScale);
     [self setFrame:f];
     if (_useMetal && fbuf) {
         RFBMetalTextureCache *cache = [fbuf metalTextureCache];
@@ -341,10 +367,11 @@ typedef int NSInteger;
                 [fbuf setMetalTextureCache:cache];
             }
             NSRect b = [self bounds];
+            CGFloat fbScale = [self _effectiveDisplayScale];
             NSRect fbRect;
-            fbRect.origin.x = invalidRect.origin.x + _monitorOrigin.x;
-            fbRect.origin.y = (b.size.height - NSMaxY(invalidRect)) + _monitorOrigin.y;
-            fbRect.size = invalidRect.size;
+            fbRect.origin.x = invalidRect.origin.x * fbScale + _monitorOrigin.x;
+            fbRect.origin.y = (b.size.height - NSMaxY(invalidRect)) * fbScale + _monitorOrigin.y;
+            fbRect.size = NSMakeSize(invalidRect.size.width * fbScale, invalidRect.size.height * fbScale);
             [cache markDirtyRect:fbRect];
             [self.layer setNeedsDisplay];
         }
@@ -372,6 +399,7 @@ typedef int NSInteger;
                                 inLayer:(CAMetalLayer *)layer
                              viewBounds:[self bounds]
                           monitorOrigin:_monitorOrigin
+                           displayScale:[self _effectiveDisplayScale]
                                    tint:(drawTint ? tint : nil)];
 }
 

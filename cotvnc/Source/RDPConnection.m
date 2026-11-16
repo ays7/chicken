@@ -155,6 +155,40 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 #pragma mark - FreeRDP Initialization & Thread
 
+- (CGFloat)currentRetinaScale
+{
+    if (![server_ respondsToSelector:@selector(useRetina)] || ![server_ useRetina])
+        return 1.0;
+
+    NSWindow *win = session ? [session window] : [rfbView window];
+    CGFloat scale = win ? [win backingScaleFactor] : 0.0;
+    if (scale <= 0.0)
+    {
+        NSScreen *screen = win ? [win screen] : [NSScreen mainScreen];
+        scale = screen ? [screen backingScaleFactor] : 1.0;
+    }
+    return scale > 0.0 ? scale : 1.0;
+}
+
+- (UINT32)desktopScaleFactorForBackingScale:(CGFloat)backingScale
+{
+    if (![server_ respondsToSelector:@selector(useRetina)] || ![server_ useRetina])
+        return 100;
+
+    int configured = [server_ respondsToSelector:@selector(rdpScaleFactor)] ? [server_ rdpScaleFactor] : 0;
+    UINT32 factor = (configured > 0) ? (UINT32)configured : (UINT32)llround(backingScale * 100.0);
+    if (factor < 100) factor = 100;
+    if (factor > 500) factor = 500;
+    return factor;
+}
+
+- (UINT32)deviceScaleFactorForDesktopScale:(UINT32)desktopScale
+{
+    if (desktopScale >= 180) return 180;
+    if (desktopScale >= 140) return 140;
+    return 100;
+}
+
 - (void)startFreeRDP
 {
     RDP_CLIENT_ENTRY_POINTS entryPoints;
@@ -254,21 +288,38 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         NSRect viewRect = rfbView ? [rfbView bounds] : NSMakeRect(0, 0, 1024, 768);
         prefSize = viewRect.size;
     }
+    BOOL useMultimon = session && [session useAllScreensActive];
+    CGFloat initialScale = [self currentRetinaScale];
+    if (!useMultimon && initialScale > 1.0)
+    {
+        prefSize.width *= initialScale;
+        prefSize.height *= initialScale;
+    }
     UINT32 initWidth = ((UINT32)prefSize.width) & ~1;
     UINT32 initHeight = (UINT32)prefSize.height;
     if (initWidth < 200) initWidth = 1024;
     if (initHeight < 200) initHeight = 768;
+    if (initWidth > 8192) initWidth = 8192;
+    if (initHeight > 8192) initHeight = 8192;
 
     currentDesktopSize = NSZeroSize;
     hasPendingDesktopSize = NO;
     lastDesktopSizeSent = NSZeroSize;
     lastDesktopSizeSentTime = 0.0;
+    [frameBuffer setDisplayScale:useMultimon ? 1.0 : initialScale];
+    if (rfbView && !useMultimon)
+    {
+        [rfbView setDisplayScale:initialScale];
+    }
     [frameBuffer setSize:NSMakeSize(initWidth, initHeight)];
 
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopWidth, initWidth);
     freerdp_settings_set_uint32(settings, FreeRDP_DesktopHeight, initHeight);
+    UINT32 initDesktopScale = [self desktopScaleFactorForBackingScale:initialScale];
+    UINT32 initDeviceScale = [self deviceScaleFactorForDesktopScale:initDesktopScale];
+    freerdp_settings_set_uint32(settings, FreeRDP_DesktopScaleFactor, initDesktopScale);
+    freerdp_settings_set_uint32(settings, FreeRDP_DeviceScaleFactor, initDeviceScale);
 
-    BOOL useMultimon = session && [session useAllScreensActive];
     if (useMultimon)
     {
         NSArray *descriptors = [session multiMonitorDescriptors];
@@ -290,8 +341,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
                     monitors[i].attributes.physicalWidth = (UINT32)(monitors[i].width * 25.4 / 96.0);
                     monitors[i].attributes.physicalHeight = (UINT32)(monitors[i].height * 25.4 / 96.0);
                     monitors[i].attributes.orientation = 0;
-                    monitors[i].attributes.desktopScaleFactor = 100;
-                    monitors[i].attributes.deviceScaleFactor = 100;
+                    UINT32 monDesktopScale = desc[@"desktopScaleFactor"] ? [desc[@"desktopScaleFactor"] unsignedIntValue] : 100;
+                    UINT32 monDeviceScale = desc[@"deviceScaleFactor"] ? [desc[@"deviceScaleFactor"] unsignedIntValue] : 100;
+                    monitors[i].attributes.desktopScaleFactor = monDesktopScale ? monDesktopScale : 100;
+                    monitors[i].attributes.deviceScaleFactor = monDeviceScale ? monDeviceScale : 100;
                 }
                 freerdp_settings_set_bool(settings, FreeRDP_UseMultimon, TRUE);
                 freerdp_settings_set_bool(settings, FreeRDP_Fullscreen, TRUE);
@@ -438,9 +491,13 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         }
         else if (self->rfbView)
         {
+            CGFloat fbScale = [self->rfbView displayScale];
+            if (fbScale <= 0.0) fbScale = 1.0;
             NSRect bounds = [self->rfbView bounds];
-            NSRect viewRect = rect;
-            viewRect.origin.y = bounds.size.height - NSMaxY(rect);
+            NSRect viewRect = NSMakeRect(rect.origin.x / fbScale,
+                                         bounds.size.height - NSMaxY(rect) / fbScale,
+                                         rect.size.width / fbScale,
+                                         rect.size.height / fbScale);
             [self->rfbView setNeedsDisplayInRect:viewRect];
         }
 
@@ -471,8 +528,11 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
                 if (win && ![win inLiveResize])
                 {
                     NSSize winSize = [[win contentView] frame].size;
-                    UINT32 winW = ((UINT32)winSize.width) & ~1;
-                    UINT32 winH = (UINT32)winSize.height;
+                    CGFloat scale = [self currentRetinaScale];
+                    UINT32 winW = ((UINT32)(winSize.width * scale)) & ~1;
+                    UINT32 winH = (UINT32)(winSize.height * scale);
+                    if (winW > 8192) winW = 8192;
+                    if (winH > 8192) winH = 8192;
                     if (winW >= 200 && winH >= 200 &&
                         (winW != (UINT32)self->currentDesktopSize.width || winH != (UINT32)self->currentDesktopSize.height))
                     {
@@ -496,6 +556,13 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         self->currentDesktopSize = newSize;
         self->hasPendingDesktopSize = NO;
         self->lastDesktopSizeSent = newSize;
+        BOOL isMultimon = self->session && [self->session isInMultiMonitorFullScreen];
+        CGFloat scale = isMultimon ? 1.0 : [self currentRetinaScale];
+        [self->frameBuffer setDisplayScale:scale];
+        if (self->rfbView && !isMultimon)
+        {
+            [self->rfbView setDisplayScale:scale];
+        }
         [self->frameBuffer setSize:newSize];
         rdpContext *ctx = (rdpContext *)self->freerdpContext;
         if (ctx && ctx->gdi)
@@ -956,8 +1023,11 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         return;
 
     NSSize winContentSize = [[win contentView] frame].size;
-    UINT32 winW = ((UINT32)winContentSize.width) & ~1;
-    UINT32 winH = (UINT32)winContentSize.height;
+    CGFloat scale = [self currentRetinaScale];
+    UINT32 winW = ((UINT32)(winContentSize.width * scale)) & ~1;
+    UINT32 winH = (UINT32)(winContentSize.height * scale);
+    if (winW > 8192) winW = 8192;
+    if (winH > 8192) winH = 8192;
     if (winW < 200 || winH < 200)
         return;
 
@@ -973,10 +1043,14 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 
 - (void)writeSetDesktopSize:(NSSize)newSize
 {
-    UINT32 w = ((UINT32)newSize.width) & ~1;
-    UINT32 h = (UINT32)newSize.height;
+    BOOL isMultimon = session && [session isInMultiMonitorFullScreen];
+    CGFloat scale = isMultimon ? 1.0 : [self currentRetinaScale];
+    UINT32 w = ((UINT32)(newSize.width * scale)) & ~1;
+    UINT32 h = (UINT32)(newSize.height * scale);
     if (w < 200 || h < 200)
         return;
+    if (w > 8192) w = 8192;
+    if (h > 8192) h = 8192;
 
     if (w == (UINT32)currentDesktopSize.width && h == (UINT32)currentDesktopSize.height)
         return;
@@ -1021,8 +1095,10 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
                     layouts[i].PhysicalHeight = (UINT32)(layouts[i].Height * 25.4 / 96.0);
                     if (layouts[i].PhysicalWidth < 10) layouts[i].PhysicalWidth = 10;
                     if (layouts[i].PhysicalHeight < 10) layouts[i].PhysicalHeight = 10;
-                    layouts[i].DesktopScaleFactor = 100;
-                    layouts[i].DeviceScaleFactor = 100;
+                    UINT32 monDesktopScale = desc[@"desktopScaleFactor"] ? [desc[@"desktopScaleFactor"] unsignedIntValue] : 100;
+                    UINT32 monDeviceScale = desc[@"deviceScaleFactor"] ? [desc[@"deviceScaleFactor"] unsignedIntValue] : 100;
+                    layouts[i].DesktopScaleFactor = monDesktopScale ? monDesktopScale : 100;
+                    layouts[i].DeviceScaleFactor = monDeviceScale ? monDeviceScale : 100;
                 }
 
                 NSLog(@"[RDPConnection] Sending multi-monitor DisplayControl layout (%u monitors)", count);
@@ -1075,11 +1151,9 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     if (layout.PhysicalWidth < 10) layout.PhysicalWidth = 10;
     if (layout.PhysicalHeight < 10) layout.PhysicalHeight = 10;
 
-    rdpSettings *settings = freerdpContext ? ((rdpContext *)freerdpContext)->settings : NULL;
-    layout.DesktopScaleFactor = settings ? freerdp_settings_get_uint32(settings, FreeRDP_DesktopScaleFactor) : 100;
-    layout.DeviceScaleFactor = settings ? freerdp_settings_get_uint32(settings, FreeRDP_DeviceScaleFactor) : 100;
-    if (layout.DesktopScaleFactor == 0) layout.DesktopScaleFactor = 100;
-    if (layout.DeviceScaleFactor == 0) layout.DeviceScaleFactor = 100;
+    CGFloat scale = [self currentRetinaScale];
+    layout.DesktopScaleFactor = [self desktopScaleFactorForBackingScale:scale];
+    layout.DeviceScaleFactor = [self deviceScaleFactorForDesktopScale:layout.DesktopScaleFactor];
 
     [inputLock lock];
     DispClientContext *disp = (DispClientContext *)dispContext;
@@ -1238,17 +1312,20 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     }
     else
     {
+        CGFloat fbScale = [activeView displayScale];
+        if (fbScale <= 0.0) fbScale = 1.0;
         CGFloat width = [activeView bounds].size.width;
         CGFloat height = [activeView bounds].size.height;
 
         if (thePoint.x < 0) thePoint.x = 0;
         if (thePoint.y < 0) thePoint.y = 0;
-        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
-        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 0.5 : 0;
+        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 0.5 : 0;
 
         NSPoint monOrigin = [activeView monitorOrigin];
-        UINT16 localX = (UINT16)thePoint.x;
-        UINT16 localY = (UINT16)(height - 1 - thePoint.y);
+        UINT16 localX = (UINT16)(thePoint.x * fbScale);
+        UINT16 localY = (UINT16)((height - thePoint.y) * fbScale - 1.0);
+        if (localY >= (UINT16)(height * fbScale)) localY = 0;
 
         x = (UINT16)(localX + monOrigin.x);
         y = (UINT16)(localY + monOrigin.y);
@@ -1292,17 +1369,20 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     }
     else
     {
+        CGFloat fbScale = [activeView displayScale];
+        if (fbScale <= 0.0) fbScale = 1.0;
         CGFloat width = [activeView bounds].size.width;
         CGFloat height = [activeView bounds].size.height;
 
         if (thePoint.x < 0) thePoint.x = 0;
         if (thePoint.y < 0) thePoint.y = 0;
-        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 1 : 0;
-        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 1 : 0;
+        if (thePoint.x >= width) thePoint.x = width > 0 ? width - 0.5 : 0;
+        if (thePoint.y >= height) thePoint.y = height > 0 ? height - 0.5 : 0;
 
         NSPoint monOrigin = [activeView monitorOrigin];
-        UINT16 localX = (UINT16)thePoint.x;
-        UINT16 localY = (UINT16)(height - 1 - thePoint.y);
+        UINT16 localX = (UINT16)(thePoint.x * fbScale);
+        UINT16 localY = (UINT16)((height - thePoint.y) * fbScale - 1.0);
+        if (localY >= (UINT16)(height * fbScale)) localY = 0;
 
         x = (UINT16)(localX + monOrigin.x);
         y = (UINT16)(localY + monOrigin.y);

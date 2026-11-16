@@ -36,6 +36,8 @@
 	bool      _viewOnly;	
 	bool      _fullscreen;
 	bool      _useAllScreens;
+	bool      _useRetina;
+	int       _rdpScaleFactor; // 0 = Auto, 100 = 100%, 150 = 150%, 200 = 200%
     Profile   *_profile;
 
     RemoteProtocol _remoteProtocol;
@@ -67,6 +69,8 @@
 - (bool)viewOnly;
 - (bool)fullscreen;
 - (bool)useAllScreens;
+- (bool)useRetina;
+- (int)rdpScaleFactor;
 - (Profile *)profile;
 - (bool)addToServerListOnConnect;
 
@@ -88,6 +92,8 @@
 - (void)setViewOnly: (bool)viewOnly;
 - (void)setFullscreen: (bool)fullscreen;
 - (void)setUseAllScreens: (bool)useAllScreens;
+- (void)setUseRetina: (bool)useRetina;
+- (void)setRdpScaleFactor:(int)scaleFactor;
 - (void)setProfile: (Profile *)profile;
 - (void)setProfileName: (NSString *)profileName;
 - (void)setSshHost:(NSString *)sshHost;
