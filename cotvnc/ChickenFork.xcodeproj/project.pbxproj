@@ -1460,7 +1460,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2026.12;
+				_CHICKEN_VERSION_ = 2026.12.1;
 			};
 			name = Development;
 		};
@@ -1505,7 +1505,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				_CHICKEN_VERSION_ = 2026.12;
+				_CHICKEN_VERSION_ = 2026.12.1;
 			};
 			name = Deployment;
 		};
@@ -1550,7 +1550,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				_CHICKEN_VERSION_ = 2026.12;
+				_CHICKEN_VERSION_ = 2026.12.1;
 			};
 			name = Default;
 		};
@@ -1647,7 +1647,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				ZERO_LINK = NO;
-				_CHICKEN_VERSION_ = 2026.12;
+				_CHICKEN_VERSION_ = 2026.12.1;
 			};
 			name = "Universal Fast Development";
 		};

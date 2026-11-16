@@ -16,14 +16,15 @@ Use this skill when attributing new code changes, feature additions, dependency 
 
 | Role | Version | Status | Release Date |
 | :--- | :--- | :--- | :--- |
-| **Latest Shipped** | **`2026.12`** | **Shipped (IMMUTABLE)** | November 15, 2026 |
+| **Latest Shipped** | **`2026.12.1`** | **Shipped (IMMUTABLE)** | November 16, 2026 |
+| Shipped Release | `2026.12` | Shipped (IMMUTABLE) | November 15, 2026 |
 | Shipped Release | `2026.11` | Shipped (IMMUTABLE) | November 2026 |
 | Shipped Release | `2026.9` | Shipped (IMMUTABLE) | August 2026 |
 | Shipped Release | `2026.6` | Shipped (IMMUTABLE) | June 2026 |
 
 > [!IMPORTANT]
 > **Cardinal Rule of Change Attribution:**
-> **Never** attribute newly developed changes, refactors, or dependency upgrades to a version that has already shipped (such as `2026.11`). All new modifications must be attributed exclusively to the current active in-development release target (**`2026.12`**). Shipped release notes and historical changelog entries are immutable records of what was actually published.
+> **Never** attribute newly developed changes, refactors, or dependency upgrades to a version that has already shipped (such as `2026.12.1` or `2026.12`). All new modifications must be attributed exclusively to the current active in-development release target. Shipped release notes and historical changelog entries are immutable records of what was actually published.
 
 ---
 

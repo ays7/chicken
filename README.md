@@ -40,6 +40,7 @@ Chicken Fork has undergone significant modernization to enhance stability, displ
 
 ## 📝 Release Notes
 
+* [Version 2026.12.1](release-notes/2026.12.1.md) — Metal GPU rendering, Retina/HiDPI RDP scaling, Windows LAN RDP discovery, Fit-to-Window / 1:1 scaling, instant ARD authentication, macOS trust store RDP verification, and ARC migration.
 * [Version 2026.12](release-notes/2026.12.md) — FreeRDP 3.33.1 and OpenSSL 4.1.0 upgrade with Apple VideoToolbox hardware H.264 decoding, multi-monitor full-screen RDP, fluid cursor handling, and styled Retina DMG installer.
 * [Version 2026.11](release-notes/2026.11.md) — Product renamed to **Chicken Fork**, version bump to 2026.11, and initial FreeRDP 3.32.2 integration.
 * [Version 2026.9](release-notes/2026.9.md) — Touch Bar support, Apple Remote Desktop (ARD) authentication, SSH passphrase guidance, and fullscreen space management fixes.

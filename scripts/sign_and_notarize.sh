@@ -156,7 +156,7 @@ codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 info "App signature verification passed."
 
 # --- Step 3: Package DMG ---
-VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.12")
+VERSION=$(defaults read "$(pwd)/$APP_PATH/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2026.12.1")
 DMG_NAME="Chicken-Fork-${VERSION}.dmg"
 DMG_PATH="${OUTPUT_DIR}/${DMG_NAME}"
 
