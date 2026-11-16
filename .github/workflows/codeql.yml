@@ -35,11 +35,10 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-          queries: default
 
       - name: Build Chicken Fork (for CodeQL C/C++/ObjC extraction)
         if: matrix.language == 'c-cpp'
@@ -55,6 +54,6 @@ jobs:
             clean build
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
