@@ -271,19 +271,24 @@ static NSString *const kRFBMetalShaderSource = @
 
 - (nullable id<MTLTexture>)updatedTextureForFrameBuffer:(FrameBuffer *)frameBuffer
 {
+    [frameBuffer lockPixelBuffer];
     const void *pixels = [frameBuffer pixelBuffer];
     size_t stride = [frameBuffer pixelBufferStride];
     NSSize fbSize = [frameBuffer size];
     FrameBufferMetalPixelFormat fbFormat = [frameBuffer metalPixelFormat];
 
-    if (!pixels || stride == 0 || fbSize.width <= 0 || fbSize.height <= 0)
+    if (!pixels || stride == 0 || fbSize.width <= 0 || fbSize.height <= 0) {
+        [frameBuffer unlockPixelBuffer];
         return nil;
+    }
 
     BOOL isUint = NO;
     MTLPixelFormat mtlFormat = MTLPixelFormatForFrameBufferFormat(fbFormat, &isUint);
     size_t bpp = BytesPerPixelForFrameBufferFormat(fbFormat);
-    if (mtlFormat == MTLPixelFormatInvalid || bpp == 0)
+    if (mtlFormat == MTLPixelFormatInvalid || bpp == 0) {
+        [frameBuffer unlockPixelBuffer];
         return nil;
+    }
 
     NSUInteger width = (NSUInteger)fbSize.width;
     NSUInteger height = (NSUInteger)fbSize.height;
@@ -304,8 +309,10 @@ static NSString *const kRFBMetalShaderSource = @
         _allDirty = YES;
     }
 
-    if (!_texture)
+    if (!_texture) {
+        [frameBuffer unlockPixelBuffer];
         return nil;
+    }
 
     if (_allDirty) {
         MTLRegion region = MTLRegionMake2D(0, 0, width, height);
@@ -325,6 +332,7 @@ static NSString *const kRFBMetalShaderSource = @
         _dirtyRect = NSZeroRect;
     }
 
+    [frameBuffer unlockPixelBuffer];
     return _texture;
 }
 

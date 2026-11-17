@@ -29,6 +29,7 @@
         bitsPerColor = 8;
         maxValue = 255;
         _colorSpace = CGColorSpaceCreateDeviceRGB();
+        _bufferLock = [[NSLock alloc] init];
         _stride = (size_t)aSize.width * 4;
         _buffer = (uint8_t *)calloc((size_t)aSize.height, _stride);
         _ownsBuffer = YES;
@@ -52,21 +53,24 @@
 
 - (void)setSize:(NSSize)aSize
 {
-    if (NSEqualSizes(size, aSize))
-        return;
-
-    size = aSize;
-    if (_ownsBuffer)
+    [_bufferLock lock];
+    if (!NSEqualSizes(size, aSize))
     {
-        if (_buffer)
-            free(_buffer);
-        _stride = (size_t)aSize.width * 4;
-        _buffer = (uint8_t *)calloc((size_t)aSize.height, _stride);
+        size = aSize;
+        if (_ownsBuffer)
+        {
+            if (_buffer)
+                free(_buffer);
+            _stride = (size_t)aSize.width * 4;
+            _buffer = (uint8_t *)calloc((size_t)aSize.height, _stride);
+        }
     }
+    [_bufferLock unlock];
 }
 
 - (void)setBuffer:(uint8_t *)aBuffer stride:(size_t)aStride
 {
+    [_bufferLock lock];
     if (_ownsBuffer && _buffer)
     {
         free(_buffer);
@@ -74,6 +78,31 @@
     }
     _buffer = aBuffer;
     _stride = aStride;
+    [_bufferLock unlock];
+}
+
+- (void)setSize:(NSSize)aSize buffer:(uint8_t *)aBuffer stride:(size_t)aStride
+{
+    [_bufferLock lock];
+    size = aSize;
+    if (_ownsBuffer && _buffer)
+    {
+        free(_buffer);
+        _ownsBuffer = NO;
+    }
+    _buffer = aBuffer;
+    _stride = aStride;
+    [_bufferLock unlock];
+}
+
+- (void)lockPixelBuffer
+{
+    [_bufferLock lock];
+}
+
+- (void)unlockPixelBuffer
+{
+    [_bufferLock unlock];
 }
 
 - (uint8_t *)buffer
@@ -118,16 +147,26 @@
 
 - (void)drawRect:(NSRect)aRect at:(NSPoint)aPoint monitorOrigin:(NSPoint)monOrigin viewHeight:(CGFloat)viewHeight
 {
+    [_bufferLock lock];
     if (!_buffer || size.width <= 0 || size.height <= 0 || _stride <= 0)
+    {
+        [_bufferLock unlock];
         return;
+    }
 
     CGContextRef ctx = [[NSGraphicsContext currentContext] CGContext];
     if (!ctx)
+    {
+        [_bufferLock unlock];
         return;
+    }
 
     CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, _buffer, _stride * (size_t)size.height, NULL);
     if (!provider)
+    {
+        [_bufferLock unlock];
         return;
+    }
 
     CGImageRef image = CGImageCreate((size_t)size.width,
                                      (size_t)size.height,
@@ -142,7 +181,10 @@
                                      kCGRenderingIntentDefault);
     CGDataProviderRelease(provider);
     if (!image)
+    {
+        [_bufferLock unlock];
         return;
+    }
 
     CGContextSaveGState(ctx);
     if (aRect.size.width > 0 && aRect.size.height > 0)
@@ -156,6 +198,7 @@
     CGContextRestoreGState(ctx);
 
     CGImageRelease(image);
+    [_bufferLock unlock];
 }
 
 @end

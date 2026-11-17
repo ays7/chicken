@@ -13,11 +13,13 @@
     size_t _stride;
     BOOL _ownsBuffer;
     CGColorSpaceRef _colorSpace;
+    NSLock *_bufferLock;
 }
 
 - (id)initWithSize:(NSSize)aSize;
 - (void)setSize:(NSSize)aSize;
 - (void)setBuffer:(uint8_t *)aBuffer stride:(size_t)aStride;
+- (void)setSize:(NSSize)aSize buffer:(uint8_t *)aBuffer stride:(size_t)aStride;
 - (uint8_t *)buffer;
 - (size_t)stride;
 

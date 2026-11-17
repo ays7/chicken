@@ -447,6 +447,8 @@ static void ns_pixel(unsigned char* v, FrameBuffer *this, float* clr)
 - (const void *)pixelBuffer { return NULL; }
 - (size_t)pixelBufferStride { return 0; }
 - (FrameBufferMetalPixelFormat)metalPixelFormat { return FrameBufferMetalPixelFormatUnsupported; }
+- (void)lockPixelBuffer {}
+- (void)unlockPixelBuffer {}
 
 /* --------------------------------------------------------------------------------- */
 

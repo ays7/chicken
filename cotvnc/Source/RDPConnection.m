@@ -550,9 +550,21 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
     });
 }
 
+- (void)clearFrameBuffer
+{
+    [frameBuffer setBuffer:NULL stride:0];
+}
+
+- (void)updateFrameBufferSize:(NSSize)aSize buffer:(uint8_t *)aBuffer stride:(size_t)aStride
+{
+    [frameBuffer setSize:aSize buffer:aBuffer stride:aStride];
+}
+
 - (void)notifyDesktopResize:(NSSize)newSize
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (self->shouldStop || ![self->frameBuffer pixelBuffer])
+            return;
         self->currentDesktopSize = newSize;
         self->hasPendingDesktopSize = NO;
         self->lastDesktopSizeSent = newSize;
@@ -562,12 +574,6 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
         if (self->rfbView && !isMultimon)
         {
             [self->rfbView setDisplayScale:scale];
-        }
-        [self->frameBuffer setSize:newSize];
-        rdpContext *ctx = (rdpContext *)self->freerdpContext;
-        if (ctx && ctx->gdi)
-        {
-            [self->frameBuffer setBuffer:ctx->gdi->primary_buffer stride:ctx->gdi->stride];
         }
         if (self->session)
         {
@@ -584,17 +590,17 @@ static UINT rdp_cliprdr_ServerFormatDataResponse(CliprdrClientContext *cliprdr, 
 {
     NSLog(@"[RDPConnection] notifyConnected called (dispatching to main queue)");
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"[RDPConnection] notifyConnected executing on main queue");
-        rdpContext *ctx = (rdpContext *)self->freerdpContext;
-        if (ctx && ctx->gdi)
+        if (self->shouldStop || ![self->frameBuffer pixelBuffer])
         {
-            self->currentDesktopSize = NSMakeSize(ctx->gdi->width, ctx->gdi->height);
-            NSLog(@"[RDPConnection] Desktop size: %.0fx%.0f, stride=%u, buffer=%p",
-                  self->currentDesktopSize.width, self->currentDesktopSize.height,
-                  ctx->gdi->stride, ctx->gdi->primary_buffer);
-            [self->frameBuffer setSize:self->currentDesktopSize];
-            [self->frameBuffer setBuffer:ctx->gdi->primary_buffer stride:ctx->gdi->stride];
+            NSLog(@"[RDPConnection] notifyConnected: already disconnected, skipping UI setup");
+            return;
         }
+        NSLog(@"[RDPConnection] notifyConnected executing on main queue");
+        NSSize fbSize = [self->frameBuffer size];
+        self->currentDesktopSize = fbSize;
+        NSLog(@"[RDPConnection] Desktop size: %.0fx%.0f, stride=%zu, buffer=%p",
+              fbSize.width, fbSize.height,
+              [self->frameBuffer pixelBufferStride], [self->frameBuffer pixelBuffer]);
         if (self->rfbView)
         {
             [self->rfbView setFrameBuffer:self->frameBuffer];
@@ -1659,7 +1665,11 @@ static BOOL rdp_PostConnect(freerdp *instance)
         return FALSE;
     }
 
-    NSLog(@"[RDPConnection] gdi_init succeeded: %ux%u", instance->context->gdi->width, instance->context->gdi->height);
+    rdpGdi *gdi = instance->context->gdi;
+    NSLog(@"[RDPConnection] gdi_init succeeded: %ux%u", gdi->width, gdi->height);
+    [conn updateFrameBufferSize:NSMakeSize(gdi->width, gdi->height)
+                         buffer:gdi->primary_buffer
+                         stride:gdi->stride];
 
     rdpPointer rdp_pointer;
     ZeroMemory(&rdp_pointer, sizeof(rdp_pointer));
@@ -1778,6 +1788,15 @@ static BOOL rdp_Pointer_SetPosition(rdpContext *context, UINT32 x, UINT32 y)
 
 static void rdp_PostDisconnect(freerdp *instance)
 {
+    if (instance && instance->context)
+    {
+        rdpChickenContext *c = (rdpChickenContext *)instance->context;
+        if (c->connection)
+        {
+            RDPConnection *conn = (__bridge RDPConnection *)c->connection;
+            [conn clearFrameBuffer];
+        }
+    }
     gdi_free(instance);
 }
 
@@ -1792,13 +1811,16 @@ static BOOL rdp_DesktopResize(rdpContext *context)
 
     if (context->gdi)
     {
+        RDPConnection *conn = (__bridge RDPConnection *)c->connection;
+        [conn clearFrameBuffer];
         if (!gdi_resize(context->gdi, width, height))
         {
             NSLog(@"[RDPConnection] gdi_resize failed for %ux%u!", width, height);
             return FALSE;
         }
-
-        RDPConnection *conn = (__bridge RDPConnection *)c->connection;
+        [conn updateFrameBufferSize:NSMakeSize(width, height)
+                             buffer:context->gdi->primary_buffer
+                             stride:context->gdi->stride];
         [conn notifyDesktopResize:NSMakeSize(width, height)];
     }
     return TRUE;
